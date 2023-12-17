@@ -26,7 +26,7 @@ export function SideBar() {
             <ul className="nav-list">
 
                 {menus.map(menu => (
-                    <li>
+                    <li key={menu.title}>
                         <Link to={menu.linkTo}>
                             <i className={`bx ${menu.icon}`} ></i>
                             <span className="link_name">{menu.title}</span>
