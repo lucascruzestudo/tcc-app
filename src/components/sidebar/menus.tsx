@@ -5,17 +5,17 @@ export const menus = [
         linkTo: "/"
     },
     {
-        title: "User",
+        title: "Projetos",
+        icon: "bx-cog",
+        linkTo: "/projects"
+    },
+    {
+        title: "Usuário",
         icon: "bx-user",
         linkTo: "/user"
     },
     {
-        title: "File Manger",
-        icon: "bx-folder",
-        linkTo: "/file-manager"
-    },
-    {
-        title: "Settings",
+        title: "Configuração",
         icon: "bx-cog",
         linkTo: "/settings"
     },
