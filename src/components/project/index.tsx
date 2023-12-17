@@ -1,6 +1,10 @@
+import { useEffect } from "react";
 import "./index.css";
+import { TProject } from "./types";
 
-export function Project() {
+export function Project({ project }: { project: TProject }) {
+
+    useEffect(() => {})
 
     function handleAccessProject(id: string): void {
         console.log(id);
@@ -11,26 +15,34 @@ export function Project() {
             <div className="header">
                 <p>
                     <strong>Projeto: </strong>
-                    Desenvolvimento de um Sistema de Recomendação para Bibliotecas Virtuais
+                    {project.name}
                 </p>
                 <p>
                     <strong>Status: </strong>
-                    Ativo
+                    {project.status}
                 </p>
             </div>
 
             <div className="body">
                 <div className="members">
                     <p><strong>Integrantes: </strong></p>
-                    <p>João Silva</p>
-                    <p>Maria Oliveira</p>
+                    
+                    {project.members.map(member => (
+                        <p key={member.id}>{member.name}</p>
+                    ))}
 
-                    <p className="mt-3"> <strong>Turma: </strong> TI2023</p>
+                    <p className="mt-3"> <strong>Turma: </strong> {project.class}</p>
                 </div>
 
                 <div className="detail-info">
-                    <p> <strong>Data de Entrega: </strong> 15/02/2023</p>
-                    <p> <strong>Horário: </strong>  10:30</p>
+                    <p> 
+                        <strong>Data de Entrega: </strong>
+                        {project.completion_at}
+                    </p>
+                    <p> 
+                        <strong>Horário: </strong>
+                        {project.completion_at}
+                    </p>
                     <button onClick={() => handleAccessProject('f7d4e510-783c-4a5c-8c7f-1423dfe91bcf')}>Acessar</button>
                 </div>
             </div>
