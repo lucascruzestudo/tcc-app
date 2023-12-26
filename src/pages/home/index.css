@@ -1,0 +1,31 @@
+.container-home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .menu-step {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 10px;
+
+        button {
+            padding: 10px;
+        }
+    }
+
+    .form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-top: 5%;
+
+        button {
+            margin-top: 5%;
+        }
+    }
+}
