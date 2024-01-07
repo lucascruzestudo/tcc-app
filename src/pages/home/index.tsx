@@ -1,19 +1,27 @@
 import './index.css'
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import stepsJson from "./steps.json";
-import { StepData, UploadFile } from "./types"
+import { Comments, StepData, UploadFile } from "./types"
 import { FaFileUpload } from "react-icons/fa";
 import { FcCheckmark } from "react-icons/fc";
+import useIsElementVisible from "../../hooks/useIsElementVisible";
 
 const project = { id: "uuid", currentStep: 3,}
 
 export function Home() {
+    // Async Scroll
+    const lastRef = useRef(null);
+    const isLastVisible = useIsElementVisible(lastRef.current);
+
     const [currentStep, setCurrentStep] = useState<StepData | null>(null);
     const [steps, setSteps] = useState<StepData[]>([]);
     const [endDate, setEndDate] = useState<string>('');
+    const [comment, setComment] = useState<string>('');
+    const [comments, setComments] = useState<Comments[]>([]);
+    const [isLoadingComments, setIsLoadingComments] = useState(false);
     
     useEffect(() => {
-        // Mock
+        // TODO: Mock
         setSteps(stepsJson);
 
         const step = stepsJson.find(step => step.step === project.currentStep) ?? null
@@ -22,6 +30,13 @@ export function Home() {
 
         changeStep(step);
     },[])
+
+    // Async Scroll
+    useEffect(() => {
+        if (isLastVisible) {
+            loadMoreComments(10);
+        }
+    }, [isLastVisible]);
 
     const nextStep = (step_id: number) => {
         const _step = steps.find(step => step.step === step_id) ?? null
@@ -40,6 +55,8 @@ export function Home() {
         const year = date.getFullYear();
         
         setEndDate(`${day}/${month}/${year}`);
+
+        setComments([...step.comments]);
     }
 
     const handleUploadFile = (event: any, _file: UploadFile) => {
@@ -64,7 +81,41 @@ export function Home() {
     }
 
     const handleSubmitCommets = () => {
-        console.log("Send");
+        const message = comment.trim();
+
+        if(message.length <= 0) return;
+
+        try {
+            // TODO: send message to api
+
+            setComment('');
+            const newComments = { date: new Date().toISOString(), from: "Allyson", message }
+            setComments((prevComments) => [newComments, ...prevComments]);
+            console.log("Send Messsage!", comment);   
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const loadMoreComments = (offset = 0, limit = 100) => {
+        if (isLoadingComments || !currentStep) return;
+
+        setIsLoadingComments(true);
+
+        try {
+            const newComments = [...currentStep.comments]
+            // TODO: Mock More newComments
+            setTimeout(() => {
+                setComments((prevComments) => [...prevComments, ...newComments]);
+                setIsLoadingComments(false);
+            }, 1000);
+            console.log(`loading new comments with offset: ${offset} and limit: ${limit}`);
+        } catch (error) {
+            console.error('Erro ao carregar mais comentários', error);
+        } finally {
+            //setIsLoadingComments(false);
+        }
+
     }
 
     return (
@@ -127,13 +178,30 @@ export function Home() {
                         <section className='comments-form'>
                             <h3>Comentários:</h3>
                             
-                            <textarea id="comment" name="comment" rows={5} cols={63}>
-                                It was a dark and stormy night...
-                            </textarea>
+                            <textarea 
+                                id="comment" 
+                                name="comment" 
+                                rows={8} 
+                                cols={80}
+                                placeholder='It was a dark and stormy night...'
+                                value={comment}
+                                onChange={e => setComment(e.target.value)}
+                            ></textarea>
                             
                             <button type="button" onClick={handleSubmitCommets}>Enviar</button>
-
                         </section>
+
+                        <section className='comments'>
+                            {comments.map((message, index) => (
+                                <p className='comment' key={index}>
+                                    <strong>{message.from}: </strong> 
+                                    {message.message}
+                                </p>
+                            ))}
+                            {!!currentStep.comments.length && <div ref={lastRef} />}
+                        </section>
+                        
+                        {isLoadingComments && <p className='moreComments'>Carregando mais comentários...</p>}
                     </>    
                 )}
             </div>

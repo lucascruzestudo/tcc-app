@@ -4,6 +4,12 @@ export interface UploadFile {
     send: boolean;
 }
 
+export interface Comments {
+    message: string;
+    from: string;
+    date: string;
+}
+
 export interface StepData {
     step: number;
     label: string;
@@ -11,5 +17,6 @@ export interface StepData {
     start_date: string;
     end_date: string;
     description: string;
-    upload_files: UploadFile[];
+    upload_files: Array<UploadFile>;
+    comments: Array<Comments>;
 }

@@ -6,7 +6,8 @@
     
     .steps {
         width: 80%;
-        
+        margin-bottom: 100px;
+
         .menu-step {
             display: flex;
             justify-content: space-around;
@@ -14,7 +15,6 @@
             flex-direction: row;
             flex-wrap: nowrap;
             gap: 10px;
-            
             border-radius: 10px;
             margin-top: 20px;
             padding: 10px;
@@ -39,53 +39,13 @@
     
             box-shadow: 0px 5px #aeaeae;
         }
-    
-        .comments-form {
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-            flex-direction: column;
-            margin-top: 5%;
-            width:100%;
-            
-            h3 {
-                margin: 10px 0px;
-            }
-
-            button {
-                margin-top: 10px;
-                padding: 5px;
-                border-radius: 5px;
-                float: right;
-                text-align: right;
-            }
-
-            textarea {
-                font-size: 0.8rem;
-                letter-spacing: 1px;
-            }
-              
-            textarea {
-                padding: 10px;
-                max-width: 100%;
-                line-height: 1.5;
-                border-radius: 5px;
-                border: 1px solid #ccc;
-                box-shadow: 1px 1px 1px #999;
-            }
-              
-            label {
-                display: block;
-                margin-bottom: 10px;
-            }
-        }
 
         .header {
             display: flex;
             justify-content: space-between;
             flex-direction: row;
             flex-wrap: nowrap;
-            margin-top: 15px;
+            margin-top: 30px;
 
             .description {
                 margin-top: 5px;
@@ -159,6 +119,75 @@
                 }
 
             }
+        }
+        
+        .comments-form {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            flex-direction: column;
+            margin-top: 5%;
+            width:100%;
+            
+            h3 {
+                margin: 10px 0px;
+            }
+
+            button {
+                margin-top: 10px;
+                padding: 5px;
+                border-radius: 5px;
+                float: right;
+                text-align: right;
+            }
+
+            textarea {
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+            }
+              
+            textarea {
+                padding: 10px;
+                max-width: 100%;
+                line-height: 1.5;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                box-shadow: 1px 1px 1px #999;
+            }
+              
+            label {
+                display: block;
+                margin-bottom: 10px;
+            }
+        }
+
+        .comments {
+            margin-top: 30px;
+            width: 80%;
+            height: auto;
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 5px;
+            
+            border-radius: 10px;
+            border: 1px solid black;
+
+            .comment-left {
+
+            }
+
+            .comment-right {
+
+            }
+
+            .comment {
+                margin: 30px 0px;
+            }
+        }
+
+        .moreComments {
+            margin-top: 15px;
         }
     }
 }
