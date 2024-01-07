@@ -1,0 +1,67 @@
+[
+    {
+        "step": 1,
+        "label": "Primeira etapa",
+        "status": "Aprovado",
+        "start_date": "2024-01-07T01:54:51.730Z",
+        "end_date": "2024-02-07T01:54:51.730Z",
+        "upload_files": [
+            {
+                "id": 1,
+                "extension": "word",
+                "send": true
+            }
+        ],
+        "description": "Entregue um documento em formato Word com no máximo 10.000 caracteres."
+    },
+    {
+        "step": 2,
+        "label": "Segunda etapa",
+        "status": "Negado",
+        "start_date": "2024-02-07T01:54:51.730Z",
+        "end_date": "2024-03-07T01:54:51.730Z",
+        "upload_files": [
+            {
+                "id": 1,
+                "extension": "word",
+                "send": false
+            },
+            {
+                "id": 2,
+                "extension": "pdf",
+                "send": true
+            }
+        ],
+        "description": "Entregue um documento em formato Word com no máximo 10.000 caracteres e um documento em formato PDF com no máximo 10.000 caracteres."
+    },
+    {
+        "step": 3,
+        "label": "Terceira etapa",
+        "status": "Aguardando aprovação do orientador",
+        "start_date": "2024-03-07T01:54:51.730Z",
+        "end_date": "2024-04-07T01:54:51.730Z",
+        "upload_files": [
+            {
+                "id": 1,
+                "extension": "txt",
+                "send": false
+            }
+        ],
+        "description": "Entregue um documento em formato de texto (TXT) com no máximo 10.000 caracteres."
+    },
+    {
+        "step": 4,
+        "label": "Quarta etapa",
+        "status": "Pendente",
+        "start_date": "2024-04-07T01:54:51.730Z",
+        "end_date": "2024-05-07T01:54:51.730Z",
+        "upload_files": [
+            {
+                "id": 1,
+                "extension": "pdf",
+                "send": true
+            }
+        ],
+        "description": "Entregue um documento em formato PDF com no máximo 10.000 caracteres."
+    }
+]
