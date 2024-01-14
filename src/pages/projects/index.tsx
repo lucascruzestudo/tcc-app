@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { Project } from "../../components/project";
 import "./index.css";
 import { TProject } from "../../components/project/types";
-import { projectsMock } from "./mock";
+import projectsMock from "./mock.json";
 
 export function Projects() {
     const [projects, setProjects] = useState<TProject[]>([]);
 
     useEffect(() => {
-        setProjects(projectsMock);
+        setProjects(projectsMock as TProject[]);
     }, [])
 
     return (
