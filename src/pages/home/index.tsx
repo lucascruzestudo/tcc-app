@@ -124,7 +124,12 @@ export function Home() {
                 <nav className="menu-step">
                     {steps.map(({ step, label }) => (
                         <div key={`step-${step}`}>
-                            <button onClick={() => nextStep(step)}>{label}</button>
+                            <button 
+                                className={step === currentStep?.step ? 'active-step' : ''} 
+                                onClick={() => nextStep(step)}
+                            >
+                                {label}
+                            </button>
                         </div>
                     ))}
                 </nav>
