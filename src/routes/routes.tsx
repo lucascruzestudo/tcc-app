@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Home, NotFound404, SignIn, SignUp } from "../pages";
+import { Home, NotFound404, Auth } from "../pages";
 import PrivateRoutes from "./privateRoutes";
 import { Projects } from "../pages/projects";
 
@@ -20,11 +20,7 @@ export const router = createBrowserRouter([
         ]
     },
     {
-        path: '/sign-in',
-        element: <SignIn />
-    },
-    {
-        path: '/sign-up',
-        element: <SignUp />
-    },
+        path: '/auth',
+        element: <Auth />
+    }
 ])
