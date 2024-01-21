@@ -1,6 +1,6 @@
 .container-project {
     height: auto;
-    background-color: #e4e9f7;
+    
     border-radius: 10px;
     padding: 10px;
     margin: 10px 0px;
@@ -21,7 +21,8 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        flex-wrap: wrap;
+        background-color: #ffffff;
+        gap: 10px;
     }
 
     .body {
@@ -35,11 +36,5 @@
     .header :nth-child(1) {
         max-width: 80%;
     }
-
-    .members {}
-
-    .detail-info {}
-
-    .detail-info bottom {}
 
 }

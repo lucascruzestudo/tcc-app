@@ -11,8 +11,9 @@ export function Project({ project }: { project: TProject }) {
     }
 
     return (
-        <div className="container-project">
-            <div className="header">
+        <div className="card container-project">
+            
+            <div className="card-header header">
                 <p>
                     <strong>Projeto: </strong>
                     {project.name}
@@ -25,29 +26,28 @@ export function Project({ project }: { project: TProject }) {
 
             <div className="body">
                 <div className="members">
-                    <p><strong>Integrantes: </strong></p>
+                    <p className="mt-2"><strong>Integrantes: </strong></p>
                     
                     {project.members.map(member => (
                         <p key={member.id}>{member.name}</p>
                     ))}
 
-                    <p className="mt-3"> <strong>Turma: </strong> {project.class}</p>
+                    <p className="mt-2"> <strong>Turma: </strong> {project.class}</p>
                 </div>
 
-                <div className="detail-info">
-                    <p> 
+                <div className="">
+                    <p className="mt-2"> 
                         <strong>Data de Entrega: </strong>
                         {project.completion_at}
                     </p>
-                    <p> 
+                    <p className="mt-2"> 
                         <strong>Horário: </strong>
                         {project.completion_at}
                     </p>
-                    <button onClick={() => handleAccessProject('f7d4e510-783c-4a5c-8c7f-1423dfe91bcf')}>Acessar</button>
+                    <button className="btn btn-primary mt-3" onClick={() => handleAccessProject('f7d4e510-783c-4a5c-8c7f-1423dfe91bcf')}>Acessar</button>
                 </div>
             </div>
 
         </div>
-
     )
 }
