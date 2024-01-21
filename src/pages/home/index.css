@@ -19,6 +19,8 @@
             margin-top: 20px;
             padding: 10px;
             background-color: #e0e0e0;
+            min-width: 400px;
+            overflow-x: auto;
                         
             button {
                 background: none;
@@ -132,7 +134,7 @@
             align-items: flex-start;
             flex-direction: column;
             margin-top: 5%;
-            width:100%;
+            width: 100%;
             
             h3 {
                 margin: 10px 0px;
@@ -168,7 +170,7 @@
 
         .comments {
             margin-top: 30px;
-            width: 80%;
+            width: 100%;
             height: auto;
             max-height: 500px;
             overflow-y: auto;
