@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Home, NotFound404, Auth } from "../pages";
+import { Home, NotFound404, Auth, User } from "../pages";
 import PrivateRoutes from "./privateRoutes";
 import { Projects } from "../pages/projects";
 
@@ -16,6 +16,10 @@ export const router = createBrowserRouter([
             {
                 path: "/projects",
                 element: <Projects />
+            },
+            {
+                path: "/user",
+                element: <User />
             },
         ]
     },
