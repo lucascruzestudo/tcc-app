@@ -4,7 +4,7 @@ import App from "../App"
 function PrivateRoutes() {
     const userAuthenticated = true // TODO: Implement authentication service
 
-    return userAuthenticated ? <App /> : <Navigate to='/auth' />
+    return userAuthenticated ? <App /> : <Navigate to="/auth" />
 }
 
 export default PrivateRoutes

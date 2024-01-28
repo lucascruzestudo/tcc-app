@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import './index.css'
+import { Link } from "react-router-dom"
+import "./index.css"
 
 export function NotFound404() {
     return (
@@ -7,7 +7,7 @@ export function NotFound404() {
             <div className="notfound">
                 <div className="notfound-404">
                     <h1>Oops!</h1>
-                    <h2>404 - The Page can't be found</h2>
+                    <h2>404 - The Page can"t be found</h2>
                 </div>
                 <Link to="/">Go TO Home</Link>
             </div>

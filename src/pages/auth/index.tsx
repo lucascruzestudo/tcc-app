@@ -2,11 +2,11 @@ import "./index.css"
 import { useState } from "react"
 
 export function Auth    () {
-    const [preview, setPreview] = useState<'sign-in' | 'sign-up' | 'forgot-password'>('sign-in')
+    const [preview, setPreview] = useState<"sign-in" | "sign-up" | "forgot-password">("sign-in")
     
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
 
     const changeState = (value: string, setState: any) => setState(value);
 
@@ -85,24 +85,24 @@ export function Auth    () {
                         <h3>Bem-vindo ao</h3>
                         <h3 className="mb-2">Laboratório de TCC</h3>
                         
-                        <p className="mb-3">{preview === 'sign-in' ? 'Cadastrar uma conta' : 'Faça Login na sua conta'}</p>
+                        <p className="mb-3">{preview === "sign-in" ? "Cadastrar uma conta" : "Faça Login na sua conta"}</p>
                     </div>
                     
                     <button
                         className="btn-preview"
-                        onClick={() => preview === 'sign-in' ? setPreview('sign-up') : setPreview('sign-in')} 
+                        onClick={() => preview === "sign-in" ? setPreview("sign-up") : setPreview("sign-in")} 
                         type="button"
                     >
-                        {preview === 'sign-in' ? 'Cadastrar' : 'Entrar'}
+                        {preview === "sign-in" ? "Cadastrar" : "Entrar"}
                     </button>
 
-                    <p className="mt-3 forgot-password" onClick={() => setPreview('forgot-password')}>Esqueceu sua senha ? clique aqui!</p>
+                    <p className="mt-3 forgot-password" onClick={() => setPreview("forgot-password")}>Esqueceu sua senha ? clique aqui!</p>
 
                 </div>
 
                 <div className="panel-control">
                     
-                    {preview === 'sign-in' &&
+                    {preview === "sign-in" &&
                         <div className="panel-login">
                             <h3 className="mb-2">Login</h3>
                             <p className="mb-5">Informe seu E-mail e Senha</p>
@@ -113,7 +113,7 @@ export function Auth    () {
                                 id="email" 
                                 placeholder="E-mail" 
                                 onChange={({target}) => changeState(target.value, setEmail)}
-                                value={email || ''}
+                                value={email || ""}
                             />
                             <input 
                                 type="text" 
@@ -121,14 +121,14 @@ export function Auth    () {
                                 placeholder="Senha" 
                                 id="password" 
                                 onChange={({target}) => changeState(target.value, setPassword)}
-                                value={password || ''}
+                                value={password || ""}
                             />
 
                             <button type="button" onClick={submitLogin}>Acessar</button>
                         </div>
                     }
                     
-                    {preview === 'sign-up' &&
+                    {preview === "sign-up" &&
                         <div className="panel-register">
                             <h3 className="mb-2">Criar Conta</h3>
                             <p className="mb-5">Preencha os campos com os seus dados</p>
@@ -139,7 +139,7 @@ export function Auth    () {
                                 id="email" 
                                 placeholder="E-mail" 
                                 onChange={({target}) => changeState(target.value, setEmail)}
-                                value={email || ''}
+                                value={email || ""}
                             />
                             <input 
                                 type="text" 
@@ -147,7 +147,7 @@ export function Auth    () {
                                 placeholder="Senha" 
                                 id="password" 
                                 onChange={({target}) => changeState(target.value, setPassword)}
-                                value={password || ''}
+                                value={password || ""}
                             />
                             <input 
                                 type="text" 
@@ -155,14 +155,14 @@ export function Auth    () {
                                 id="confirmPassword"
                                 placeholder="Confirmação da senha"
                                 onChange={({target}) => changeState(target.value, setConfirmPassword)}
-                                value={confirmPassword || ''}
+                                value={confirmPassword || ""}
                             />
 
                             <button type="button" onClick={submitRegister}>Cadastrar</button>
                         </div>
                     }
 
-                    {preview === 'forgot-password' &&
+                    {preview === "forgot-password" &&
                         <div className="panel-login">
                             <h3 className="mb-2">Esqueci minha senha</h3>
                             <p className="mb-5">Informe o E-mail Cadastrado</p>
@@ -174,7 +174,7 @@ export function Auth    () {
                                 id="email" 
                                 placeholder="E-mail" 
                                 onChange={({target}) => changeState(target.value, setEmail)}
-                                value={email || ''}
+                                value={email || ""}
                             />
                             
                             <button type="button" onClick={submitForgotPassword}>Enviar</button>

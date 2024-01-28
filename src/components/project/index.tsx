@@ -44,7 +44,7 @@ export function Project({ project }: { project: TProject }) {
                         <strong>Horário: </strong>
                         {project.completion_at}
                     </p>
-                    <button className="btn btn-primary mt-3" onClick={() => handleAccessProject('f7d4e510-783c-4a5c-8c7f-1423dfe91bcf')}>Acessar</button>
+                    <button className="btn btn-primary mt-3" onClick={() => handleAccessProject("f7d4e510-783c-4a5c-8c7f-1423dfe91bcf")}>Acessar</button>
                 </div>
             </div>
 

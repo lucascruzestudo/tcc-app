@@ -1,4 +1,4 @@
-import './index.css'
+import "./index.css"
 import { useEffect, useState, useRef } from "react";
 import stepsJson from "./steps.json";
 import { Comments, StepData, UploadFile } from "./types"
@@ -15,8 +15,8 @@ export function Home() {
 
     const [currentStep, setCurrentStep] = useState<StepData | null>(null);
     const [steps, setSteps] = useState<StepData[]>([]);
-    const [endDate, setEndDate] = useState<string>('');
-    const [comment, setComment] = useState<string>('');
+    const [endDate, setEndDate] = useState<string>("");
+    const [comment, setComment] = useState<string>("");
     const [comments, setComments] = useState<Comments[]>([]);
     const [isLoadingComments, setIsLoadingComments] = useState(false);
     
@@ -50,8 +50,8 @@ export function Home() {
 
         const date = new Date(step.end_date);
 
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
         const year = date.getFullYear();
         
         setEndDate(`${day}/${month}/${year}`);
@@ -88,7 +88,7 @@ export function Home() {
         try {
             // TODO: send message to api
 
-            setComment('');
+            setComment("");
             const newComments = { date: new Date().toISOString(), from: "Allyson", message }
             setComments((prevComments) => [newComments, ...prevComments]);
             console.log("Send Messsage!", comment);   
@@ -111,7 +111,7 @@ export function Home() {
             }, 1000);
             console.log(`loading new comments with offset: ${offset} and limit: ${limit}`);
         } catch (error) {
-            console.error('Erro ao carregar mais comentários', error);
+            console.error("Erro ao carregar mais comentários", error);
         } finally {
             //setIsLoadingComments(false);
         }
@@ -120,12 +120,12 @@ export function Home() {
 
     return (
         <div className="container-home">
-            <div className='steps'>
+            <div className="steps">
                 <nav className="menu-step">
                     {steps.map(({ step, label }) => (
                         <div key={`step-${step}`}>
                             <button 
-                                className={step === currentStep?.step ? 'active-step' : ''} 
+                                className={step === currentStep?.step ? "active-step" : ""} 
                                 onClick={() => nextStep(step)}
                             >
                                 {label}
@@ -136,13 +136,13 @@ export function Home() {
                 
                 {currentStep && (
                     <>
-                        <section className='header'>
+                        <section className="header">
                             <div>
                                 <span>Etapa: {currentStep.step} -
-                                    {currentStep.step === project.currentStep ? ' Em andamento' : ' Concluido'} 
+                                    {currentStep.step === project.currentStep ? " Em andamento" : " Concluido"} 
                                 </span>
                                 
-                                <div className='description'>
+                                <div className="description">
                                     <strong>Descrição da etapa: </strong>
                                     <small>{currentStep.description}</small>
                                 </div>
@@ -150,17 +150,17 @@ export function Home() {
             
                             <div>
                                 <span>Data de entrega:</span>
-                                <div className='project-end-date'>{endDate}</div>
+                                <div className="project-end-date">{endDate}</div>
                             </div>
 
                         </section>
 
-                        <p className='title-upload-files'><FaFileUpload /> Faça upload dos seus documentos aqui:</p>
+                        <p className="title-upload-files"><FaFileUpload /> Faça upload dos seus documentos aqui:</p>
 
-                        <section className='upload-files'>
-                            <div className='files'>
+                        <section className="upload-files">
+                            <div className="files">
                                 {currentStep.upload_files.map((file) => (
-                                    <div key={file.id} className='file'>
+                                    <div key={file.id} className="file">
                                         <label htmlFor={`file-${file.id}`}>Enviar arquivo .{file.extension}</label>
                                         <input 
                                             type="file" 
@@ -180,7 +180,7 @@ export function Home() {
                             </div>
                         </section>
             
-                        <section className='comments-form'>
+                        <section className="comments-form">
                             <h3>Comentários:</h3>
                             
                             <textarea 
@@ -188,7 +188,7 @@ export function Home() {
                                 name="comment" 
                                 rows={8} 
                                 cols={80}
-                                placeholder='It was a dark and stormy night...'
+                                placeholder="It was a dark and stormy night..."
                                 value={comment}
                                 onChange={e => setComment(e.target.value)}
                             ></textarea>
@@ -196,9 +196,9 @@ export function Home() {
                             <button type="button" onClick={handleSubmitCommets}>Enviar</button>
                         </section>
 
-                        <section className='comments'>
+                        <section className="comments">
                             {comments.map((message, index) => (
-                                <p className='comment' key={index}>
+                                <p className="comment" key={index}>
                                     <strong>{message.from}: </strong> 
                                     {message.message}
                                 </p>
@@ -206,7 +206,7 @@ export function Home() {
                             {!!currentStep.comments.length && <div ref={lastRef} />}
                         </section>
                         
-                        {isLoadingComments && <p className='moreComments'>Carregando mais comentários...</p>}
+                        {isLoadingComments && <p className="moreComments">Carregando mais comentários...</p>}
                     </>    
                 )}
             </div>

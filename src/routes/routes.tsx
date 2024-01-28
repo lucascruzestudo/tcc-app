@@ -5,22 +5,22 @@ import { Projects } from "../pages/projects";
 
 export const router = createBrowserRouter([
     {
-        path: '/',
+        path: "/",
         element: <PrivateRoutes />,
         errorElement: <NotFound404 />,
         children: [
             {
-                path: '/',
+                path: "/",
                 element: <Home />
             },
             {
-                path: '/projects',
+                path: "/projects",
                 element: <Projects />
             },
         ]
     },
     {
-        path: '/auth',
+        path: "/auth",
         element: <Auth />
     }
 ])

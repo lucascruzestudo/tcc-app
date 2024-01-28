@@ -1,5 +1,5 @@
 import { useState } from "react";
-import './index.css'
+import "./index.css"
 import { Link } from "react-router-dom";
 import { menus } from "./menus";
 
@@ -11,13 +11,13 @@ export function SideBar() {
     };
 
     return (
-        <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
             
             <div className="logo_details">
                 <i className="bx bxl-audible icon"></i>
                 <div className="logo_name">Laboratório</div>
                 <i
-                    className={`bx ${isSidebarOpen ? 'bx-menu-alt-right' : 'bx-menu'} `}
+                    className={`bx ${isSidebarOpen ? "bx-menu-alt-right" : "bx-menu"} `}
                     id="btn"
                     onClick={toggleSidebar}
                 ></i>
