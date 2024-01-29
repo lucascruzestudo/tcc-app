@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Home, NotFound404, Auth, User } from "../pages";
+import { Home, NotFound404, Auth, Settings } from "../pages";
 import PrivateRoutes from "./privateRoutes";
 import { Projects } from "../pages/projects";
 
@@ -18,8 +18,8 @@ export const router = createBrowserRouter([
                 element: <Projects />
             },
             {
-                path: "/user",
-                element: <User />
+                path: "/settings",
+                element: <Settings />
             },
         ]
     },

@@ -10,11 +10,6 @@ export const menus = [
         linkTo: "/projects"
     },
     {
-        title: "Usuário",
-        icon: "bx-user",
-        linkTo: "/user"
-    },
-    {
         title: "Configuração",
         icon: "bx-cog",
         linkTo: "/settings"
