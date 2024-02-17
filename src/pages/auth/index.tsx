@@ -34,7 +34,6 @@ export function Auth    () {
 
         if (!_email || !_password || !_confirmPassword) return;
 
-
         console.log({email, password, confirmPassword});
     }
 
