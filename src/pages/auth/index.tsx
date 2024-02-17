@@ -52,12 +52,21 @@ export function Auth    () {
     const _validatePassword = () => {
         const _password = password.trim();
 
-        if (_password.length === 0) {
-            console.log("Invalid Password.")
+        if (_password.length < 8) {
+            console.log("The password must contain at least 8 characters.")
             return false;
         }
 
-        //TODO: validate if _password contains Numbera, Uppercase, lowercase and special characters
+        const hasNumber = /\d/.test(_password);
+        const hasUpperCase = /[A-Z]/.test(_password);
+        const hasLowerCase = /[a-z]/.test(_password);
+        const hasSpecialChar = /[^A-Za-z0-9]/.test(_password);
+    
+        if (!(hasNumber && hasUpperCase && hasLowerCase && hasSpecialChar)) {
+            console.log("Password must contain at least one number, one uppercase letter, one lowercase letter, and one special character.");
+            return false;
+        }    
+
         return _password;
     }
 
