@@ -1,22 +1,15 @@
 import "./index.css";
-//import {  } from "./types";
 import { useEffect, useState } from "react";
-
-export type UpdateUser = {
-    name: string,
-    email: string;
-    oldPassword: string;
-    newPassword: string;
-    confirmNewPassword: string;
-}
+import { toast } from "react-toastify";
+import { UpdateUser } from "./types"
 
 export function Settings() {
     const [user, setUser] = useState<UpdateUser>({
-        name: '',
-        email: '',
-        oldPassword: '',
-        newPassword: '',
-        confirmNewPassword: ''
+        name: "",
+        email: "",
+        oldPassword: "",
+        newPassword: "",
+        confirmNewPassword: ""
     })
 
     const changeUpdateUserState = (event: any) => {
@@ -26,11 +19,11 @@ export function Settings() {
 
     useEffect(() => {
         const user = {
-            name: 'Lucas',
-            email: 'lucasgomes@fatec.sp.gov.br',
-            oldPassword: '',
-            newPassword: '',
-            confirmNewPassword: ''
+            name: "Lucas",
+            email: "lucasgomes@fatec.sp.gov.br",
+            oldPassword: "",
+            newPassword: "",
+            confirmNewPassword: ""
         }
         setUser(user);
     }, [])
@@ -39,8 +32,8 @@ export function Settings() {
         let email = user.email.trim();
         
         if (email.length === 0) {
-            console.error("E-mail is required.");
-            return;
+            toast("E-mail is required.",  {type: "error"});
+            return false;
         }
 
         // TODO: send update E-mail to API
@@ -49,20 +42,18 @@ export function Settings() {
     }
 
     const handleUpdatePassword = () => {
-        let {newPassword, confirmNewPassword, oldPassword } = user;
-        
-        oldPassword = oldPassword.trim();
-        newPassword = newPassword.trim();
-        confirmNewPassword = confirmNewPassword.trim();
+        const oldPassword = user.oldPassword.trim();
+        const newPassword = user.newPassword.trim();
+        const confirmNewPassword = user.confirmNewPassword.trim();
         
         if (oldPassword.length === 0) {
-            console.error("Old Password is required.");
-            return;
+            toast("Old Password is required.",  {type: "error"});
+            return false;
         }
         
         if (newPassword !== confirmNewPassword) {
-            console.error("New Password not match with Confirm password.");
-            return;
+            toast("New Password not match with Confirm password.",  {type: "error"});
+            return false;
         }
 
         // TODO: send update password to API

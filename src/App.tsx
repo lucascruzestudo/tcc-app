@@ -1,6 +1,7 @@
-import { Outlet } from "react-router-dom"
-import "./App.css"
-import { SideBar } from "./components/sidebar"
+import "./App.css";
+import { Outlet } from "react-router-dom";
+import { SideBar } from "./components/sidebar";
+import { ToastContainer } from "react-toastify";
 
 function App() {
     return (
@@ -9,6 +10,7 @@ function App() {
             <div className="container-section">
                 <main>
                     <Outlet />
+                    <ToastContainer  position="top-right" theme="light" />
                 </main>
             </div>
         </>

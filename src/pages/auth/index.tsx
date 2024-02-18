@@ -1,5 +1,6 @@
 import "./index.css"
 import { useState } from "react"
+import { ToastContainer, toast } from "react-toastify";
 
 export function Auth    () {
     const [preview, setPreview] = useState<"sign-in" | "sign-up" | "forgot-password">("sign-in")
@@ -15,7 +16,7 @@ export function Auth    () {
         const _password = _validatePassword();
 
         if (!_email || !_password) return;
-
+        
         console.log({_email, _password});
     }
 
@@ -42,7 +43,7 @@ export function Auth    () {
         const _email = email.trim()
 
         if (!(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i).test(_email)){
-            console.log("Invalid E-mail.");
+            toast("Invalid E-mail.", {type: "error"});
             return false
         }
 
@@ -53,7 +54,7 @@ export function Auth    () {
         const _password = password.trim();
 
         if (_password.length < 8) {
-            console.log("The password must contain at least 8 characters.")
+            toast("The password must contain at least 8 characters.", {type: "error"});
             return false;
         }
 
@@ -63,7 +64,8 @@ export function Auth    () {
         const hasSpecialChar = /[^A-Za-z0-9]/.test(_password);
     
         if (!(hasNumber && hasUpperCase && hasLowerCase && hasSpecialChar)) {
-            console.log("Password must contain at least one number, one uppercase letter, one lowercase letter, and one special character.");
+            toast(`Password must contain at least one number, one uppercase letter, 
+                one lowercase letter, and one special character.`, {type: "error"});
             return false;
         }    
 
@@ -75,7 +77,7 @@ export function Auth    () {
         const _confirmPassword = confirmPassword.trim()
 
         if (_password !== _confirmPassword) {
-            console.log("Password not matchet");
+            toast("Password not matchet.", {type: "error"});
             return false
         }
 
@@ -192,6 +194,8 @@ export function Auth    () {
                 </div>
 
             </div>
+
+            <ToastContainer  position="top-right" theme="light" />
         </div>
     )
 }

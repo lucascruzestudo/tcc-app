@@ -5,6 +5,7 @@ import { Comments, StepData, UploadFile } from "./types"
 import { FaFileUpload } from "react-icons/fa";
 import { FcCheckmark } from "react-icons/fc";
 import useIsElementVisible from "../../hooks/useIsElementVisible";
+import { toast } from "react-toastify";
 
 const project = { id: "uuid", currentStep: 3,}
 
@@ -65,7 +66,8 @@ export function Home() {
         const file = event.target.files[0];
 
         if (file.size > 100000) {
-            throw new Error(`Very large file. ${file.size}/${100000}`);
+            toast(`Very large file. ${file.size}/${100000}`, {type: "error"});
+            return
         }
 
         const extensionMap: Record<string, string> = {
@@ -74,9 +76,11 @@ export function Home() {
         }
 
         if (file.type !== extensionMap[_file.extension]) {
-            throw new Error(`Extension ${file.type} not supported - expected: ${_file.extension}`);
+            toast(`Extension ${file.type} not supported - expected: ${_file.extension}`, {type: "error"});
+            return
         }
 
+        // TODO: send file to api
         console.log("send file", file)
     }
 
@@ -91,9 +95,10 @@ export function Home() {
             setComment("");
             const newComments = { date: new Date().toISOString(), from: "Allyson", message }
             setComments((prevComments) => [newComments, ...prevComments]);
-            console.log("Send Messsage!", comment);   
+            console.log("Send Messsage!", comment);
         } catch (error) {
             console.error(error);
+            toast("Erro ao enviar seu comentário.", {type: "error"});
         }
     }
 
@@ -104,16 +109,13 @@ export function Home() {
 
         try {
             const newComments = [...currentStep.comments]
-            // TODO: Mock More newComments
-            setTimeout(() => {
-                setComments((prevComments) => [...prevComments, ...newComments]);
-                setIsLoadingComments(false);
-            }, 1000);
+            setComments((prevComments) => [...prevComments, ...newComments]);
             console.log(`loading new comments with offset: ${offset} and limit: ${limit}`);
         } catch (error) {
-            console.error("Erro ao carregar mais comentários", error);
+            console.log(error);
+            toast("Erro ao carregar mais comentários.", {type: "error"});
         } finally {
-            //setIsLoadingComments(false);
+            setIsLoadingComments(false);
         }
 
     }
