@@ -2,14 +2,24 @@ import "./index.css";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { UpdateUser } from "./types"
+import { validUsername } from "../../utils/validators";
+import { User } from "../../utils/types";
 
 export function Settings() {
+    const userLocalStorage: Omit<User, "password"> & {
+        role: number | string,
+        access_token: string,
+        refresh_token: string,
+    } = JSON.parse(localStorage.get("user"));
+    
     const [user, setUser] = useState<UpdateUser>({
-        name: "",
+        full_name: "",
+        username: "",
         email: "",
         oldPassword: "",
         newPassword: "",
-        confirmNewPassword: ""
+        confirmNewPassword: "",
+        profile_picture: "",
     })
 
     const changeUpdateUserState = (event: any) => {
@@ -18,24 +28,43 @@ export function Settings() {
     };
 
     useEffect(() => {
+        
         const user = {
-            name: "Lucas",
-            email: "lucasgomes@fatec.sp.gov.br",
+            ...userLocalStorage,
             oldPassword: "",
             newPassword: "",
             confirmNewPassword: ""
         }
         setUser(user);
-    }, [])
+    }, []);
 
-    const handleUpdateEmail = () => {
-        let email = user.email.trim();
-        
-        if (email.length === 0) {
+    const handleUpdateGeneralData = () => {
+        const userUpdate: {
+            username?: string,
+            email?: string,
+            full_name?: string,
+        } = {
+            username: user.username ? user.username.trim() : "",
+            email: user.email ? user.email.trim() : "",
+            full_name: user.full_name ? user.full_name.trim() : "",
+        }
+
+        if (userUpdate.username === userLocalStorage.username) delete userUpdate.username;
+        if (userUpdate.email === userLocalStorage.email) delete userUpdate.email;
+        if (userUpdate.full_name === userLocalStorage.full_name) delete userUpdate.full_name;
+
+        if (userUpdate.email && userUpdate.email.length === 0) {
             toast("E-mail is required.",  {type: "error"});
             return false;
         }
 
+        if(userUpdate.username && !validUsername(userUpdate.username)) {
+            toast(
+                "O username deve conter apenas letras minúsculas, números, '_' ou '.'.", 
+                {type: "error"}
+            );
+            return
+        }
         // TODO: send update E-mail to API
 
         console.log("onCLick -> Update Email", user)
@@ -63,7 +92,18 @@ export function Settings() {
 
     return(
         <div className="container-user">
-            <div className="form-update-password">
+            <div className="form-update-general-data">
+                <label htmlFor="formControlUsername" className="form-label">Login</label>
+                <input 
+                    type="text" 
+                    className="form-control mb-3" 
+                    id="formControlUsername" 
+                    placeholder="name.login"
+                    name="username"
+                    value={user.username}
+                    onChange={(event) => changeUpdateUserState(event)}
+                />
+
                 <label htmlFor="formControlEmail" className="form-label">E-mail</label>
                 <input 
                     type="email" 
@@ -75,8 +115,8 @@ export function Settings() {
                     onChange={(event) => changeUpdateUserState(event)}
                 />    
 
-                <button type="button" onClick={handleUpdateEmail} className="btn btn-primary mt-2">
-                    Salvar novo E-mail
+                <button type="button" onClick={handleUpdateGeneralData} className="btn btn-primary mt-2">
+                    Salvar novos dados
                 </button>
             </div>
 

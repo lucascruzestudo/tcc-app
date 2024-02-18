@@ -1,10 +1,12 @@
 import "./index.css"
 import { useState } from "react"
 import { ToastContainer, toast } from "react-toastify";
+import { validEmail, validMarchet, validPassword, validUsername } from "../../utils/validators";
 
 export function Auth    () {
     const [preview, setPreview] = useState<"sign-in" | "sign-up" | "forgot-password">("sign-in")
     
+    const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -12,12 +14,16 @@ export function Auth    () {
     const changeState = (value: string, setState: any) => setState(value);
 
     const submitLogin = () => {
-        const _email = _validateEmail();
+        const _username = _validateUsername();
         const _password = _validatePassword();
 
-        if (!_email || !_password) return;
+        if (!_username || !_password) return;
         
-        console.log({_email, _password});
+        console.log({_username, _password});
+        // TODO: Login to API
+        const userData = {} // result from api
+
+        localStorage.setItem("user", JSON.stringify(userData));
     }
 
     const submitForgotPassword = () => {
@@ -25,6 +31,7 @@ export function Auth    () {
 
         if (!_email) return;
         
+        // TODO: ForgotPassword to API
         console.log({_email});
     }
 
@@ -32,58 +39,51 @@ export function Auth    () {
         const _email = _validateEmail();
         const _password = _validatePassword();
         const _confirmPassword = _validateConfirmPassword();
-
+        
         if (!_email || !_password || !_confirmPassword) return;
 
+        // TODO: Register to API
         console.log({email, password, confirmPassword});
     }
 
     
     const _validateEmail = () => {
-        const _email = email.trim()
+        const validator = validEmail(email);
 
-        if (!(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i).test(_email)){
+        if (!validator){
             toast("Invalid E-mail.", {type: "error"});
             return false
         }
 
-        return _email;
+        return email;
     }
     
     const _validatePassword = () => {
-        const _password = password.trim();
+        const validator = validPassword(password);
 
-        if (_password.length < 8) {
-            toast("The password must contain at least 8 characters.", {type: "error"});
-            return false;
+        if (!validator.valid) {
+            toast(validator.message, {type: "error"});
+            return false
         }
 
-        const hasNumber = /\d/.test(_password);
-        const hasUpperCase = /[A-Z]/.test(_password);
-        const hasLowerCase = /[a-z]/.test(_password);
-        const hasSpecialChar = /[^A-Za-z0-9]/.test(_password);
-    
-        if (!(hasNumber && hasUpperCase && hasLowerCase && hasSpecialChar)) {
-            toast(`Password must contain at least one number, one uppercase letter, 
-                one lowercase letter, and one special character.`, {type: "error"});
-            return false;
-        }    
-
-        return _password;
+        return password;
     }
 
     const _validateConfirmPassword = () => {
-        const _password = password.trim()
-        const _confirmPassword = confirmPassword.trim()
+        const validator = validMarchet(password, confirmPassword)
 
-        if (_password !== _confirmPassword) {
+        if (validator) {
             toast("Password not matchet.", {type: "error"});
             return false
         }
 
-        return _confirmPassword;
+        return confirmPassword;
     }; 
 
+    const _validateUsername = () => {
+        if (!validUsername(username)) return false
+        return username
+    }
 
     return (
         <div className="background-sign-in">
@@ -115,15 +115,15 @@ export function Auth    () {
                     {preview === "sign-in" &&
                         <div className="panel-login">
                             <h3 className="mb-2">Login</h3>
-                            <p className="mb-5">Informe seu E-mail e Senha</p>
+                            <p className="mb-5">Informe seu Login e Senha</p>
 
                             <input 
                                 type="text" 
-                                name="email" 
-                                id="email" 
-                                placeholder="E-mail" 
-                                onChange={({target}) => changeState(target.value, setEmail)}
-                                value={email || ""}
+                                name="username" 
+                                id="username" 
+                                placeholder="username" 
+                                onChange={({target}) => changeState(target.value, setUsername)}
+                                value={username || ""}
                             />
                             <input 
                                 type="text" 
@@ -145,6 +145,14 @@ export function Auth    () {
 
                             <input 
                                 type="text" 
+                                name="username" 
+                                id="username" 
+                                placeholder="Username" 
+                                onChange={({target}) => changeState(target.value, setUsername)}
+                                value={username || ""}
+                            />
+                            <input 
+                                type="email" 
                                 name="email" 
                                 id="email" 
                                 placeholder="E-mail" 
