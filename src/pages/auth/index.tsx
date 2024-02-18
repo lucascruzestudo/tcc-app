@@ -19,11 +19,12 @@ export function Auth    () {
 
         if (!_username || !_password) return;
         
-        console.log({_username, _password});
         // TODO: Login to API
         const userData = {} // result from api
-
+        
         localStorage.setItem("user", JSON.stringify(userData));
+        console.log({_username, _password});
+        window.location.href = '/';
     }
 
     const submitForgotPassword = () => {
@@ -44,6 +45,7 @@ export function Auth    () {
 
         // TODO: Register to API
         console.log({email, password, confirmPassword});
+        window.location.href = '/';
     }
 
     
@@ -81,7 +83,14 @@ export function Auth    () {
     }; 
 
     const _validateUsername = () => {
-        if (!validUsername(username)) return false
+        if (!validUsername(username)) {
+            toast(
+                "O username deve conter apenas letras minúsculas, números, '_' ou '.'.", 
+                {type: "error"}
+            );
+            return false
+        }
+        
         return username
     }
 
