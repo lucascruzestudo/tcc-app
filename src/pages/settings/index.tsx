@@ -10,7 +10,8 @@ export function Settings() {
         role: number | string,
         access_token: string,
         refresh_token: string,
-    } = JSON.parse(localStorage.get("user"));
+    } = {full_name: "", username: "", email: "", role: 1, access_token: "", refresh_token: ""}
+    //JSON.parse(localStorage.get("user"));
     
     const [user, setUser] = useState<UpdateUser>({
         full_name: "",
@@ -91,14 +92,25 @@ export function Settings() {
     }
 
     return(
-        <div className="container-user">
-            <div className="form-update-general-data">
-                <label htmlFor="formControlUsername" className="form-label">Login</label>
+        <div className="container-user row mt-5">
+            <div className="form-update-general-data col-6">
+                <label htmlFor="formControlUsername" className="form-label">Nome</label>
                 <input 
                     type="text" 
                     className="form-control mb-3" 
                     id="formControlUsername" 
-                    placeholder="name.login"
+                    placeholder="Nome ou Apelido"
+                    name="full_name"
+                    value={user.full_name}
+                    onChange={(event) => changeUpdateUserState(event)}
+                />
+
+                <label htmlFor="formControlUsername" className="form-label">Username</label>
+                <input 
+                    type="text" 
+                    className="form-control mb-3" 
+                    id="formControlUsername" 
+                    placeholder="Username"
                     name="username"
                     value={user.username}
                     onChange={(event) => changeUpdateUserState(event)}
@@ -120,7 +132,7 @@ export function Settings() {
                 </button>
             </div>
 
-            <div className="form-update-password mt-5">
+            <div className="form-update-password col-6">
                 <label htmlFor="formControlOldPassword" className="form-label">Senha Antiga</label>
                 <input 
                     type="password" 
