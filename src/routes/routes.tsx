@@ -1,9 +1,14 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Home, NotFound404, Auth, Settings } from "../pages";
 import PrivateRoutes from "./privateRoutes";
 import { Projects } from "../pages/projects";
 
 export const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Navigate to="/home" replace />,
+        children: []
+    },
     {
         path: "/",
         element: <PrivateRoutes />,
