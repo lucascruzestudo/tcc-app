@@ -10,7 +10,7 @@ export const router = createBrowserRouter([
         errorElement: <NotFound404 />,
         children: [
             {
-                path: "/",
+                path: "/home",
                 element: <Home />
             },
             {

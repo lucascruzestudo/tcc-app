@@ -24,7 +24,7 @@ export function Auth    () {
         
         localStorage.setItem("user", JSON.stringify(userData));
         console.log({_username, _password});
-        window.location.href = '/';
+        // window.location.href = '/home';
     }
 
     const submitForgotPassword = () => {
@@ -45,7 +45,7 @@ export function Auth    () {
 
         // TODO: Register to API
         console.log({email, password, confirmPassword});
-        window.location.href = '/';
+        // window.location.href = '/home';
     }
 
     
