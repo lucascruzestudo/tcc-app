@@ -92,8 +92,8 @@ export function Settings() {
     }
 
     return(
-        <div className="container-user row mt-5">
-            <div className="form-update-general-data col-6">
+        <div className="container-user row mt-3">
+            <div className="form-update-general-data mb-5 col-md-6 col-sm-12">
                 <label htmlFor="formControlUsername" className="form-label">Nome</label>
                 <input 
                     type="text" 
@@ -132,7 +132,7 @@ export function Settings() {
                 </button>
             </div>
 
-            <div className="form-update-password col-6">
+            <div className="form-update-password mb-5 col-md-6 col-sm-12">
                 <label htmlFor="formControlOldPassword" className="form-label">Senha Antiga</label>
                 <input 
                     type="password" 

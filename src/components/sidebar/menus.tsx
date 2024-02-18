@@ -6,7 +6,7 @@ export const menus = [
     },
     {
         title: "Projetos",
-        icon: "bx-cog",
+        icon: "bx-list-ul",
         linkTo: "/projects"
     },
     {
