@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Home, NotFound404, Auth, Settings } from "../pages";
 import PrivateRoutes from "./privateRoutes";
 import { Projects } from "../pages/projects";
+import { NewProject } from "../pages/new-project";
 
 export const router = createBrowserRouter([
     {
@@ -23,7 +24,11 @@ export const router = createBrowserRouter([
                 element: <Projects />
             },
             {
-                path: "/settings",
+                path: "/new-project",
+                element: <NewProject />
+            },
+            {
+                path: "/my-account",
                 element: <Settings />
             },
         ]

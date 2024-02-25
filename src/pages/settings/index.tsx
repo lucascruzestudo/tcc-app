@@ -94,11 +94,11 @@ export function Settings() {
     return(
         <div className="container-user row mt-3">
             <div className="form-update-general-data mb-5 col-md-6 col-sm-12">
-                <label htmlFor="formControlUsername" className="form-label">Nome</label>
+                <label htmlFor="formControlName" className="form-label">Nome</label>
                 <input 
                     type="text" 
                     className="form-control mb-3" 
-                    id="formControlUsername" 
+                    id="formControlName" 
                     placeholder="Nome ou Apelido"
                     name="full_name"
                     value={user.full_name}

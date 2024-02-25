@@ -12,6 +12,6 @@ export const menus = [
     {
         title: "Minha Conta",
         icon: "bx-cog",
-        linkTo: "/settings"
+        linkTo: "/my-account"
     },
 ]
