@@ -1,10 +1,11 @@
 import { Navigate } from "react-router-dom"
 import App from "../App"
+import { useAuth } from "src/hooks/authContextProvider";
 
 function PrivateRoutes() {
-    const userAuthenticated = true // TODO: Implement authentication service
+    const { isAuthenticated } = useAuth();
 
-    return userAuthenticated ? <App /> : <Navigate to="/auth" />
+    return isAuthenticated ? <App /> : <Navigate to="/auth" />
 }
 
 export default PrivateRoutes
