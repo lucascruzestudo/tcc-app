@@ -10,6 +10,11 @@ export function SideBar() {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+        window.location.href = '/auth';
+    }
+
     return (
         <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
             
@@ -43,7 +48,7 @@ export function SideBar() {
                             <div className="designation">Orientador</div>
                         </div>
                     </div>
-                    <i className="bx bx-log-out" id="log_out"></i>
+                    <i className="bx bx-log-out" id="log_out" onClick={handleLogout}></i>
                 </li>
 
             </ul>
