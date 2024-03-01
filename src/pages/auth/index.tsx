@@ -1,7 +1,12 @@
 import "./index.css"
 import { useState } from "react"
 import { ToastContainer, toast } from "react-toastify";
-import { validEmail, validMarchet, validPassword, validUsername } from "@utils/validators";
+import { 
+    validEmail, 
+    validMarchet, 
+    validPassword, 
+    validUsername
+} from "@utils/validators";
 import AuthService from "src/services/auth";
 
 export function Auth() {
