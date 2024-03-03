@@ -2,16 +2,24 @@ import { useState } from "react";
 import "./index.css"
 import { Link } from "react-router-dom";
 import { menus } from "./menus";
+import AuthService from "src/services/auth";
 
 export function SideBar() {
+    const authService = new AuthService();
+
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        authService.logout();
+        
         localStorage.removeItem('user');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+
         window.location.href = '/';
     }
 
