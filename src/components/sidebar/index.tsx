@@ -12,7 +12,7 @@ export function SideBar() {
 
     const handleLogout = () => {
         localStorage.removeItem('user');
-        window.location.href = '/auth';
+        window.location.href = '/';
     }
 
     return (

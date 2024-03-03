@@ -55,7 +55,7 @@ export function NewProject() {
 
   const addMember = () => {
     if (membersIds.length > 5) {
-      toast("member limit", { type: "error" });
+      toast("Limite de membros", { type: "error" });
       return;
     }
 

@@ -15,7 +15,7 @@ class Validators {
         const validator = validEmail(email);
 
         if (!validator) {
-            toast("Invalid E-mail.", { type: "error" });
+            toast("E-mail inválido.", { type: "error" });
             return false
         }
 
@@ -37,7 +37,7 @@ class Validators {
         const validator = validMarchet(password, confirmPassword)
 
         if (validator) {
-            toast("Password not matchet.", { type: "error" });
+            toast("Senha não correspondida", { type: "error" });
             return false
         }
 

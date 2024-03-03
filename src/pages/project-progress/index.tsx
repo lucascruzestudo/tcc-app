@@ -205,7 +205,7 @@ export function ProjectProgress() {
                 name="comment"
                 rows={8}
                 cols={80}
-                placeholder="It was a dark and stormy night..."
+                placeholder="Faça seu comentário!"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               ></textarea>

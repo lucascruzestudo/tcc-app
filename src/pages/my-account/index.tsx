@@ -12,7 +12,7 @@ export function MyAccount() {
         full_name: "",
         username: "",
         email: "",
-        oldPassword: "",
+        currentPassword: "",
         newPassword: "",
         confirmNewPassword: "",
         profile_picture: "",
@@ -25,7 +25,7 @@ export function MyAccount() {
 
     useEffect(() => {
         const user = {
-            oldPassword: "",
+            currentPassword: "",
             newPassword: "",
             confirmNewPassword: "",
             username: userLocalStorage.username || "",
@@ -53,13 +53,13 @@ export function MyAccount() {
         if (userUpdate.full_name === userLocalStorage.full_name) delete userUpdate.full_name;
 
         if (userUpdate.email && userUpdate.email.length === 0) {
-            toast("E-mail is required.",  {type: "error"});
+            toast("E-mail é obrigatório.",  {type: "error"});
             return false;
         }
 
         if(userUpdate.username && !validUsername(userUpdate.username)) {
             toast(
-                "O username deve conter apenas letras minúsculas, números, '_' ou '.'.", 
+                "O nome de usuário deve conter apenas letras minúsculas, números, '_' ou '.'.", 
                 {type: "error"}
             );
             return
@@ -70,17 +70,17 @@ export function MyAccount() {
     }
 
     const handleUpdatePassword = () => {
-        const oldPassword = user.oldPassword.trim();
+        const currentPassword = user.currentPassword.trim();
         const newPassword = user.newPassword.trim();
         const confirmNewPassword = user.confirmNewPassword.trim();
         
-        if (oldPassword.length === 0) {
-            toast("Old Password is required.",  {type: "error"});
+        if (currentPassword.length === 0) {
+            toast("A senha atual é obrigatória.",  {type: "error"});
             return false;
         }
         
         if (newPassword !== confirmNewPassword) {
-            toast("New Password not match with Confirm password.",  {type: "error"});
+            toast("A nova senha não corresponde à confirmação da senha.",  {type: "error"});
             return false;
         }
 
@@ -92,7 +92,7 @@ export function MyAccount() {
     return(
         <div className="container-user row mt-3">
             <div className="form-update-general-data mb-5 col-md-6 col-sm-12">
-                <label htmlFor="formControlName" className="form-label">Nome</label>
+                <label htmlFor="formControlName" className="form-label">Nome social</label>
                 <input 
                     type="text" 
                     className="form-control mb-3" 
@@ -103,12 +103,12 @@ export function MyAccount() {
                     onChange={(event) => changeUpdateUserState(event)}
                 />
 
-                <label htmlFor="formControlUsername" className="form-label">Username</label>
+                <label htmlFor="formControlUsername" className="form-label">Nome de usuário</label>
                 <input 
                     type="text" 
                     className="form-control mb-3" 
                     id="formControlUsername" 
-                    placeholder="Username"
+                    placeholder="Nome de usuário"
                     name="username"
                     value={user.username}
                     onChange={(event) => changeUpdateUserState(event)}
@@ -119,7 +119,7 @@ export function MyAccount() {
                     type="email" 
                     className="form-control mb-3" 
                     id="formControlEmail" 
-                    placeholder="name@example.com"
+                    placeholder="nome@exemplo.com"
                     name="email"
                     value={user.email}
                     onChange={(event) => changeUpdateUserState(event)}
@@ -131,14 +131,14 @@ export function MyAccount() {
             </div>
 
             <div className="form-update-password mb-5 col-md-6 col-sm-12">
-                <label htmlFor="formControlOldPassword" className="form-label">Senha Antiga</label>
+                <label htmlFor="formControlcurrentPassword" className="form-label">Senha Antiga</label>
                 <input 
                     type="password" 
                     className="form-control mb-3" 
-                    id="formControlOldPassword" 
-                    placeholder="Old Password"
-                    name="oldPassword"
-                    value={user.oldPassword}
+                    id="formControlcurrentPassword" 
+                    placeholder="Senha atual"
+                    name="currentPassword"
+                    value={user.currentPassword}
                     onChange={(event) => changeUpdateUserState(event)}
                 />
 
@@ -147,7 +147,7 @@ export function MyAccount() {
                     type="password" 
                     className="form-control mb-3"
                     id="formControlPassword"
-                    placeholder="New Password"
+                    placeholder="Nova senha"
                     name="newPassword"
                     value={user.newPassword}
                     onChange={(event) => changeUpdateUserState(event)}
@@ -158,7 +158,7 @@ export function MyAccount() {
                     type="password" 
                     className="form-control mb-3"
                     id="formControlConfirmPassword"
-                    placeholder="Comfirm New Password"
+                    placeholder="Confirmação da nova senha"
                     name="confirmNewPassword"
                     value={user.confirmNewPassword}
                     onChange={(event) => changeUpdateUserState(event)}
