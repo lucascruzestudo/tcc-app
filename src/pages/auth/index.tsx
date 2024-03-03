@@ -8,6 +8,55 @@ import {
     validUsername
 } from "@utils/validators";
 import AuthService from "src/services/auth";
+import { User } from "@utils/types";
+
+class Validators {
+    
+    static validateEmail = (email: string) => {
+        const validator = validEmail(email);
+
+        if (!validator) {
+            toast("Invalid E-mail.", { type: "error" });
+            return false
+        }
+
+        return email;
+    }
+
+    static validatePassword = (password: string) => {
+        const validator = validPassword(password);
+
+        if (!validator.valid) {
+            toast(validator.message, { type: "error" });
+            return false
+        }
+
+        return password;
+    }
+
+    static validateConfirmPassword = (password: string, confirmPassword: string) => {
+        const validator = validMarchet(password, confirmPassword)
+
+        if (validator) {
+            toast("Password not matchet.", { type: "error" });
+            return false
+        }
+
+        return confirmPassword;
+    };
+
+    static validateUsername = (username: string) => {
+        if (!validUsername(username)) {
+            toast(
+                "O username deve conter apenas letras minúsculas, números, '_' ou '.'.",
+                { type: "error" }
+            );
+            return false
+        }
+
+        return username
+    }
+}
 
 export function Auth() {
     const authService = new AuthService();
@@ -23,15 +72,23 @@ export function Auth() {
     const changeState = (value: string, setState: any) => setState(value);
 
     const submitLogin = async () => {
-        const _username = _validateUsername();
-        const _password = _validatePassword();
+        const _username = Validators.validateUsername(username);
+        const _password = Validators.validatePassword(password);
 
         if (!_username || !_password) return;
 
-        const userData = await authService.login({
-            username: _username,
-            password: _password,
-        });
+        // const userData = await authService.login({
+        //     username: _username,
+        //     password: _password,
+        // });
+
+        const userData: User = {
+            email: "email_mock@matcher.com",
+            full_name: "My name is...",
+            profile_picture: "D:\\study\\Fundamentos da Informática\\IMG-20190227-WA0055.jpg",
+            role: 1, 
+            username: "Fulano dev"
+        }
 
         if (userData === null) return;
 
@@ -40,7 +97,7 @@ export function Auth() {
     }
 
     const submitForgotPassword = () => {
-        const _email = _validateEmail();
+        const _email = Validators.validateEmail(email);
 
         if (!_email) return;
 
@@ -49,10 +106,10 @@ export function Auth() {
     }
 
     const submitRegister = async () => {
-        const _username = _validateUsername();
-        const _email = _validateEmail();
-        const _password = _validatePassword();
-        const _confirmPassword = _validateConfirmPassword();
+        const _username = Validators.validateUsername(username);
+        const _email = Validators.validateEmail(email);
+        const _password = Validators.validatePassword(password);
+        const _confirmPassword = Validators.validateConfirmPassword(password, confirmPassword);
 
         if (
             !_email ||
@@ -78,52 +135,6 @@ export function Auth() {
 
         localStorage.setItem("user", JSON.stringify(userData));
         window.location.href = '/home';
-    }
-
-
-    const _validateEmail = () => {
-        const validator = validEmail(email);
-
-        if (!validator) {
-            toast("Invalid E-mail.", { type: "error" });
-            return false
-        }
-
-        return email;
-    }
-
-    const _validatePassword = () => {
-        const validator = validPassword(password);
-
-        if (!validator.valid) {
-            toast(validator.message, { type: "error" });
-            return false
-        }
-
-        return password;
-    }
-
-    const _validateConfirmPassword = () => {
-        const validator = validMarchet(password, confirmPassword)
-
-        if (validator) {
-            toast("Password not matchet.", { type: "error" });
-            return false
-        }
-
-        return confirmPassword;
-    };
-
-    const _validateUsername = () => {
-        if (!validUsername(username)) {
-            toast(
-                "O username deve conter apenas letras minúsculas, números, '_' ou '.'.",
-                { type: "error" }
-            );
-            return false
-        }
-
-        return username
     }
 
     return (
@@ -162,7 +173,7 @@ export function Auth() {
                                 type="text"
                                 name="username"
                                 id="username"
-                                placeholder="username"
+                                placeholder="Nome de usuário"
                                 onChange={({ target }) => changeState(target.value, setUsername)}
                                 value={username || ""}
                             />
@@ -186,9 +197,17 @@ export function Auth() {
 
                             <input
                                 type="text"
+                                name="fullName"
+                                id="fullName"
+                                placeholder="Apelido"
+                                onChange={({ target }) => changeState(target.value, setFullName)}
+                                value={fullName || ""}
+                            />
+                            <input
+                                type="text"
                                 name="username"
                                 id="username"
-                                placeholder="Username"
+                                placeholder="Nome de usuário"
                                 onChange={({ target }) => changeState(target.value, setUsername)}
                                 value={username || ""}
                             />

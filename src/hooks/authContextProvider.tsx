@@ -1,9 +1,9 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { User } from "@utils/types";
 
 interface AuthContextType {
     isAuthenticated: boolean;
-    login: () => void;
-    logout: () => void;
+    user: User | undefined;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -18,19 +18,28 @@ export const useAuth = (): AuthContextType => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState<User>();
 
-    const login = () => {
-        // Implement Login
-        setIsAuthenticated(true);
-    };
+    useEffect(() => {
+        const userlocalStorage = localStorage.getItem('user');
 
-    const logout = () => {
-        // Implement Logout
-        setIsAuthenticated(false);
-    };
+        if (!userlocalStorage) {
+            setIsAuthenticated(false);
+            return;
+        }
+
+        try {
+            const parsedUser = JSON.parse(userlocalStorage);
+            setUser(parsedUser);
+            setIsAuthenticated(true);
+        } catch (error) {
+            setIsAuthenticated(false);
+            console.error("Auth Provider: ", error);
+        }
+    }, [])
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, user }}>
             {children}
         </AuthContext.Provider>
     );
