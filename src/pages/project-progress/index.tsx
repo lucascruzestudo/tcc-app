@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import stepsJson from "./steps.json";
 import { Comments, StepData, UploadFile } from "./types";
 import { FaFileUpload } from "react-icons/fa";
-import { FcCheckmark } from "react-icons/fc";
+import { FcOk } from "react-icons/fc";
 import useIsElementVisible from "../../hooks/useIsElementVisible";
 import { toast } from "react-toastify";
 
@@ -25,8 +25,7 @@ export function ProjectProgress() {
     // TODO: Mock
     setSteps(stepsJson);
 
-    const step =
-      stepsJson.find((step) => step.step === project.currentStep) ?? null;
+    const step = stepsJson.find((step) => step.step === project.currentStep) ?? null;
 
     if (!step) return;
 
@@ -71,9 +70,10 @@ export function ProjectProgress() {
       return;
     }
 
+    // add docx/Word
     const extensionMap: Record<string, string> = {
       pdf: "application/pdf",
-      txt: "text/plan",
+      txt: "text/plain",
     };
 
     if (file.type !== extensionMap[_file.extension]) {
@@ -167,31 +167,35 @@ export function ProjectProgress() {
                 <div className="project-end-date">{endDate}</div>
               </div>
             </section>
-
-            <p className="title-upload-files">
-              <FaFileUpload /> Faça upload dos seus documentos aqui:
-            </p>
+            
+            {currentStep.upload_files.length > 0 &&
+              <p className="title-upload-files">
+                <FaFileUpload /> Faça upload dos seus documentos aqui:
+              </p>
+            }
 
             <section className="upload-files">
               <div className="files">
                 {currentStep.upload_files.map((file) => (
-                  <div key={file.id} className="file">
-                    <label htmlFor={`file-${file.id}`}>
-                      Enviar arquivo .{file.extension}
+
+                  <div key={file.id} className="file mb-3">
+                    <label htmlFor={`file-${file.id}`} className="form-label">
+                      Tipo do arquivo (.{file.extension}) {file.send ? <FcOk className="mb-1" /> : ''}
                     </label>
-                    <input
+
+                    <input 
+                      className="form-control"
                       type="file"
                       name={`file-${file.id}`}
                       id={`file-${file.id}`}
                       accept={`.${file.extension}`}
                       onChange={(event) => handleUploadFile(event, file)}
-                    ></input>
-                    {file.send ? <FcCheckmark /> : <></>}
+                    />
                   </div>
                 ))}
               </div>
 
-              <div>
+              <div className="status-project">
                 <span>Status: </span> <br />
                 <p>{currentStep.status}</p>
               </div>
