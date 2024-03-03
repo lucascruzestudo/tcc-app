@@ -89,7 +89,16 @@ export function Auth() {
         
         if (response.status !== 200) return
 
-        localStorage.setItem("user", JSON.stringify(response.data));
+        const {
+            access_token,
+            refresh_token,
+            ...userData
+        } = response.data
+
+        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("accessToken", JSON.stringify(access_token));
+        localStorage.setItem("refreshToken", JSON.stringify(refresh_token));
+
         window.location.href = '/project-progress';
     }
 

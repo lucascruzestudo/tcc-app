@@ -40,4 +40,15 @@ export default class AuthService {
       return { data, status };
     }
   }
+
+  async logout(): Promise<Response> {
+    try {
+      const response = await api.post("/logout");
+      return { status: response.status, data: response.data };
+    } catch (error: any) {
+      console.error("Error logged out - ", error);
+      const { data, status } = error.response;
+      return { data, status };
+    }
+  }
 }
