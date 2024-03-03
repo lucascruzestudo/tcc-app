@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { ProjectProgress, NotFound404, Settings } from "../pages";
+import { ProjectProgress, NotFound404, MyAccount } from "../pages";
 import PrivateRoutes from "./privateRoutes";
 import { Projects } from "../pages/projects";
 import { NewProject } from "../pages/new-project";
@@ -28,7 +28,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/my-account",
-                element: <Settings />
+                element: <MyAccount />
             },
         ]
     },

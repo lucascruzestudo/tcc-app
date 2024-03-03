@@ -8,7 +8,6 @@ import {
     validUsername
 } from "@utils/validators";
 import AuthService from "src/services/auth";
-import { User } from "@utils/types";
 
 class Validators {
     
@@ -82,7 +81,7 @@ export function Auth() {
         //     password: _password,
         // });
 
-        const userData: User = {
+        const userData = {
             email: "email_mock@matcher.com",
             full_name: "My name is...",
             profile_picture: "D:\\study\\Fundamentos da Informática\\IMG-20190227-WA0055.jpg",

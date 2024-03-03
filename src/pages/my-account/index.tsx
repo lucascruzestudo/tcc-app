@@ -2,17 +2,12 @@ import "./index.css";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { UpdateUser } from "./types"
-import { validUsername } from "../../utils/validators";
-import { User } from "../../utils/types";
+import { validUsername } from "@utils/validators";
+import { useAuth } from "src/hooks/authContextProvider";
 
-export function Settings() {
-    const userLocalStorage: Omit<User, "password"> & {
-        role: number | string,
-        access_token: string,
-        refresh_token: string,
-    } = {full_name: "", username: "", email: "", role: 1, access_token: "", refresh_token: ""}
-    //JSON.parse(localStorage.get("user"));
-    
+export function MyAccount() {
+    const userLocalStorage = useAuth().user!
+     
     const [user, setUser] = useState<UpdateUser>({
         full_name: "",
         username: "",
@@ -29,13 +24,16 @@ export function Settings() {
     };
 
     useEffect(() => {
-        
         const user = {
-            ...userLocalStorage,
             oldPassword: "",
             newPassword: "",
-            confirmNewPassword: ""
-        }
+            confirmNewPassword: "",
+            username: userLocalStorage.username || "",
+            profile_picture: userLocalStorage.profile_picture || "",
+            email: userLocalStorage.email || "",
+            full_name: userLocalStorage.full_name || "",
+        };
+        
         setUser(user);
     }, []);
 

@@ -10,4 +10,7 @@ export type User = {
     profile_picture: string;
     email: string,
     full_name: string,
+
+    access_token: string;
+    refresh_token: string;
 }
