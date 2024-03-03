@@ -1,7 +1,7 @@
 import api from "@config/api";
 
 type Login = {
-  username: string;
+  email: string;
   password: string;
 };
 
@@ -10,27 +10,34 @@ type Register = {
   password: string;
   email: string;
   full_name: string;
-  rule: 1 | 2 | 3 | 4;
+  role: 1 | 2 | 3 | 4;
+}
+
+type Response<T = any> = {
+  status: number;
+  data: T,
 }
 
 export default class AuthService {
-  login = async (data: Login): Promise<any | null> => {
+  async login<T>(data: Login): Promise<Response<T>> {
     try {
       const response = await api.post("/login", data);
-      return response.data;
-    } catch (error) {
-      console.error("Error when logging in");
-      return null
+      return { status: response.status, data: response.data };
+    } catch (error: any) {
+      console.error("Error when logging in - ", error);
+      const { data, status } = error.response;
+      return { data, status };
     }
-  };
+  }
 
-  register = async (data: Register): Promise<any | null> => {
+  async register<T>(data: Register): Promise<Response<T>> {
     try {
-      const response = await api.post("/login", data);
-      return response.data;
-    } catch (error) {
-      console.error("Error registering new user");
-      return null
+      const response = await api.post("/register", data);
+      return { status: response.status, data: response.data };
+    } catch (error: any) {
+      console.error("Error registering new user - ", error);
+      const { data, status } = error.response;
+      return { data, status };
     }
-  };
+  }
 }

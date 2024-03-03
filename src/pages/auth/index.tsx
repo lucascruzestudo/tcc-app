@@ -8,6 +8,7 @@ import {
     validUsername
 } from "@utils/validators";
 import AuthService from "src/services/auth";
+import { LocalStorangeUser } from "@utils/types";
 
 class Validators {
     
@@ -71,27 +72,24 @@ export function Auth() {
     const changeState = (value: string, setState: any) => setState(value);
 
     const submitLogin = async () => {
-        const _username = Validators.validateUsername(username);
+        const _email = Validators.validateEmail(email);
         const _password = Validators.validatePassword(password);
 
-        if (!_username || !_password) return;
+        if (!_email || !_password) return;
+        
+        const response = await authService.login<LocalStorangeUser>({
+            email: _email,
+            password: _password,
+        });
 
-        // const userData = await authService.login({
-        //     username: _username,
-        //     password: _password,
-        // });
-
-        const userData = {
-            email: "email_mock@matcher.com",
-            full_name: "My name is...",
-            profile_picture: "D:\\study\\Fundamentos da Informática\\IMG-20190227-WA0055.jpg",
-            role: 1, 
-            username: "Fulano dev"
+        if (response.status === 401) {
+            toast("O E-mail ou senha está incorreto.", { type: "error" });
+            return
         }
+        
+        if (response.status !== 200) return
 
-        if (userData === null) return;
-
-        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("user", JSON.stringify(response.data));
         window.location.href = '/project-progress';
     }
 
@@ -122,18 +120,17 @@ export function Auth() {
             return
         }
 
-        const userData = await authService.register({
+        const response = await authService.register({
             username: _username,
             password: _password,
             email: _email,
-            full_name: '',
-            rule: 1,
+            full_name: fullName,
+            role: 4,
         });
 
-        if (userData === null) return;
+        if (response.status !== 201) return;
 
-        localStorage.setItem("user", JSON.stringify(userData));
-        window.location.href = '/project-progress';
+        submitLogin();
     }
 
     return (
@@ -169,15 +166,15 @@ export function Auth() {
                             <p className="mb-5">Informe seu Login e Senha</p>
 
                             <input
-                                type="text"
-                                name="username"
-                                id="username"
-                                placeholder="Nome de usuário"
-                                onChange={({ target }) => changeState(target.value, setUsername)}
-                                value={username || ""}
+                                type="email"
+                                name="email"
+                                id="email"
+                                placeholder="E-mail"
+                                onChange={({ target }) => changeState(target.value, setEmail)}
+                                value={email || ""}
                             />
                             <input
-                                type="text"
+                                type="password"
                                 name="password"
                                 placeholder="Senha"
                                 id="password"
@@ -219,7 +216,7 @@ export function Auth() {
                                 value={email || ""}
                             />
                             <input
-                                type="text"
+                                type="password"
                                 name="password"
                                 placeholder="Senha"
                                 id="password"
@@ -227,7 +224,7 @@ export function Auth() {
                                 value={password || ""}
                             />
                             <input
-                                type="text"
+                                type="password"
                                 name="confirmPassword"
                                 id="confirmPassword"
                                 placeholder="Confirmação da senha"

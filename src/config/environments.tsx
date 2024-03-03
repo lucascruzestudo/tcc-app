@@ -1,5 +1,9 @@
+const { 
+    VITE_API_V1_URL 
+} = import.meta.env
+
 const environments = {
-    api_url: process.env.REACT_APP_API_URL
+    api_url: VITE_API_V1_URL
 }
 
 export {
