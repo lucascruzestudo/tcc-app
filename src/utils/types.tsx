@@ -5,10 +5,9 @@ import { UserRole } from "./enums"
 */
 export type User = {
     username: string,
-    password: string;
     role: UserRole;
 
-    profile_picture?: string;
-    email?: string,
-    full_name?: string,
+    profile_picture: string;
+    email: string,
+    full_name: string,
 }
