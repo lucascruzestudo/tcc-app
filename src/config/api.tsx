@@ -16,10 +16,17 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    
+    debugger
     const refreshToken = localStorage.getItem("refreshToken");
 
-    if (!error.response || error.response.status !== 401 || !refreshToken) {
+    const url_map = ["/login", "/register"]
+
+    if (
+      !error.response || 
+      !refreshToken || 
+      error.response.status !== 401 || 
+      url_map.includes(error.response.config.url ?? "")
+    ) {
       return Promise.reject(error);
     }
            

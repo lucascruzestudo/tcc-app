@@ -5,16 +5,26 @@ import { TProject } from "../../components/project/types";
 import projectsMock from "./mock.json";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import ProjectsService from "src/services/projects";
 
 
 export function Projects() {
+  const projectsService = new ProjectsService();
+  
   const [projects, setProjects] = useState<TProject[]>([]);
   const [showModalNewProject, setShowModalNewProject] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     setProjects(projectsMock as TProject[]);
+
+    onInit();
   }, []);
+
+  const onInit = async () => {
+    const response = await projectsService.getProjects();
+    console.log(response)
+  }
 
   const handleNavigate = (path: string) => navigate(path);
 

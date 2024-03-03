@@ -4,7 +4,7 @@ export const validUsername = (username: string): boolean => {
 };
 
 
-export const validEmail = (email: string): boolean => { console.log(email);
+export const validEmail = (email: string): boolean => {
     const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regexEmail.test(email);
 }
