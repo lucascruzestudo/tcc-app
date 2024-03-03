@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 const project = { id: "uuid", currentStep: 3 };
 
-export function Home() {
+export function ProjectProgress() {
   // Async Scroll
   const lastRef = useRef(null);
   const isLastVisible = useIsElementVisible(lastRef.current);

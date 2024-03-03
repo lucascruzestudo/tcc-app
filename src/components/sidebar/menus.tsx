@@ -2,7 +2,7 @@ export const menus = [
     {
         title: "Inicio",
         icon: "bx-grid-alt",
-        linkTo: "/home"
+        linkTo: "/project-progress"
     },
     {
         title: "Projetos",

@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { Home, NotFound404, Settings } from "../pages";
+import { ProjectProgress, NotFound404, Settings } from "../pages";
 import PrivateRoutes from "./privateRoutes";
 import { Projects } from "../pages/projects";
 import { NewProject } from "../pages/new-project";
@@ -12,11 +12,11 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <Navigate to="/home" replace />,
+                element: <Navigate to="/project-progress" replace />,
             },
             {
-                path: "/home",
-                element: <Home />
+                path: "/project-progress",
+                element: <ProjectProgress />
             },
             {
                 path: "/projects",

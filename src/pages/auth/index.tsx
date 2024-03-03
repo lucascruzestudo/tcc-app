@@ -93,7 +93,7 @@ export function Auth() {
         if (userData === null) return;
 
         localStorage.setItem("user", JSON.stringify(userData));
-        window.location.href = '/home';
+        window.location.href = '/project-progress';
     }
 
     const submitForgotPassword = () => {
@@ -134,7 +134,7 @@ export function Auth() {
         if (userData === null) return;
 
         localStorage.setItem("user", JSON.stringify(userData));
-        window.location.href = '/home';
+        window.location.href = '/project-progress';
     }
 
     return (

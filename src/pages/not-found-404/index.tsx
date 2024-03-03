@@ -9,7 +9,7 @@ export function NotFound404() {
                     <h1>Oops!</h1>
                     <h2>404 - The Page can"t be found</h2>
                 </div>
-                <Link to="/">Go TO Home</Link>
+                <Link to="/">Back to top</Link>
             </div>
         </div>
     )
