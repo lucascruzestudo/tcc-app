@@ -96,8 +96,8 @@ export function Auth() {
         } = response.data
 
         localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("accessToken", JSON.stringify(access_token));
-        localStorage.setItem("refreshToken", JSON.stringify(refresh_token));
+        localStorage.setItem("accessToken", access_token);
+        localStorage.setItem("refreshToken", refresh_token);
 
         window.location.href = '/project-progress';
     }
