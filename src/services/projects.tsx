@@ -16,4 +16,15 @@ export default class ProjectsService {
       return { data, status };
     }
   }
+
+  async createProject<T>(body: any): Promise<Response<T>> {
+    try {
+      const response = await api.post("/projects", body);
+      return { status: response.status, data: response.data };
+    } catch (error: any) {
+      console.error("Error when logging in - ", error);
+      const { data, status } = error.response;
+      return { data, status };
+    }
+  }
 }

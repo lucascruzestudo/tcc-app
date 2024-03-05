@@ -4,6 +4,7 @@ import { IoTrashOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
+import ProjectsService from "src/services/projects";
 
 type Member = {
   email: string;
@@ -11,6 +12,8 @@ type Member = {
 };
 
 export function NewProject() {
+  const projectsService = new ProjectsService()
+
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [completion_at, setCompletion_at] = useState<string | undefined>();
@@ -81,7 +84,7 @@ export function NewProject() {
     setMembersIds((prevIds) => prevIds.filter((memberId) => memberId !== id));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (name.trim().length === 0) {
       toast("O campo nome é obrigatório.", { type: "error" });
       return;
@@ -101,13 +104,14 @@ export function NewProject() {
     );
 
     const body = {
-      name,
+      projectName: name,
       description,
       completion_at: formattedDate,
-      members: Array.from(members).map((member) => member[1]),
+      studentEmails: Array.from(members).map((member) => member[1].email),
     };
 
-    console.log(body);
+    const response = await projectsService.createProject(body);
+    console.log(response);
   };
 
   return (
