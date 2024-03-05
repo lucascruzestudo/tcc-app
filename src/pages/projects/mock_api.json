@@ -1,0 +1,51 @@
+{
+    "status": 200,
+    "data": {
+        "msg": "Projects retrieved successfully",
+        "projects": [
+            {
+                "active": true,
+                "completed": false,
+                "currentStage": 1,
+                "dueDate": null,
+                "lastUpdate": "Tue, 05 Mar 2024 20:03:58 GMT",
+                "projectName": "Allyson Project",
+                "stages": [
+                    {
+                        "active": true,
+                        "attachments": [],
+                        "comments": [],
+                        "completed": false,
+                        "dueDate": null,
+                        "stageId": 1,
+                        "stageName": "Pré-Projeto",
+                        "startDate": "Tue, 05 Mar 2024 20:03:58 GMT"
+                    },
+                    {
+                        "active": false,
+                        "attachments": [],
+                        "comments": [],
+                        "completed": false,
+                        "dueDate": null,
+                        "stageId": 2,
+                        "stageName": "Relatório Parcial",
+                        "startDate": null
+                    },
+                    {
+                        "active": false,
+                        "attachments": [],
+                        "comments": [],
+                        "completed": false,
+                        "dueDate": null,
+                        "stageId": 3,
+                        "stageName": "Entrega Final",
+                        "startDate": null
+                    }
+                ],
+                "startDate": "Tue, 05 Mar 2024 20:03:58 GMT",
+                "students": []
+            }
+        ],
+        "success": true
+    }
+}

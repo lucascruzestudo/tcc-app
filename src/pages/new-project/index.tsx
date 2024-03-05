@@ -112,6 +112,10 @@ export function NewProject() {
 
     const response = await projectsService.createProject(body);
     console.log(response);
+
+    if (response.status !== 201) return;
+    
+    toast("Projeto criado com sucesso!", { type: "success" });
   };
 
   return (
