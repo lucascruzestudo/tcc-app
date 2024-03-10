@@ -1,0 +1,32 @@
+[
+    {
+        "stageId": 1,
+        "stageName": "Pré-Projeto",
+        "attachments": [],
+        "comments": [],
+        "startDate": "2026-12-09T02:33:00-0300",
+        "dueDate": null,
+        "active": true,
+        "completed": false
+    },
+    {
+        "stageId": 2,
+        "stageName": "Relatório Parcial",
+        "attachments": [],
+        "comments": [],
+        "startDate": null,
+        "dueDate": null,
+        "active": false,
+        "completed": false
+    },
+    {
+        "stageId": 3,
+        "stageName": "Entrega Final",
+        "attachments": [],
+        "comments": [],
+        "startDate": null,
+        "dueDate": null,
+        "active": false,
+        "completed": false
+    }
+]
