@@ -57,6 +57,7 @@ export function RetrieveProject() {
       setName(response.data.projectName);
       setDescription(response.data.description);
       setDueDate(formatDate(new Date(response.data.dueDate)));
+      setAdvisorEmail(response.data.advisor.email)
 
       const updatedStudents = new Map();
       const updatedStudentsIds: Array<string> = [];
@@ -96,7 +97,7 @@ export function RetrieveProject() {
   };
 
   const addStudent = () => {
-    if (studentsIds.length > 4) {
+    if (studentsIds.length > 6) {
       toast("Limite de membros", { type: "error" });
       return;
     }
@@ -267,7 +268,7 @@ export function RetrieveProject() {
           </div>
         ))}
 
-        {studentsIds.length < 5 && (
+        {studentsIds.length < 6 && (
           <div className="row">
             <div className="mt-4 offset-11 col-1 d-flex flex-column justify-content-end align-items-center">
               <button className="btn btn-primary" onClick={addStudent}>

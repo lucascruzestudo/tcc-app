@@ -27,8 +27,12 @@ export function Project({ project }: { project: TProject & {dueDateFormatted: st
                 <div className="members">
                     <p className="mt-2"><strong>Integrantes: </strong></p>
                     
+                    {project.advisor &&
+                        <p key={project.advisor._id}>{project.advisor.full_name} (Orientador)</p>
+                    }
+                    
                     {project.students.map(student => (
-                        <p key={student._id}>{student.full_name}</p>
+                        <p key={student._id}>{student.full_name} (Aluno)</p>
                     ))}
 
                     <p className="mt-2"> <strong>Turma: </strong> {project.class}</p>

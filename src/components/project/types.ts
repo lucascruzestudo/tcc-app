@@ -14,6 +14,7 @@ export type TProject = {
     active: boolean;
     completed: boolean;
     class: string;
+    advisor: TMember;
 
     students: TMember[];
 };
