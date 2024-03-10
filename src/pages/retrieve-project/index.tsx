@@ -8,6 +8,7 @@ import ProjectsService from "src/services/projects";
 import { useParams } from "react-router-dom";
 import { TProject } from "@components/project/types";
 import { useAuth } from "src/hooks/authContextProvider";
+import { validEmail } from "@utils/validators";
 
 type Student = {
   email: string;
@@ -20,10 +21,12 @@ export function RetrieveProject() {
 
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [dueDate, setDueDate] = useState<string | undefined>();
+  const [expectedCompletion, setExpectedCompletion] = useState<string | undefined>();
   const [students, setStudents] = useState<Map<string, Student>>(new Map([]));
   const [studentsIds, setStudentsIds] = useState<string[]>([]);
   const [advisorEmail, setAdvisorEmail] = useState<string>('');
+  const [coordinatorEmail, setCoordinatorEmail] = useState<string>('');
+  const [approve, setApprove] = useState<boolean>(false);
 
   useEffect(() => {
     onInit();
@@ -56,8 +59,15 @@ export function RetrieveProject() {
       
       setName(response.data.projectName);
       setDescription(response.data.description);
-      setDueDate(formatDate(new Date(response.data.dueDate)));
-      setAdvisorEmail(response.data.advisor.email)
+      setExpectedCompletion(formatDate(new Date(response.data.expectedCompletion)));
+      setApprove(response.data.creationApproved);
+
+      if (response.data.advisor) {
+        setAdvisorEmail(response.data.advisor.email);
+      }
+      if (response.data.coordinator) {
+        setCoordinatorEmail(response.data.coordinator.email);
+      }
 
       const updatedStudents = new Map();
       const updatedStudentsIds: Array<string> = [];
@@ -129,7 +139,7 @@ export function RetrieveProject() {
       toast("O campo nome é obrigatório.", { type: "error" });
       return;
     }
-    if (!dueDate || dueDate.trim().length === 0) {
+    if (!expectedCompletion || expectedCompletion.trim().length === 0) {
       toast("A data de finalização é obrigatório.", { type: "error" });
       return;
     }
@@ -138,16 +148,22 @@ export function RetrieveProject() {
       return;
     }
 
+    if (!validEmail(coordinatorEmail)) {
+      toast("E-mail do Coordenador inválido.", { type: "error" });
+      return;
+    }
+
     const formattedDate = format(
-      new Date(dueDate),
+      new Date(expectedCompletion),
       "yyyy-MM-dd'T'HH:mm:ssXXX"
     );
     
     const bory = {
       projectName: name,
       description,
-      dueDate: formattedDate,
-      advisorEmail: advisorEmail,
+      expectedCompletion: formattedDate,
+      advisorEmail,
+      coordinatorEmail,
       studentEmails: Array.from(students).map((student) => student[1].email)
     }
 
@@ -174,9 +190,39 @@ export function RetrieveProject() {
 
   };
 
+  async function handleApproveProject (_approve: boolean) {
+    if (!projectId) return
+
+    const response = await projectsService.approvalProject(projectId, { approve: _approve });
+
+    if (response.status !== 200) {
+        toast("Opss. Não foi possivel concluir a operação!", { type: "error" });  
+        return;
+    }
+
+    setApprove(_approve);
+}
+
   return (
     <div className="container-new-project">
       <div className="row m-0 p-0">
+
+        {userLocalStorage.role === 1 && projectId &&
+          <div className="row form-group m-0">
+            <div className="offset-8 col-4 mt-2 form-check form-switch">
+              <input onChange={(e) => handleApproveProject(e.target.checked)} 
+                  className="form-check-input" 
+                  type="checkbox" 
+                  id="flexSwitchCheckApproveTCC"
+                  checked={approve}
+              />
+              <label className="form-check-label" htmlFor="flexSwitchCheckApproveTCC">
+                {approve ? 'Reprovar' : 'Aprovar'} Ideia
+              </label>
+            </div>
+          </div>
+        }
+
         <div className="row form-group mt-3">
           <div className="col-8">
             <input
@@ -194,8 +240,8 @@ export function RetrieveProject() {
               className="form-control"
               id="name"
               placeholder="Data de finalização"
-              value={dueDate || ""}
-              onChange={(e) => setDueDate(e.target.value)}
+              value={expectedCompletion || ""}
+              onChange={(e) => setExpectedCompletion(e.target.value)}
             />
           </div>
         </div>
@@ -207,7 +253,8 @@ export function RetrieveProject() {
               id="description"
               placeholder="Descrição do projeto"
               value={description}
-              rows={3}
+              style={{ height: `${Math.max(3, description.length / 30)}em` }}
+              maxLength={500}
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
           </div>
@@ -221,6 +268,22 @@ export function RetrieveProject() {
           <label className="col-4 mb-1 mt-4" htmlFor={`select-profile`}>
             Perfil:
           </label>
+        </div>
+
+        <div className="row mt-4">
+            <div className="col-8">
+              <input
+                type="email"
+                className="form-control"
+                placeholder="E-mail"
+                value={coordinatorEmail}
+                onChange={(e) => setCoordinatorEmail(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group col-3">
+              <span>Coordenador</span>
+            </div>
         </div>
 
         <div className="row mt-4">
@@ -280,10 +343,10 @@ export function RetrieveProject() {
 
         <div className="row mt-5">
           <button
-            className="offset-10 col-2 btn btn-primary"
+            className="offset-10 col-2 btn btn-primary p-2"
             onClick={handleSubmit}
           >
-            {projectId ? "Atualizar" : "Criar"}
+          {projectId ? "Atualizar" : "Criar"}
           </button>
         </div>
       </div>

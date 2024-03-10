@@ -6,47 +6,34 @@ type Response<T = any> = {
 }
 
 export default class ProjectsService {
-  async getProject<T>(id: string): Promise<Response<T>> {
+  private async request<T>(method: () => Promise<any>): Promise<Response<T>> {
     try {
-      const response = await api.get(`/project/${id}`);
+      const response = await method();
       return { status: response.status, data: response.data };
     } catch (error: any) {
-      console.error("Error when logging in - ", error);
-      const { data, status } = error.response;
-      return { data, status };
-    }
-  }
-  
-  async getProjects<T>(): Promise<Response<T>> {
-    try {
-      const response = await api.get("/projects");
-      return { status: response.status, data: response.data };
-    } catch (error: any) {
-      console.error("Error when logging in - ", error);
+      console.error("Error - ", error);
       const { data, status } = error.response;
       return { data, status };
     }
   }
 
-  async createProject<T>(body: any): Promise<Response<T>> {
-    try {
-      const response = await api.post("/projects", body);
-      return { status: response.status, data: response.data };
-    } catch (error: any) {
-      console.error("Error when logging in - ", error);
-      const { data, status } = error.response;
-      return { data, status };
-    }
+  getProject<T>(id: string): Promise<Response<T>> {
+    return this.request<T>(() => api.get(`/project/${id}`));
   }
   
-  async updateProject<T>(id: string, body: any): Promise<Response<T>> {
-    try {
-      const response = await api.put(`/project/${id}`, body);
-      return { status: response.status, data: response.data };
-    } catch (error: any) {
-      console.error("Error when logging in - ", error);
-      const { data, status } = error.response;
-      return { data, status };
-    }
+  getProjects<T>(): Promise<Response<T>> {
+    return this.request<T>(() => api.get("/projects"));
+  }
+
+  createProject<T>(data: any): Promise<Response<T>> {
+    return this.request<T>(() => api.post("/projects", data));
+  }
+  
+  updateProject<T>(id: string, data: any): Promise<Response<T>> {
+    return this.request<T>(() => api.put(`/project/${id}`, data));
+  }
+
+  approvalProject<T>(id: string, data: {approve: boolean}): Promise<Response<T>> {
+    return this.request<T>(() => api.put(`/project/${id}/approval`, data));
   }
 }

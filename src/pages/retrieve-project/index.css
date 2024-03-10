@@ -1,5 +1,5 @@
 .container-new-project {
-    width: 60%;
+    width: 70%;
     margin: 0 auto;
     display: flex;
     justify-content: center;
@@ -8,6 +8,11 @@
     border-radius: 10px;
     padding: 10px;
     margin-top: 5%;
+
+    .toggleApproveProject {
+        display: flex;
+        justify-content: flex-end;
+    }
 }
 
 @media only screen and (max-width: 1200px) {

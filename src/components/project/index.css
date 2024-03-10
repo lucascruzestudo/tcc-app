@@ -3,8 +3,8 @@
     
     border-radius: 10px;
     padding: 10px;
-    margin: 10px 0px;
-    
+    margin: 15px 0px;
+
     @media screen and (max-width: 750px) {  
         width: 90%;
     }
@@ -21,8 +21,12 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        background-color: #ffffff;
         gap: 10px;
+        flex-wrap: nowrap;
+    }
+
+    .description {
+        text-align: justify;
     }
 
     .body {
@@ -51,4 +55,11 @@
         padding: 5px 0px;
     }
 
+}
+
+.card-yellow {
+    background-color: rgba(255, 255, 194, 0.612);
+}
+.card-blue {
+    background-color: rgba(213, 224, 250, 0.623);
 }
