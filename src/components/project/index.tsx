@@ -1,13 +1,9 @@
-import { useEffect } from "react";
 import "./index.css";
 import { TProject } from "./types";
 import { useNavigate } from "react-router-dom";
 
-export function Project({ project }: { project: TProject }) {
+export function Project({ project }: { project: TProject & {dueDateFormatted: string, dueHourFormatted: string} }) {
     const navigate = useNavigate();
-
-    useEffect(() => {
-    })
 
     const handleAccessProject = (id: string): void => console.log(id);
 
@@ -32,7 +28,7 @@ export function Project({ project }: { project: TProject }) {
                     <p className="mt-2"><strong>Integrantes: </strong></p>
                     
                     {project.students.map(student => (
-                        <p key={student.studentId}>{student.name}</p>
+                        <p key={student._id}>{student.full_name}</p>
                     ))}
 
                     <p className="mt-2"> <strong>Turma: </strong> {project.class}</p>
@@ -41,11 +37,11 @@ export function Project({ project }: { project: TProject }) {
                 <div className="">
                     <p className="mt-2"> 
                         <strong>Data de Entrega: </strong>
-                        {project.dueDate}
+                        {project.dueDateFormatted}
                     </p>
                     <p className="mt-2"> 
                         <strong>Horário: </strong>
-                        {project.dueDate}
+                        {project.dueHourFormatted}
                     </p>
                     <div className="mt-3 btns">
                         <button className="btn btn-primary" onClick={() => handleAccessProject(project._id)}>

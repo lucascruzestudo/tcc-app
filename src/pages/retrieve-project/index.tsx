@@ -53,20 +53,20 @@ export function RetrieveProject() {
       const response = await projectsService.getProject<TProject>(projectId)
 
       if (response.status !== 200) return
-
+      
       setName(response.data.projectName);
-      setDescription(response.data.description || "N/A");
-      setDueDate(formatDate(new Date()));
+      setDescription(response.data.description);
+      setDueDate(formatDate(new Date(response.data.dueDate)));
 
       const updatedStudents = new Map();
       const updatedStudentsIds: Array<string> = [];
 
       response.data.students.forEach(s => {
-        updatedStudents.set(s.studentId, { 
-          _id: s.studentId, email: `fulando.${s.studentId}.com.br`,
+        updatedStudents.set(s._id, { 
+          _id: s._id, email: s.email,
         });
         
-        updatedStudentsIds.push(s.studentId);
+        updatedStudentsIds.push(s._id);
       });
 
       setStudents(updatedStudents);
@@ -153,14 +153,20 @@ export function RetrieveProject() {
     if (projectId) {
       const response = await projectsService.updateProject(projectId, bory);
       
-      if (response.status !== 200) return;
+      if (response.status !== 200) {
+        toast("Opss. Não foi possivel concluir a operação!", { type: "error" });  
+        return;
+      }
 
       toast("Projeto Atualizado com sucesso!", { type: "success" });
 
     } else {
       const response = await projectsService.createProject(bory);
       
-      if (response.status !== 201) return;
+      if (response.status !== 201) {
+        toast("Opss. Não foi possivel concluir a operação!", { type: "error" });  
+        return;
+      }
       
       toast("Projeto criado com sucesso!", { type: "success" });
     }

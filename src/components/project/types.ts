@@ -1,7 +1,7 @@
 export type TMember = {
-    studentId: string;
+    _id: string;
     email: string;
-    name: string;
+    full_name: string;
 };
 
 export type TProject = {
