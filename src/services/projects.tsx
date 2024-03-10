@@ -6,6 +6,17 @@ type Response<T = any> = {
 }
 
 export default class ProjectsService {
+  async getProject<T>(id: string): Promise<Response<T>> {
+    try {
+      const response = await api.get(`/project/${id}`);
+      return { status: response.status, data: response.data };
+    } catch (error: any) {
+      console.error("Error when logging in - ", error);
+      const { data, status } = error.response;
+      return { data, status };
+    }
+  }
+  
   async getProjects<T>(): Promise<Response<T>> {
     try {
       const response = await api.get("/projects");
@@ -20,6 +31,17 @@ export default class ProjectsService {
   async createProject<T>(body: any): Promise<Response<T>> {
     try {
       const response = await api.post("/projects", body);
+      return { status: response.status, data: response.data };
+    } catch (error: any) {
+      console.error("Error when logging in - ", error);
+      const { data, status } = error.response;
+      return { data, status };
+    }
+  }
+  
+  async updateProject<T>(id: string, body: any): Promise<Response<T>> {
+    try {
+      const response = await api.put(`/project/${id}`, body);
       return { status: response.status, data: response.data };
     } catch (error: any) {
       console.error("Error when logging in - ", error);

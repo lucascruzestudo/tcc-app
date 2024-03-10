@@ -2,7 +2,6 @@ import "./index.css";
 import { useEffect, useState } from "react";
 import { Project } from "../../components/project";
 import { TProject } from "../../components/project/types";
-import projectsMock from "./mock.json";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import ProjectsService from "src/services/projects";
@@ -12,18 +11,33 @@ export function Projects() {
   const projectsService = new ProjectsService();
   
   const [projects, setProjects] = useState<TProject[]>([]);
-  const [showModalNewProject, setShowModalNewProject] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setProjects(projectsMock as TProject[]);
-
     onInit();
   }, []);
 
   const onInit = async () => {
-    const response = await projectsService.getProjects();
-    console.log(response)
+    const response = await projectsService.getProjects<{
+      projects: Array<TProject>
+    }>();
+    
+    if (response.status !== 200) return;
+
+    setProjects(response.data.projects.map((p, index) => ({
+      ...p,
+      projecId: String((index + 1)),
+      description: "description",
+
+      class: "ADS NOITE",
+      dueDate: p.dueDate ? (new Date(p.dueDate)).toISOString() : '-',
+      startDate: p.startDate ? (new Date(p.startDate)).toISOString() : '-',
+      students: p.students.map((s, index) => ({
+        studentId: s.studentId,
+        name: (`Fulando ${index + 1}`),
+        email: `fulando.${s.studentId}.com.br`,
+      }))
+    })));
   }
 
   const handleNavigate = (path: string) => navigate(path);
@@ -34,7 +48,7 @@ export function Projects() {
 
       <div className="list-projects">
         {projects.map((project) => (
-          <Project project={project} key={project.id} />
+          <Project project={project} key={project._id} />
         ))}
       </div>
 

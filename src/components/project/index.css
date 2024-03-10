@@ -37,4 +37,18 @@
         max-width: 80%;
     }
 
+    .btns {
+        .btn-warning {
+            color: #ffffff;
+        }
+
+        .btn {
+            margin: 3px;
+        }
+    }
+
+    .card-header {
+        padding: 5px 0px;
+    }
+
 }

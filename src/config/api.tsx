@@ -16,7 +16,6 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    debugger
     const refreshToken = localStorage.getItem("refreshToken");
 
     const url_map = ["/login", "/register"]
@@ -24,25 +23,41 @@ api.interceptors.response.use(
     if (
       !error.response || 
       !refreshToken || 
-      error.response.status !== 401 || 
+      error.response.status !== 422 || 
       url_map.includes(error.response.config.url ?? "")
     ) {
       return Promise.reject(error);
     }
+
+   //"msg": "The token is not yet valid (iat)"
+   
+    debugger
            
     try {
-      const response = await axios.post(`${environments.api_url}/refresh`, {}, {
-        headers: {
-          Authorization: `Bearer ${refreshToken}`,
-        }
-      });
+      const url = `${environments.api_url}/refresh`;
+      const options = {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${refreshToken}`
+          },
+          body: JSON.stringify({})
+      };
+
+      const response = await fetch(url, options);
+
+      if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      debugger
 
       if (!error.config) throw new Error("Request Config not found.")
       
-      localStorage.setItem("accessToken", response.data.access_token);
-      localStorage.setItem("refreshToken", response.data.refresh_token);
+      //localStorage.setItem("accessToken", response.data.access_token);
+      //localStorage.setItem("refreshToken", response.data.refresh_token);
 
-      error.config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+      //error.config.headers.Authorization = `Bearer ${response.data.accessToken}`;
       
       return axios.request(error.config);
 

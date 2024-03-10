@@ -1,14 +1,19 @@
 export type TMember = {
-    id: string;
+    studentId: string;
+    email: string;
     name: string;
 };
 
 export type TProject = {
-    id: string;
-    name: string;
-    members: TMember[];
+    _id: string;
+    projectName: string;
+    startDate: string; // Data Formato ISO
+    dueDate: string; // Data Formato ISO
+    description: string;
+    currentStage: number;    
+    active: boolean;
+    completed: boolean;
     class: string;
-    created_at: string; // Data Formato ISO
-    completion_at: string; // Data Formato ISO
-    status: "Ativo" | "Inativo";
+
+    students: TMember[];
 };

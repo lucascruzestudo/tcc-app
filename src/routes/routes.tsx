@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { ProjectProgress, NotFound404, MyAccount } from "../pages";
 import PrivateRoutes from "./privateRoutes";
 import { Projects } from "../pages/projects";
-import { NewProject } from "../pages/new-project";
+import { RetrieveProject } from "../pages/retrieve-project";
 
 export const router = createBrowserRouter([
     {
@@ -24,7 +24,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/new-project",
-                element: <NewProject />
+                element: <RetrieveProject />
+            },
+            {
+                path: "/edit-project/:projectId",
+                element: <RetrieveProject />
             },
             {
                 path: "/my-account",

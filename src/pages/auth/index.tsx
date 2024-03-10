@@ -134,7 +134,7 @@ export function Auth() {
             password: _password,
             email: _email,
             full_name: fullName,
-            role: 4,
+            role: 3,
         });
 
         if (response.status !== 201) return;

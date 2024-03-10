@@ -1,51 +1,104 @@
-{
-    "status": 200,
-    "data": {
-        "msg": "Projects retrieved successfully",
-        "projects": [
+[
+    {
+        "active": true,
+        "completed": false,
+        "currentStage": 1,
+        "dueDate": null,
+        "lastUpdate": "Tue, 05 Mar 2024 20:03:58 GMT",
+        "projectName": "Allyson Project",
+        "stages": [
             {
                 "active": true,
+                "attachments": [],
+                "comments": [],
                 "completed": false,
-                "currentStage": 1,
                 "dueDate": null,
-                "lastUpdate": "Tue, 05 Mar 2024 20:03:58 GMT",
-                "projectName": "Allyson Project",
-                "stages": [
-                    {
-                        "active": true,
-                        "attachments": [],
-                        "comments": [],
-                        "completed": false,
-                        "dueDate": null,
-                        "stageId": 1,
-                        "stageName": "Pré-Projeto",
-                        "startDate": "Tue, 05 Mar 2024 20:03:58 GMT"
-                    },
-                    {
-                        "active": false,
-                        "attachments": [],
-                        "comments": [],
-                        "completed": false,
-                        "dueDate": null,
-                        "stageId": 2,
-                        "stageName": "Relatório Parcial",
-                        "startDate": null
-                    },
-                    {
-                        "active": false,
-                        "attachments": [],
-                        "comments": [],
-                        "completed": false,
-                        "dueDate": null,
-                        "stageId": 3,
-                        "stageName": "Entrega Final",
-                        "startDate": null
-                    }
-                ],
-                "startDate": "Tue, 05 Mar 2024 20:03:58 GMT",
-                "students": []
+                "stageId": 1,
+                "stageName": "Pré-Projeto",
+                "startDate": "Tue, 05 Mar 2024 20:03:58 GMT"
+            },
+            {
+                "active": false,
+                "attachments": [],
+                "comments": [],
+                "completed": false,
+                "dueDate": null,
+                "stageId": 2,
+                "stageName": "Relatório Parcial",
+                "startDate": null
+            },
+            {
+                "active": false,
+                "attachments": [],
+                "comments": [],
+                "completed": false,
+                "dueDate": null,
+                "stageId": 3,
+                "stageName": "Entrega Final",
+                "startDate": null
             }
         ],
-        "success": true
+        "startDate": "Tue, 05 Mar 2024 20:03:58 GMT",
+        "students": []
+    },
+    {
+        "active": true,
+        "advisor": {
+            "advisorId": "65eb94b9db5ca3d90fa7fad7"
+        },
+        "completed": false,
+        "creationApproved": true,
+        "currentStage": 1,
+        "dueDate": null,
+        "lastUpdate": "Fri, 08 Mar 2024 19:53:01 GMT",
+        "projectName": "TCCLab",
+        "stages": [
+            {
+                "active": true,
+                "attachments": [],
+                "comments": [],
+                "completed": false,
+                "dueDate": null,
+                "stageId": 1,
+                "stageName": "Pré-Projeto",
+                "startDate": "Fri, 08 Mar 2024 19:53:01 GMT"
+            },
+            {
+                "active": false,
+                "attachments": [],
+                "comments": [],
+                "completed": false,
+                "dueDate": null,
+                "stageId": 2,
+                "stageName": "Relatório Parcial",
+                "startDate": null
+            },
+            {
+                "active": false,
+                "attachments": [],
+                "comments": [],
+                "completed": false,
+                "dueDate": null,
+                "stageId": 3,
+                "stageName": "Entrega Final",
+                "startDate": null
+            }
+        ],
+        "startDate": "Fri, 08 Mar 2024 19:53:01 GMT",
+        "students": [
+            {
+                "studentId": "65eb932037dfe2b1fb607e2f"
+            }
+        ]
+    },
+    {
+        "creationApproved": false,
+        "lastUpdate": "Fri, 08 Mar 2024 20:01:15 GMT",
+        "projectName": "Thayna fuma maconha",
+        "students": [
+            {
+                "studentId": "65eb9771ea88b282a1090daf"
+            }
+        ]
     }
-}
+]
