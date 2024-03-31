@@ -2,7 +2,6 @@ import "./index.css";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { UpdateUser } from "./types"
-import { validUsername } from "@utils/validators";
 import { useAuth } from "src/hooks/authContextProvider";
 
 export function MyAccount() {
@@ -10,7 +9,6 @@ export function MyAccount() {
      
     const [user, setUser] = useState<UpdateUser>({
         full_name: "",
-        username: "",
         email: "",
         currentPassword: "",
         newPassword: "",
@@ -28,7 +26,6 @@ export function MyAccount() {
             currentPassword: "",
             newPassword: "",
             confirmNewPassword: "",
-            username: userLocalStorage.username || "",
             profile_picture: userLocalStorage.profile_picture || "",
             email: userLocalStorage.email || "",
             full_name: userLocalStorage.full_name || "",
@@ -39,16 +36,13 @@ export function MyAccount() {
 
     const handleUpdateGeneralData = () => {
         const userUpdate: {
-            username?: string,
             email?: string,
             full_name?: string,
         } = {
-            username: user.username ? user.username.trim() : "",
             email: user.email ? user.email.trim() : "",
             full_name: user.full_name ? user.full_name.trim() : "",
         }
 
-        if (userUpdate.username === userLocalStorage.username) delete userUpdate.username;
         if (userUpdate.email === userLocalStorage.email) delete userUpdate.email;
         if (userUpdate.full_name === userLocalStorage.full_name) delete userUpdate.full_name;
 
@@ -57,14 +51,9 @@ export function MyAccount() {
             return false;
         }
 
-        if(userUpdate.username && !validUsername(userUpdate.username)) {
-            toast(
-                "O nome de usuário deve conter apenas letras minúsculas, números, '_' ou '.'.", 
-                {type: "error"}
-            );
-            return
-        }
         // TODO: send update E-mail to API
+
+        console.log(userUpdate)
 
         console.log("onCLick -> Update Email", user)
     }
@@ -100,17 +89,6 @@ export function MyAccount() {
                     placeholder="Nome ou Apelido"
                     name="full_name"
                     value={user.full_name}
-                    onChange={(event) => changeUpdateUserState(event)}
-                />
-
-                <label htmlFor="formControlUsername" className="form-label">Nome de usuário</label>
-                <input 
-                    type="text" 
-                    className="form-control mb-3" 
-                    id="formControlUsername" 
-                    placeholder="Nome de usuário"
-                    name="username"
-                    value={user.username}
                     onChange={(event) => changeUpdateUserState(event)}
                 />
 

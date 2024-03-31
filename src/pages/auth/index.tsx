@@ -5,7 +5,6 @@ import {
     validEmail, 
     validMarchet, 
     validPassword, 
-    validUsername
 } from "@utils/validators";
 import AuthService from "src/services/auth";
 import { LocalStorangeUser } from "@utils/types";
@@ -44,18 +43,6 @@ class Validators {
 
         return confirmPassword;
     };
-
-    static validateUsername = (username: string) => {
-        if (!validUsername(username)) {
-            toast(
-                "O username deve conter apenas letras minúsculas, números, '_' ou '.'.",
-                { type: "error" }
-            );
-            return false
-        }
-
-        return username
-    }
 }
 
 export function Auth() {
@@ -63,7 +50,6 @@ export function Auth() {
 
     const [preview, setPreview] = useState<"sign-in" | "sign-up" | "forgot-password">("sign-in")
 
-    const [username, setUsername] = useState<string>("");
     const [fullName, setFullName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -112,7 +98,6 @@ export function Auth() {
     }
 
     const submitRegister = async () => {
-        const _username = Validators.validateUsername(username);
         const _email = Validators.validateEmail(email);
         const _password = Validators.validatePassword(password);
         const _confirmPassword = Validators.validateConfirmPassword(password, confirmPassword);
@@ -121,7 +106,6 @@ export function Auth() {
             !_email ||
             !_password ||
             !_confirmPassword ||
-            !_username ||
 
             fullName.length < 4
         ) {
@@ -130,7 +114,6 @@ export function Auth() {
         }
 
         const response = await authService.register({
-            username: _username,
             password: _password,
             email: _email,
             full_name: fullName,
@@ -208,14 +191,7 @@ export function Auth() {
                                 onChange={({ target }) => changeState(target.value, setFullName)}
                                 value={fullName || ""}
                             />
-                            <input
-                                type="text"
-                                name="username"
-                                id="username"
-                                placeholder="Nome de usuário"
-                                onChange={({ target }) => changeState(target.value, setUsername)}
-                                value={username || ""}
-                            />
+          
                             <input
                                 type="email"
                                 name="email"

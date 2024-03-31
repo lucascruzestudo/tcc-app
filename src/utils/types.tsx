@@ -6,7 +6,6 @@ import { UserRole } from "./enums"
 export type LocalStorangeUser = {
     id: string
     full_name: string,
-    username: string,
     email: string,
     role: UserRole;
     profile_picture: string;

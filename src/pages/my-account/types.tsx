@@ -1,6 +1,4 @@
 export type UpdateUser = {
-    username: string,
-
     currentPassword: string;
     newPassword: string;
     confirmNewPassword: string;
