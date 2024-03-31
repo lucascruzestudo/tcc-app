@@ -18,21 +18,14 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const refreshToken = localStorage.getItem("refreshToken");
 
-    const url_map = ["/login", "/register"]
+    const {status, data} = error.response as any
 
-    if (
-      !error.response || 
-      !refreshToken || 
-      error.response.status !== 422 || 
-      url_map.includes(error.response.config.url ?? "")
-    ) {
+    if (!(status == 401 && data && data.msg && data.msg.includes('Token has expired'))) {
       return Promise.reject(error);
     }
 
-   //"msg": "The token is not yet valid (iat)"
-   
-    debugger
-           
+    if (!error.config) throw new Error("Request Config not found.")
+
     try {
       const url = `${environments.api_url}/refresh`;
       const options = {
@@ -45,20 +38,19 @@ api.interceptors.response.use(
       };
 
       const response = await fetch(url, options);
-
-      if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+      
+      if (response.status !== 200) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+      
+      const data = await response.json();
+      
       debugger
 
-      if (!error.config) throw new Error("Request Config not found.")
-      
-      //localStorage.setItem("accessToken", response.data.access_token);
-      //localStorage.setItem("refreshToken", response.data.refresh_token);
+      localStorage.setItem("accessToken", data.access_token);
+      localStorage.setItem("refreshToken", data.refresh_token);
 
-      //error.config.headers.Authorization = `Bearer ${response.data.accessToken}`;
-      
+      error.config.headers.Authorization = `Bearer ${data.accessToken}`;
       return axios.request(error.config);
 
     } catch (refreshError) {
