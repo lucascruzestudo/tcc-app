@@ -65,6 +65,7 @@ export function RetrieveProject() {
       if (response.data.advisor) {
         setAdvisorEmail(response.data.advisor.email);
       }
+      
       if (response.data.coordinator) {
         setCoordinatorEmail(response.data.coordinator.email);
       }

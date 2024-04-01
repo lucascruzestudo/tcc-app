@@ -120,7 +120,9 @@ export function MyAccount() {
 
         const response2 = await userService.getProfile(id);
 
-        console.log(response2);        
+        console.log(response2);
+
+        if(false) setProfileImg(null)
     };
 
     return(
