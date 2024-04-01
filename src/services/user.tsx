@@ -28,4 +28,12 @@ export default class UserService {
     edit<T>(id: string, data: UpdateUser): Promise<Response<T>> {
       return this.request<T>(() => api.patch(`/user-edit/${id}`, data));
     }
+
+    editprofile<T>(id: string, data: any): Promise<Response<T>> {
+      return this.request<T>(() => api.patch(`/photo-profile/${id}`, data));
+    }
+    
+    getProfile<T>(id: string): Promise<Response<T>> {
+      return this.request<T>(() => api.get(`/photo-profile/${id}`));
+    }
 }

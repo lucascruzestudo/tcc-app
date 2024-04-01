@@ -4,10 +4,13 @@ import { toast } from "react-toastify";
 import { UpdateUser } from "./types"
 import { useAuth } from "src/hooks/authContextProvider";
 import UserService from "@services/user";
+import defaultProfile from "@assets/profile.jpeg";
+import { TbPhotoEdit } from "react-icons/tb";
 
 export function MyAccount() {
     const userLocalStorage = useAuth().user!
     const userService = new UserService()
+    const [profileImg, setProfileImg] = useState<any>(defaultProfile);
      
     const [user, setUser] = useState<UpdateUser>({
         full_name: "",
@@ -34,6 +37,8 @@ export function MyAccount() {
         };
         
         setUser(user);
+
+        userService.getProfile(userLocalStorage.id).then(r => console.log(r));
     }, []);
 
     const handleUpdateGeneralData = async () => {
@@ -101,8 +106,36 @@ export function MyAccount() {
         setUser({...user, newPassword: '', confirmNewPassword: '', currentPassword: ''});
     }
 
+    const handlePhotoChange = async (e: any) => {
+        const file = e.target.files[0];
+
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        const id: string = userLocalStorage.id
+
+        const response = await userService.editprofile(id, formData);
+
+        console.log(response);
+
+        const response2 = await userService.getProfile(id);
+
+        console.log(response2);        
+    };
+
     return(
         <div className="container-user row mt-3">
+            
+            <div className="row mb-5">
+                <div className="col">
+                    <div className="profile-picture">
+                        <img src={profileImg} alt="Foto de Perfil" id="profile-img" />
+                        <input onChange={handlePhotoChange} type="file" id="file-input" />
+                        <label id="file-input" htmlFor="file-input"><TbPhotoEdit /></label>
+                    </div>
+                </div>
+            </div>
+
             <div className="form-update-general-data mb-5 col-md-6 col-sm-12">
                 <label htmlFor="formControlName" className="form-label">Nome social</label>
                 <input 
