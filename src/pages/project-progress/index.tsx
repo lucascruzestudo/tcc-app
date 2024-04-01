@@ -1,7 +1,7 @@
 import "./index.css";
 import { useEffect, useState, useRef } from "react";
 import stepsJson from "./steps.json";
-import { Comments, StepData, UploadFile } from "./types";
+import { Comment, StepData, UploadFile } from "./types";
 import { FaFileUpload } from "react-icons/fa";
 import { FcOk } from "react-icons/fc";
 import useIsElementVisible from "../../hooks/useIsElementVisible";
@@ -26,7 +26,7 @@ export function ProjectProgress() {
   const [steps, setSteps] = useState<TStages[]>([]);
   const [endDate, setEndDate] = useState<string>("");
   const [comment, setComment] = useState<string>("");
-  const [comments, setComments] = useState<Comments[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [isLoadingComments, setIsLoadingComments] = useState(false);
 
   useEffect(() => {
@@ -51,7 +51,19 @@ export function ProjectProgress() {
     changeStep(step);
     setProject(project);
 
-    console.log(response.data);    
+    getComment(project.currentStage)
+  }
+
+  const getComment = async (stageId: number) => {
+    if (!project) return;
+
+    const response = await projectsService.getCommentsFromStage<Comment[]>(
+      project._id, stageId
+    );
+
+    if (response.status === 200) {
+      setComments(response.data)
+    }
   }
 
   // Async Scroll
@@ -116,21 +128,26 @@ export function ProjectProgress() {
     console.log("send file", file);
   };
 
-  const handleSubmitCommets = () => {
+  const handleSubmitCommets = async () => {
+    if (!project) return;
+
     const message = comment.trim();
 
     if (message.length <= 0) return;
 
     try {
-      // TODO: send message to api
-
-      setComment("");
-      const newComments = {
-        date: new Date().toISOString(),
-        from: "Allyson",
+      const response = await projectsService.sendNewCommentProject<Comment>(project._id, {
         message,
-      };
-      setComments((prevComments) => [newComments, ...prevComments]);
+        stageId: project?.currentStage
+      });
+
+      if (response.status !== 201) {
+        toast("Oppss... Ocorreu um erro ao enviar o comentário.", { type: "error" });
+        return;
+      }
+      
+      setComment("");
+      setComments((prevComments) => [response.data, ...prevComments]);
       console.log("Send Messsage!", comment);
     } catch (error) {
       console.error(error);
@@ -255,8 +272,8 @@ export function ProjectProgress() {
             <section className="comments">
               {comments.map((message, index) => (
                 <p className="comment" key={index}>
-                  <strong>{message.from}: </strong>
-                  {message.message}
+                  <strong>{message.full_name}: </strong>
+                  {message.comment}
                 </p>
               ))}
               {!!currentStage.comments.length && <div ref={lastRef} />}

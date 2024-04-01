@@ -36,4 +36,15 @@ export default class ProjectsService {
   approvalProject<T>(id: string, data: {approve: boolean}): Promise<Response<T>> {
     return this.request<T>(() => api.put(`/project/${id}/approval`, data));
   }
+
+  sendNewCommentProject<T>(
+    id: string, 
+    data: { message: string, stageId: number}
+  ): Promise<Response<T>> {
+    return this.request<T>(() => api.post(`/project/${id}/comment`, data));
+  }
+
+  getCommentsFromStage<T>(projectId: string, stageId: number): Promise<Response<T>> {
+    return this.request<T>(() => api.get(`project/${projectId}/stage/${stageId}`));
+  }
 }
