@@ -4,6 +4,7 @@ import { TProject } from "./types";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { getProjectStatus } from "@utils/project-functions";
 
 export function Project({ project, userRole }: { project: TProject, userRole: number }) {
     const navigate = useNavigate();
@@ -12,15 +13,10 @@ export function Project({ project, userRole }: { project: TProject, userRole: nu
     
     const [_project, _setProject] = useState<TProject>(project);
     
-    const handleAccessProject = (id: string): void => console.log(id);
+    const handleAccessProject = (id: string): void => navigate(`/project-progress/${id}`);
     const handleEditProject = (id: string): void => navigate(`/edit-project/${id}`);
 
-    const getStatus = () => {
-        if (_project.completed) return "Completo"
-        else if(!_project.creationApproved) return "Aprovação pendente"
-        else if (_project.active) return "Em andamento"
-        else return "Pausado"
-    }
+    const getStatus = () => getProjectStatus(_project);
 
     function getDate() {
         const year = expectedCompletion.getFullYear();

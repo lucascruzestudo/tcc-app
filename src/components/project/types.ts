@@ -4,6 +4,26 @@ export type TMember = {
     full_name: string;
 };
 
+export type TFile = {
+    id: number;
+    extension: string;
+    send: boolean;
+    path: string;
+}
+
+export type TStages = {
+    active: boolean;
+    attachments: Array<TFile>;
+    comments: [];
+    completed: boolean;
+    description: string;
+    dueDate: string;
+    expectedCompletion: string;
+    stageId: number;
+    stageName: string;
+    startDate: string;
+}
+
 export type TProject = {
     _id: string;
     projectName: string;
@@ -18,6 +38,7 @@ export type TProject = {
     advisor: TMember;
     coordinator: TMember;
     creationApproved: boolean;
+    stages: Array<TStages>
 
     students: TMember[];
 };

@@ -85,7 +85,7 @@ export function Auth() {
         localStorage.setItem("accessToken", access_token);
         localStorage.setItem("refreshToken", refresh_token);
 
-        window.location.href = '/project-progress';
+        window.location.href = '/projects';
     }
 
     const submitForgotPassword = () => {

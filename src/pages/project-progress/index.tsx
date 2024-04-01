@@ -6,31 +6,53 @@ import { FaFileUpload } from "react-icons/fa";
 import { FcOk } from "react-icons/fc";
 import useIsElementVisible from "../../hooks/useIsElementVisible";
 import { toast } from "react-toastify";
-
-const project = { id: "uuid", currentStep: 3 };
+import { useParams } from "react-router-dom";
+import { TProject, TStages } from "@components/project/types";
+import ProjectsService from "@services/projects";
+import { useAuth } from "src/hooks/authContextProvider";
+import { getProjectStatus } from "@utils/project-functions";
 
 export function ProjectProgress() {
+  const { projectId } = useParams();
+  const projectsService = new ProjectsService()
+  const userLocalStorage = useAuth().user!
+
   // Async Scroll
   const lastRef = useRef(null);
   const isLastVisible = useIsElementVisible(lastRef.current);
 
-  const [currentStep, setCurrentStep] = useState<StepData | null>(null);
-  const [steps, setSteps] = useState<StepData[]>([]);
+  const [currentStage, setCurrentStage] = useState<TStages | null>(null);
+  const [project, setProject] = useState<TProject | null>(null);
+  const [steps, setSteps] = useState<TStages[]>([]);
   const [endDate, setEndDate] = useState<string>("");
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<Comments[]>([]);
   const [isLoadingComments, setIsLoadingComments] = useState(false);
 
   useEffect(() => {
-    // TODO: Mock
-    setSteps(stepsJson);
+    init();
+  }, []);
 
-    const step = stepsJson.find((step) => step.step === project.currentStep) ?? null;
+  async function init() {
+    if (!projectId) return
+
+    const response = await projectsService.getProject<TProject>(projectId)
+
+    if (response.status !== 200) return
+   
+    const project = response.data;
+
+    setSteps(response.data.stages);
+
+    const step = project.stages.find((step) => step.stageId === project.currentStage) ?? null;
 
     if (!step) return;
 
     changeStep(step);
-  }, []);
+    setProject(project);
+
+    console.log(response.data);    
+  }
 
   // Async Scroll
   useEffect(() => {
@@ -40,22 +62,28 @@ export function ProjectProgress() {
   }, [isLastVisible]);
 
   const nextStep = (step_id: number) => {
-    const _step = steps.find((step) => step.step === step_id) ?? null;
-    if (!_step || _step.step > project.currentStep) return;
+    if (!project) return;
+
+    const _step = steps.find((step) => step.stageId === step_id) ?? null;
+    if (!_step || _step.stageId > project.currentStage) return;
 
     changeStep(_step);
   };
 
-  const changeStep = (step: StepData) => {
-    setCurrentStep(step);
+  const changeStep = (step: TStages) => {
+    setCurrentStage(step);
 
-    const date = new Date(step.end_date);
+    if (step.expectedCompletion) {
+      const date = new Date(step.expectedCompletion);
 
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
 
-    setEndDate(`${day}/${month}/${year}`);
+      setEndDate(`${day}/${month}/${year}`);
+    } else {
+      setEndDate("Não definido!");
+    }
 
     setComments([...step.comments]);
   };
@@ -111,12 +139,12 @@ export function ProjectProgress() {
   };
 
   const loadMoreComments = (offset = 0, limit = 100) => {
-    if (isLoadingComments || !currentStep) return;
+    if (isLoadingComments || !currentStage) return;
 
     setIsLoadingComments(true);
 
     try {
-      const newComments = [...currentStep.comments];
+      const newComments = [...currentStage.comments];
       setComments((prevComments) => [...prevComments, ...newComments]);
       console.log(
         `loading new comments with offset: ${offset} and limit: ${limit}`
@@ -133,32 +161,29 @@ export function ProjectProgress() {
     <div className="container-home">
       <div className="steps">
         <nav className="menu-step">
-          {steps.map(({ step, label }) => (
-            <div key={`step-${step}`}>
+          {steps.map(({ stageId, stageName }) => (
+            <div key={`step-${stageId}`}>
               <button
-                className={step === currentStep?.step ? "active-step" : ""}
-                onClick={() => nextStep(step)}
+                className={stageId === currentStage?.stageId ? "active-step" : ""}
+                onClick={() => nextStep(stageId)}
               >
-                {label}
+                {stageName}
               </button>
             </div>
           ))}
         </nav>
 
-        {currentStep && (
+        {currentStage && (
           <>
             <section className="header">
               <div>
                 <span>
-                  Etapa: {currentStep.step} -
-                  {currentStep.step === project.currentStep
-                    ? " Em andamento"
-                    : " Concluido"}
+                  Etapa: {currentStage.stageId} - {currentStage.stageName}
                 </span>
 
                 <div className="description mt-3">
                   <strong>Descrição da etapa: </strong>
-                  <small>{currentStep.description}</small>
+                  <small>{currentStage.description}</small>
                 </div>
               </div>
 
@@ -168,7 +193,7 @@ export function ProjectProgress() {
               </div>
             </section>
             
-            {currentStep.upload_files.length > 0 &&
+            {currentStage.attachments.length > 0 &&
               <p className="title-upload-files">
                 <FaFileUpload /> Faça upload dos seus documentos aqui:
               </p>
@@ -176,7 +201,7 @@ export function ProjectProgress() {
 
             <section className="upload-files">
               <div className="files">
-                {currentStep.upload_files.map((file) => (
+                {currentStage.attachments.map((file) => (
 
                   <div key={file.id} className="file mb-3">
                     <label htmlFor={`file-${file.id}`} className="form-label">
@@ -197,7 +222,12 @@ export function ProjectProgress() {
 
               <div className="status-project">
                 <span>Status: </span> <br />
-                <p>{currentStep.status}</p>
+                <p>
+                  {project && currentStage.stageId === project.currentStage 
+                    ? " Em andamento"
+                    : " Concluido"
+                  }
+                </p>
               </div>
             </section>
 
@@ -229,7 +259,7 @@ export function ProjectProgress() {
                   {message.message}
                 </p>
               ))}
-              {!!currentStep.comments.length && <div ref={lastRef} />}
+              {!!currentStage.comments.length && <div ref={lastRef} />}
             </section>
 
             {isLoadingComments && (

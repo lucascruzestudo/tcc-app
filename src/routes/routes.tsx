@@ -15,7 +15,7 @@ export const router = createBrowserRouter([
                 element: <Navigate to="/project-progress" replace />,
             },
             {
-                path: "/project-progress",
+                path: "/project-progress/:projectId",
                 element: <ProjectProgress />
             },
             {
