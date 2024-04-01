@@ -225,7 +225,7 @@ export function ProjectProgress() {
                 <p>
                   {project && currentStage.stageId === project.currentStage 
                     ? " Em andamento"
-                    : " Concluido"
+                    : currentStage.completed ? " Concluido" : " Indisponível"
                   }
                 </p>
               </div>
