@@ -10,7 +10,8 @@
     "paths": {
       "@components/*": ["src/components/*"],
       "@utils/*": ["src/utils/*"],
-      "@config/*": ["src/config/*"]
+      "@config/*": ["src/config/*"],
+      "@services/*": ["src/services/*"],
     },
 
     /* Bundler mode */

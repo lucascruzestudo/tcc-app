@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { UpdateUser } from "./types"
 import { useAuth } from "src/hooks/authContextProvider";
+import UserService from "@services/user";
 
 export function MyAccount() {
     const userLocalStorage = useAuth().user!
+    const userService = new UserService()
      
     const [user, setUser] = useState<UpdateUser>({
         full_name: "",
@@ -34,7 +36,7 @@ export function MyAccount() {
         setUser(user);
     }, []);
 
-    const handleUpdateGeneralData = () => {
+    const handleUpdateGeneralData = async () => {
         const userUpdate: {
             email?: string,
             full_name?: string,
@@ -51,14 +53,20 @@ export function MyAccount() {
             return false;
         }
 
-        // TODO: send update E-mail to API
+        if (Object.keys(userUpdate).length === 0) return;
+        
+        const id: string = userLocalStorage.id
+        const response = await userService.edit<{msg: string}>(id, userUpdate);
 
-        console.log(userUpdate)
+        if (response.status !== 200 && response.data) {
+            toast(response.data.msg,  {type: "error"});
+            return false;
+        }
 
-        console.log("onCLick -> Update Email", user)
+        toast("Dados atualizados!",  {type: "success"});
     }
 
-    const handleUpdatePassword = () => {
+    const handleUpdatePassword = async () => {
         const currentPassword = user.currentPassword.trim();
         const newPassword = user.newPassword.trim();
         const confirmNewPassword = user.confirmNewPassword.trim();
@@ -73,9 +81,24 @@ export function MyAccount() {
             return false;
         }
 
-        // TODO: send update password to API
+        const id: string = userLocalStorage.id
 
-        console.log("onCLick -> Update Password", user)
+        const response = await userService.edit<{msg: string}>(id, {
+            currentPassword: currentPassword,
+            newPassword: newPassword
+        });
+
+        if (response.status !== 200 && response.data) {
+            if (response.data.msg.includes('Invalid Password')) {
+                toast("Senha antiga incorreta!",  {type: "error"});
+            } else {
+                toast(response.data.msg,  {type: "error"});
+            }
+            return false;
+        }
+
+        toast("Senha atualizada!",  {type: "success"});
+        setUser({...user, newPassword: '', confirmNewPassword: '', currentPassword: ''});
     }
 
     return(
