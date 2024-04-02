@@ -68,6 +68,8 @@ export function MyAccount() {
             return false;
         }
 
+        useAuth().setUser({...userLocalStorage, ...userUpdate});
+
         toast("Dados atualizados!",  {type: "success"});
     }
 

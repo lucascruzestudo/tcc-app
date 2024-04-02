@@ -1,9 +1,10 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect, Dispatch, SetStateAction } from "react";
 import { LocalStorangeUser } from "@utils/types";
 
 interface AuthContextType {
     isAuthenticated: boolean;
     user: LocalStorangeUser | undefined;
+    setUser: Dispatch<SetStateAction<LocalStorangeUser | undefined>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -18,7 +19,12 @@ export const useAuth = (): AuthContextType => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [user, setUser] = useState<LocalStorangeUser>();
+    const [user, setUser] = useState<LocalStorangeUser | undefined>();
+
+    useEffect(() => {
+        if(!user) return;
+        localStorage.setItem('user', JSON.stringify(user));
+    }, [user])
 
     useEffect(() => {
         const userlocalStorage = localStorage.getItem('user');
@@ -39,7 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, setUser }}>
             {children}
         </AuthContext.Provider>
     );

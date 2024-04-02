@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <Navigate to="/project-progress" replace />,
+                element: <Navigate to="/projects" replace />,
             },
             {
                 path: "/project-progress/:projectId",

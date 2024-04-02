@@ -30,28 +30,36 @@ export function ProjectProgress() {
   const [isLoadingComments, setIsLoadingComments] = useState(false);
 
   useEffect(() => {
+    if (!currentStage) return
+    getComment(currentStage.stageId);
+  }, [currentStage]);
+
+  useEffect(() => {
     init();
   }, []);
+
+  // Async Scroll
+  useEffect(() => {
+    if (isLastVisible) {
+      loadMoreComments(10);
+    }
+  }, [isLastVisible]);
 
   async function init() {
     if (!projectId) return
 
-    const response = await projectsService.getProject<TProject>(projectId)
+    const response = await projectsService.getProject<TProject>(projectId);
 
     if (response.status !== 200) return
    
     const project = response.data;
-
+    
+    setProject(project);
     setSteps(response.data.stages);
 
     const step = project.stages.find((step) => step.stageId === project.currentStage) ?? null;
 
-    if (!step) return;
-
-    changeStep(step);
-    setProject(project);
-
-    getComment(project.currentStage)
+    if (step) changeStep(step);
   }
 
   const getComment = async (stageId: number) => {
@@ -66,19 +74,13 @@ export function ProjectProgress() {
     }
   }
 
-  // Async Scroll
-  useEffect(() => {
-    if (isLastVisible) {
-      loadMoreComments(10);
-    }
-  }, [isLastVisible]);
-
   const nextStep = (step_id: number) => {
     if (!project) return;
 
     const _step = steps.find((step) => step.stageId === step_id) ?? null;
     if (!_step || _step.stageId > project.currentStage) return;
 
+    setComments([]);
     changeStep(_step);
   };
 
@@ -96,8 +98,6 @@ export function ProjectProgress() {
     } else {
       setEndDate("Não definido!");
     }
-
-    setComments([...step.comments]);
   };
 
   const handleUploadFile = (event: any, _file: UploadFile) => {
@@ -129,7 +129,7 @@ export function ProjectProgress() {
   };
 
   const handleSubmitCommets = async () => {
-    if (!project) return;
+    if (!project || !currentStage) return;
 
     const message = comment.trim();
 
@@ -138,7 +138,7 @@ export function ProjectProgress() {
     try {
       const response = await projectsService.sendNewCommentProject<Comment>(project._id, {
         message,
-        stageId: project?.currentStage
+        stageId: currentStage?.stageId
       });
 
       if (response.status !== 201) {
@@ -148,7 +148,6 @@ export function ProjectProgress() {
       
       setComment("");
       setComments((prevComments) => [response.data, ...prevComments]);
-      console.log("Send Messsage!", comment);
     } catch (error) {
       console.error(error);
       toast("Erro ao enviar seu comentário.", { type: "error" });
@@ -254,7 +253,7 @@ export function ProjectProgress() {
               <textarea
                 id="comment"
                 name="comment"
-                rows={8}
+                rows={4}
                 cols={80}
                 placeholder="Faça seu comentário!"
                 value={comment}
@@ -271,10 +270,19 @@ export function ProjectProgress() {
 
             <section className="comments">
               {comments.map((message, index) => (
-                <p className="comment" key={index}>
-                  <strong>{message.full_name}: </strong>
-                  {message.comment}
-                </p>
+                <div className="d-flex" key={message._id}>
+                  <p
+                    className={`
+                      ${message.user_id === userLocalStorage.id 
+                      ? 'my-comment' 
+                      : 'team-comment'}`
+                    } 
+                    key={index}
+                  >
+                    <strong>{message.full_name}: </strong>
+                    {message.comment}
+                  </p>
+                </div>
               ))}
               {!!currentStage.comments.length && <div ref={lastRef} />}
             </section>
