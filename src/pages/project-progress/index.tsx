@@ -1,7 +1,6 @@
 import "./index.css";
 import { useEffect, useState, useRef } from "react";
-import stepsJson from "./steps.json";
-import { Comment, StepData, UploadFile } from "./types";
+import { Comment, UploadFile } from "./types";
 import { FaFileUpload } from "react-icons/fa";
 import { FcOk } from "react-icons/fc";
 import useIsElementVisible from "../../hooks/useIsElementVisible";
@@ -10,7 +9,6 @@ import { useParams } from "react-router-dom";
 import { TProject, TStages } from "@components/project/types";
 import ProjectsService from "@services/projects";
 import { useAuth } from "src/hooks/authContextProvider";
-import { getProjectStatus } from "@utils/project-functions";
 
 export function ProjectProgress() {
   const { projectId } = useParams();
