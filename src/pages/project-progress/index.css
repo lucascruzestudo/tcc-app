@@ -80,20 +80,7 @@
         .upload-files {
             display: flex;
             flex-direction: row;
-            
-           .files {
-                flex: 5;
-                div {
-                    width: 80%;
-                }
-                label {
-                    text-align: center;
-                }
-            }
-
-            .status-project {
-                flex: 2;
-            }
+            gap: 20px;
         }
         
         .comments-form {

@@ -1,9 +1,9 @@
 export const menus = [
-    {
-        title: "Inicio",
-        icon: "bx-grid-alt",
-        linkTo: "/project-progress"
-    },
+    //{
+    //  title: "Inicio",
+    //  icon: "bx-grid-alt",
+    //  linkTo: "/project-progress"
+    //},
     {
         title: "Projetos",
         icon: "bx-list-ul",

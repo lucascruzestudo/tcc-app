@@ -76,7 +76,7 @@ export function ProjectProgress() {
     if (!project) return;
 
     const _step = steps.find((step) => step.stageId === step_id) ?? null;
-    if (!_step || _step.stageId > project.currentStage) return;
+    if (!_step /*|| _step.stageId > project.currentStage*/) return;
 
     setComments([]);
     changeStep(_step);
@@ -105,15 +105,17 @@ export function ProjectProgress() {
 
     if (file.size > 100000) {
       toast(`Very large file. ${file.size}/${100000}`, { type: "error" });
+      event.target.value = null;
       return;
     }
 
+    /*
     // add docx/Word
     const extensionMap: Record<string, string> = {
       pdf: "application/pdf",
       txt: "text/plain",
     };
-
+    
     if (file.type !== extensionMap[_file.extension]) {
       toast(
         `Extension ${file.type} not supported - expected: ${_file.extension}`,
@@ -121,6 +123,7 @@ export function ProjectProgress() {
       );
       return;
     }
+    */
 
     // TODO: send file to api
     console.log("send file", file);
@@ -214,7 +217,7 @@ export function ProjectProgress() {
             }
 
             <section className="upload-files">
-              <div className="files">
+            <div className="files">
                 {currentStage.attachments.map((file) => (
 
                   <div key={file.id} className="file mb-3">
@@ -232,16 +235,6 @@ export function ProjectProgress() {
                     />
                   </div>
                 ))}
-              </div>
-
-              <div className="status-project">
-                <span>Status: </span> <br />
-                <p>
-                  {project && currentStage.stageId === project.currentStage 
-                    ? " Em andamento"
-                    : currentStage.completed ? " Concluido" : " Indisponível"
-                  }
-                </p>
               </div>
             </section>
 
