@@ -6,7 +6,7 @@ import { FcOk } from "react-icons/fc";
 import useIsElementVisible from "../../hooks/useIsElementVisible";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-import { TProject, TStages } from "@components/project/types";
+import { TFile, TProject, TStages } from "@components/project/types";
 import ProjectsService from "@services/projects";
 import { useAuth } from "src/hooks/authContextProvider";
 
@@ -98,7 +98,7 @@ export function ProjectProgress() {
     }
   };
 
-  const handleUploadFile = (event: any, _file: UploadFile) => {
+  const handleUploadFile = async (event: any, _file: UploadFile) => {
     if (event.cancelable) return;
 
     const file = event.target.files[0];
@@ -108,25 +108,30 @@ export function ProjectProgress() {
       event.target.value = null;
       return;
     }
-
-    /*
-    // add docx/Word
-    const extensionMap: Record<string, string> = {
-      pdf: "application/pdf",
-      txt: "text/plain",
-    };
     
-    if (file.type !== extensionMap[_file.extension]) {
-      toast(
-        `Extension ${file.type} not supported - expected: ${_file.extension}`,
-        { type: "error" }
-      );
+    console.log("send file", file);
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const response = await projectsService.uploadProjectFile(
+      project!._id, currentStage!.stageId, _file.id, formData
+    );
+
+    if (response.status !== 200) {
+      toast(`Error no upload.`, { type: "error" });
       return;
     }
-    */
 
-    // TODO: send file to api
-    console.log("send file", file);
+    //   {
+    //     "description": "Esse é a PNG de Relatório Parcial!",
+    //     "extension": "png",
+    //     "file_path": "tmp/files/projects/660ebd9a892ba53ca5d14e1e/stage_1/Screenshot_from_2024-04-13_10-05-24.png",
+    //     "filename": "Screenshot_from_2024-04-13_10-05-24.png",
+    //     "id": "660ef9febeb5d68ab1b4d70d",
+    //     "return_file_path": "tmp\\files\\projects\\660ebd9a892ba53ca5d14e1e\\stage_1\\logo.png"
+    // }
+
   };
 
   const handleSubmitCommets = async () => {
@@ -173,6 +178,19 @@ export function ProjectProgress() {
       setIsLoadingComments(false);
     }
   };
+
+  const handleDownloadFile = async (file: TFile) => {
+    const response = await projectsService.downloadProjectFile(
+      project!._id, currentStage!.stageId, file.id
+    );
+
+    if (response.status !== 200) {
+      toast(`Error no upload.`, { type: "error" });
+      return;
+    }
+
+    console.log(response)
+  }
 
   return (
     <div className="container-home">
@@ -222,10 +240,17 @@ export function ProjectProgress() {
 
                   <div key={file.id} className="file mb-3">
                     <label htmlFor={`file-${file.id}`} className="form-label">
-                      Tipo do arquivo (.{file.extension}) {file.send ? <FcOk className="mb-1" /> : ''}
+                      Tipo do arquivo (.{file.extension}) {file.filename ? <FcOk className="mb-1" /> : ''}
+                      <button 
+                        onClick={() => handleDownloadFile(file)} 
+                        type="button" 
+                        className="btn btn-link"
+                      >
+                        Fazer Download
+                      </button>
                     </label>
 
-                    <input 
+                    <input
                       className="form-control"
                       type="file"
                       name={`file-${file.id}`}

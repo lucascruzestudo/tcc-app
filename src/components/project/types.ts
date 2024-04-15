@@ -5,10 +5,12 @@ export type TMember = {
 };
 
 export type TFile = {
-    id: number;
+    id: string;
     extension: string;
-    send: boolean;
-    path: string;
+    filename: string;
+    file_path: string;
+    description: string;
+    return_file_path: string;
 }
 
 export type TStages = {

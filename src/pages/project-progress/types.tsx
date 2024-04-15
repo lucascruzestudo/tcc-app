@@ -1,7 +1,6 @@
 export interface UploadFile {
-    id: number;
+    id: string;
     extension: string;
-    send: boolean;
 }
 
 export interface Comment {

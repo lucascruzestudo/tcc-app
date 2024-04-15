@@ -47,4 +47,26 @@ export default class ProjectsService {
   getCommentsFromStage<T>(projectId: string, stageId: number): Promise<Response<T>> {
     return this.request<T>(() => api.get(`project/${projectId}/stage/${stageId}`));
   }
+ 
+  uploadProjectFile<T>(
+    projectId: string, 
+    stageId: number, 
+    fileId: string,
+    data: any,
+  ): Promise<Response<T>> {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
+    return this.request<T>(() => api.post(`project/${projectId}/${stageId}/file/${fileId}/upload`, data, config));
+  }
+
+  downloadProjectFile<T>(
+    projectId: string, 
+    stageId: number, 
+    fileId: string,
+  ): Promise<Response<T>> {
+    return this.request<T>(() => api.get(`project/${projectId}/${stageId}/file/download/${fileId}`));
+  }
 }
