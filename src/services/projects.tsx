@@ -1,4 +1,5 @@
 import api from "@config/api";
+import { AxiosRequestConfig } from "axios";
 
 type Response<T = any> = {
   status: number;
@@ -67,6 +68,9 @@ export default class ProjectsService {
     stageId: number, 
     fileId: string,
   ): Promise<Response<T>> {
-    return this.request<T>(() => api.get(`project/${projectId}/${stageId}/file/download/${fileId}`));
+    const config: AxiosRequestConfig = {
+      responseType: 'blob'
+    }
+    return this.request<T>(() => api.get(`project/${projectId}/${stageId}/file/download/${fileId}`, config));
   }
 }

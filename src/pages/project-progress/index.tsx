@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { TFile, TProject, TStages } from "@components/project/types";
 import ProjectsService from "@services/projects";
 import { useAuth } from "src/hooks/authContextProvider";
+import { formatFileName } from "@utils/project-functions";
 
 export function ProjectProgress() {
   const { projectId } = useParams();
@@ -103,7 +104,9 @@ export function ProjectProgress() {
 
     const file = event.target.files[0];
 
-    if (file.size > 100000) {
+    const max_size_file = 100000 * 5
+
+    if (file.size > max_size_file) {
       toast(`Very large file. ${file.size}/${100000}`, { type: "error" });
       event.target.value = null;
       return;
@@ -180,7 +183,7 @@ export function ProjectProgress() {
   };
 
   const handleDownloadFile = async (file: TFile) => {
-    const response = await projectsService.downloadProjectFile(
+    const response = await projectsService.downloadProjectFile<BlobPart>(
       project!._id, currentStage!.stageId, file.id
     );
 
@@ -189,7 +192,18 @@ export function ProjectProgress() {
       return;
     }
 
-    console.log(response)
+    try {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', file.filename);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode!.removeChild(link);
+    } catch (error) {
+        console.error('Error Download file:', error);
+    }
+
   }
 
   return (
@@ -240,14 +254,21 @@ export function ProjectProgress() {
 
                   <div key={file.id} className="file mb-3">
                     <label htmlFor={`file-${file.id}`} className="form-label">
-                      Tipo do arquivo (.{file.extension}) {file.filename ? <FcOk className="mb-1" /> : ''}
-                      <button 
-                        onClick={() => handleDownloadFile(file)} 
-                        type="button" 
-                        className="btn btn-link"
-                      >
-                        Fazer Download
-                      </button>
+                      <span>
+                        Tipo do arquivo (.{file.extension}) {file.filename ? <FcOk className="mb-1" /> : ''}
+                      </span>
+                      <br />
+                      <span>
+                        <strong>Último Upload:</strong> {formatFileName(file.filename, 30)} -
+
+                        <button 
+                          onClick={() => handleDownloadFile(file)} 
+                          type="button" 
+                          className="btn btn-link"
+                        >
+                          Fazer Download
+                        </button>  
+                      </span>
                     </label>
 
                     <input

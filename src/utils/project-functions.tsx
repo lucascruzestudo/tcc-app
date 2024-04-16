@@ -6,3 +6,14 @@ export const getProjectStatus = (_project: TProject) => {
     else if (_project.active) return "Em andamento"
     else return "Pausado"
 }
+
+export const formatFileName = (fileName: string, maxLength: number) => {
+    if (fileName.length <= maxLength) {
+        return fileName;
+    } else {
+        const extension = fileName.split('.').pop() || '';
+        const fileNameWithoutExtension = fileName.slice(0, - (extension.length + 1));
+        const truncatedFileName = fileNameWithoutExtension.slice(0, maxLength - 3);
+        return truncatedFileName + '...' + extension;
+    }
+}
