@@ -1,11 +1,11 @@
-import "./index.css";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { UpdateUser } from "./types"
-import { useAuth } from "src/hooks/authContextProvider";
-import UserService from "@services/user";
 import defaultProfile from "@assets/profile.jpeg";
+import UserService from "@services/user";
+import { useEffect, useState } from "react";
 import { TbPhotoEdit } from "react-icons/tb";
+import { toast } from "react-toastify";
+import { useAuth } from "src/hooks/authContextProvider";
+import "./index.css";
+import { UpdateUser } from "./types";
 
 export function MyAccount() {
     const userLocalStorage = useAuth().user!
@@ -38,7 +38,11 @@ export function MyAccount() {
         
         setUser(user);
 
-        userService.getProfile(userLocalStorage.id).then(r => console.log(r));
+        userService.getProfile<BlobPart>(userLocalStorage.id).then(({data}) => {
+            const blob = new Blob([data]);
+            const url = URL.createObjectURL(blob);
+            setProfileImg(url);
+        });
     }, []);
 
     const handleUpdateGeneralData = async () => {
@@ -116,15 +120,11 @@ export function MyAccount() {
         
         const id: string = userLocalStorage.id
 
-        const response = await userService.editprofile(id, formData);
+        await userService.editprofile(id, formData);
 
-        console.log(response);
+        const response = await userService.getProfile(id);
 
-        const response2 = await userService.getProfile(id);
-
-        console.log(response2);
-
-        if(false) setProfileImg(null)
+        setProfileImg(response.data);
     };
 
     return(

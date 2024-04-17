@@ -34,6 +34,8 @@ export default class UserService {
     }
     
     getProfile<T>(id: string): Promise<Response<T>> {
-      return this.request<T>(() => api.get(`/photo-profile/${id}`));
+      return this.request<T>(() => api.get(`/photo-profile/${id}`, {
+        responseType: 'blob'
+      }));
     }
 }
