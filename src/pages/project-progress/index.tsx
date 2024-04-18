@@ -1,15 +1,15 @@
-import "./index.css";
-import { useEffect, useState, useRef } from "react";
-import { Comment, UploadFile } from "./types";
-import { FaFileUpload } from "react-icons/fa";
-import { FcOk } from "react-icons/fc";
-import useIsElementVisible from "../../hooks/useIsElementVisible";
-import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
 import { TFile, TProject, TStages } from "@components/project/types";
 import ProjectsService from "@services/projects";
-import { useAuth } from "src/hooks/authContextProvider";
 import { formatFileName } from "@utils/project-functions";
+import { useEffect, useRef, useState } from "react";
+import { FaFileUpload } from "react-icons/fa";
+import { FcOk } from "react-icons/fc";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useAuth } from "src/hooks/authContextProvider";
+import useIsElementVisible from "../../hooks/useIsElementVisible";
+import "./index.css";
+import { Comment, UploadFile } from "./types";
 
 export function ProjectProgress() {
   const { projectId } = useParams();
@@ -249,39 +249,64 @@ export function ProjectProgress() {
             }
 
             <section className="upload-files">
-            <div className="files">
                 {currentStage.attachments.map((file) => (
+                  <>
+                    <div key={file.id} className="file row">
+                      <div className="col-4 info-file">
+                        <div className="">
+                          <label htmlFor={`file-${file.id}`} className="form-label">
+                            Tipo do arquivo (.{file.extension}) {file.filename ? <FcOk className="mb-1" /> : ''}
+                          </label>
 
-                  <div key={file.id} className="file mb-3">
-                    <label htmlFor={`file-${file.id}`} className="form-label">
-                      <span>
-                        Tipo do arquivo (.{file.extension}) {file.filename ? <FcOk className="mb-1" /> : ''}
-                      </span>
-                      <br />
-                      <span>
-                        <strong>Último Upload:</strong> {formatFileName(file.filename, 30)} -
+                          <input
+                            className="form-control"
+                            type="file"
+                            name={`file-${file.id}`}
+                            id={`file-${file.id}`}
+                            accept={`.${file.extension}`}
+                            onChange={(event) => handleUploadFile(event, file)}
+                          />
+                        </div>
+                      </div>
 
-                        <button 
-                          onClick={() => handleDownloadFile(file)} 
-                          type="button" 
-                          className="btn btn-link"
-                        >
-                          Fazer Download
-                        </button>  
-                      </span>
-                    </label>
+                      <div className="col-4 info-file">
+                        <div className="attachment">
+                          <div><strong>Upload do Aluno: </strong></div>
+                          <div>
+                            <button 
+                              onClick={() => handleDownloadFile(file)} 
+                              type="button" 
+                              className="btn btn-link p-0"
+                            >
+                              {formatFileName(file.filename, 29)}
+                            </button>
+                          </div> 
+                        </div>
+                      </div>
 
-                    <input
-                      className="form-control"
-                      type="file"
-                      name={`file-${file.id}`}
-                      id={`file-${file.id}`}
-                      accept={`.${file.extension}`}
-                      onChange={(event) => handleUploadFile(event, file)}
-                    />
-                  </div>
+                      <div className="col-4 info-file">
+                        <div className="attachment">
+                          {file.return_file_path && (<>
+                            <div>
+                              <strong>Retorno do avaliador: </strong>
+                            </div>
+                            <div>
+                              <button 
+                              onClick={() => handleDownloadFile(file)} 
+                              type="button" 
+                              className="btn btn-link p-0"
+                            >
+                              {formatFileName(file.filename, 25)}
+                            </button> 
+                            </div>
+                          </>)}
+                        </div>
+                      </div>
+
+                    </div>
+                    <hr />
+                  </>
                 ))}
-              </div>
             </section>
 
             <section className="comments-form">
