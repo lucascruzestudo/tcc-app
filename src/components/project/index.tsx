@@ -1,10 +1,10 @@
+import { getProjectStatus } from "@utils/project-functions";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import ProjectsService from "src/services/projects";
 import "./index.css";
 import { TProject } from "./types";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useState } from "react";
-import { getProjectStatus } from "@utils/project-functions";
 
 export function Project({ project, userRole }: { project: TProject, userRole: number }) {
     const navigate = useNavigate();
@@ -103,7 +103,7 @@ export function Project({ project, userRole }: { project: TProject, userRole: nu
                         {getHour()}
                     </p>
                     <div className="mt-3 btns">
-                        <button className="btn btn-primary" onClick={() => handleAccessProject(project._id)}>
+                        <button className="btn btn-primary" disabled={!project.creationApproved} onClick={() => handleAccessProject(project._id)}>
                             Acessar
                         </button>
                         <button className="btn btn-warning" onClick={() => handleEditProject(project._id)}>
