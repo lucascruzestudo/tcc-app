@@ -186,9 +186,9 @@ export function ProjectProgress() {
     }
   };
 
-  const handleDownloadFile = async (file: TFile) => {
+  const handleDownloadFile = async (file: TFile, fileType: "file_path" | "return_file_path") => {
     const response = await projectsService.downloadProjectFile<BlobPart>(
-      project!._id, currentStage!.stageId, file.id
+      project!._id, currentStage!.stageId, file.id, fileType
     );
 
     if (response.status !== 200) {
@@ -276,7 +276,7 @@ export function ProjectProgress() {
                           <div className="pt-1 pb-2"><strong>Upload do Aluno: </strong></div>
                           <div>
                             <button 
-                              onClick={() => handleDownloadFile(file)} 
+                              onClick={() => handleDownloadFile(file, "file_path")} 
                               type="button" 
                               className="btn btn-link p-0"
                             >
@@ -291,11 +291,11 @@ export function ProjectProgress() {
                           <div className="pt-1 pb-2"><strong>Retorno do avaliador: </strong></div>
                             <div>
                               <button 
-                              onClick={() => handleDownloadFile(file)} 
+                              onClick={() => handleDownloadFile(file, "return_file_path")} 
                               type="button" 
                               className="btn btn-link p-0"
                             >
-                              {formatFileName(file.filename, 25)}
+                              {formatFileName(file.return_filename, 25)}
                             </button> 
                             </div>
                         </>)}

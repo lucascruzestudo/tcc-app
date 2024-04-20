@@ -67,10 +67,13 @@ export default class ProjectsService {
     projectId: string, 
     stageId: number, 
     fileId: string,
+    filetype: "file_path" | "return_file_path",
   ): Promise<Response<T>> {
     const config: AxiosRequestConfig = {
       responseType: 'blob'
     }
-    return this.request<T>(() => api.get(`project/${projectId}/${stageId}/file/download/${fileId}`, config));
+    return this.request<T>(() => api.get(
+      `project/${projectId}/${stageId}/file/${fileId}/filetype/${filetype}/download`, config)
+    );
   }
 }

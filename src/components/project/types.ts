@@ -9,6 +9,7 @@ export type TFile = {
     extension: string;
     filename: string;
     file_path: string;
+    return_filename: string;
     description: string;
     return_file_path: string;
 }

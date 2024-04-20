@@ -21,3 +21,4 @@ export interface StepData {
     upload_files: Array<UploadFile>;
     comments: Array<Comment>;
 }
+
