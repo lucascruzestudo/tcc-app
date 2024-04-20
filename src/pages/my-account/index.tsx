@@ -10,7 +10,7 @@ import { UpdateUser } from "./types";
 export function MyAccount() {
     const userLocalStorage = useAuth().user!
     const userService = new UserService()
-    const [profileImg, setProfileImg] = useState<any>(defaultProfile);
+    const [profileImg, setProfileImg] = useState<string>('');
      
     const [user, setUser] = useState<UpdateUser>({
         full_name: "",
@@ -39,8 +39,12 @@ export function MyAccount() {
         setUser(user);
 
         userService.getProfile<BlobPart>(userLocalStorage.id).then(({data}) => {
+            if (!data) return;
+            if (profileImg) URL.revokeObjectURL(profileImg);
+
             const blob = new Blob([data]);
             const url = URL.createObjectURL(blob);
+            //useAuth().setUser({...userLocalStorage, profile_picture: url});
             setProfileImg(url);
         });
     }, []);
@@ -122,9 +126,15 @@ export function MyAccount() {
 
         await userService.editprofile(id, formData);
 
-        const response = await userService.getProfile(id);
+        userService.getProfile<BlobPart>(userLocalStorage.id).then(({data}) => {
+            if (!data) return;
+            if (profileImg) URL.revokeObjectURL(profileImg);
 
-        setProfileImg(response.data);
+            const blob = new Blob([data]);
+            const url = URL.createObjectURL(blob);
+            //useAuth().setUser({...userLocalStorage, profile_picture: url});
+            setProfileImg(url);
+        });
     };
 
     return(
@@ -133,7 +143,7 @@ export function MyAccount() {
             <div className="row mb-5">
                 <div className="col">
                     <div className="profile-picture">
-                        <img src={profileImg} alt="Foto de Perfil" id="profile-img" />
+                        <img src={profileImg || defaultProfile} alt="Foto de Perfil" id="profile-img" />
                         <input onChange={handlePhotoChange} type="file" id="file-input" />
                         <label id="file-input" htmlFor="file-input"><TbPhotoEdit /></label>
                     </div>
