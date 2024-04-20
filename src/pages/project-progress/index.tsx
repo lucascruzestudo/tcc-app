@@ -77,7 +77,7 @@ export function ProjectProgress() {
     if (!project) return;
 
     const _step = steps.find((step) => step.stageId === step_id) ?? null;
-    if (!_step /*|| _step.stageId > project.currentStage*/) return;
+    if (!_step || _step.stageId > project.currentStage) return;
 
     setComments([]);
     changeStep(_step);
@@ -100,7 +100,7 @@ export function ProjectProgress() {
   };
 
   const handleUploadFile = async (event: any, _file: UploadFile) => {
-    if (event.cancelable) return;
+    if (!project || !currentStage || event.cancelable) return;
 
     const file = event.target.files[0];
 
@@ -112,13 +112,11 @@ export function ProjectProgress() {
       return;
     }
     
-    console.log("send file", file);
-
     const formData = new FormData()
     formData.append('file', file)
 
-    const response = await projectsService.uploadProjectFile(
-      project!._id, currentStage!.stageId, _file.id, formData
+    const response = await projectsService.uploadProjectFile<TFile>(
+      project._id, currentStage.stageId, _file.id, formData
     );
 
     if (response.status !== 200) {
@@ -126,15 +124,21 @@ export function ProjectProgress() {
       return;
     }
 
-    //   {
-    //     "description": "Esse é a PNG de Relatório Parcial!",
-    //     "extension": "png",
-    //     "file_path": "tmp/files/projects/660ebd9a892ba53ca5d14e1e/stage_1/Screenshot_from_2024-04-13_10-05-24.png",
-    //     "filename": "Screenshot_from_2024-04-13_10-05-24.png",
-    //     "id": "660ef9febeb5d68ab1b4d70d",
-    //     "return_file_path": "tmp\\files\\projects\\660ebd9a892ba53ca5d14e1e\\stage_1\\logo.png"
-    // }
+    const newAttachments = currentStage.attachments.map((att) => {
+      if(att.id === response.data.id) return response.data
+      return att
+    })
 
+    const _stage = {...currentStage, attachments: newAttachments}
+
+    setCurrentStage(_stage);
+
+    const _stages = project.stages.map((stg) => {
+      if(stg.stageId === _stage.stageId) return _stage
+      return stg
+    });
+
+    setProject({...project, stages: _stages});
   };
 
   const handleSubmitCommets = async () => {
@@ -249,47 +253,42 @@ export function ProjectProgress() {
             }
 
             <section className="upload-files">
-                {currentStage.attachments.map((file) => (
-                  <>
-                    <div key={file.id} className="file row">
-                      <div className="col-4 info-file">
-                        <div className="">
-                          <label htmlFor={`file-${file.id}`} className="form-label">
-                            Tipo do arquivo (.{file.extension}) {file.filename ? <FcOk className="mb-1" /> : ''}
-                          </label>
+                {currentStage.attachments.map((file, index) => (
+                  <div key={index}>
+                    <div key={file.id} className="files">
+                      <div className="attachment upload-area">
+                        <label htmlFor={`file-${file.id}`} className="form-label">
+                          Tipo do arquivo (.{file.extension}) {file.filename ? <FcOk title="Upload feito" className="mb-1" /> : ''}
+                        </label>
 
-                          <input
-                            className="form-control"
-                            type="file"
-                            name={`file-${file.id}`}
-                            id={`file-${file.id}`}
-                            accept={`.${file.extension}`}
-                            onChange={(event) => handleUploadFile(event, file)}
-                          />
-                        </div>
+                        <input
+                          className="form-control"
+                          type="file"
+                          name={`file-${file.id}`}
+                          id={`file-${file.id}`}
+                          accept={`.${file.extension}`}
+                          onChange={(event) => handleUploadFile(event, file)}
+                        />
                       </div>
 
-                      <div className="col-4 info-file">
-                        <div className="attachment">
-                          <div><strong>Upload do Aluno: </strong></div>
+                      <div className="attachment">
+                        {file.file_path && (<>
+                          <div className="pt-1 pb-2"><strong>Upload do Aluno: </strong></div>
                           <div>
                             <button 
                               onClick={() => handleDownloadFile(file)} 
                               type="button" 
                               className="btn btn-link p-0"
                             >
-                              {formatFileName(file.filename, 29)}
+                              {formatFileName(file.filename, 25)}
                             </button>
                           </div> 
-                        </div>
+                        </>)}
                       </div>
 
-                      <div className="col-4 info-file">
-                        <div className="attachment">
-                          {file.return_file_path && (<>
-                            <div>
-                              <strong>Retorno do avaliador: </strong>
-                            </div>
+                      <div className="attachment">
+                        {file.return_file_path && (<>
+                          <div className="pt-1 pb-2"><strong>Retorno do avaliador: </strong></div>
                             <div>
                               <button 
                               onClick={() => handleDownloadFile(file)} 
@@ -299,13 +298,11 @@ export function ProjectProgress() {
                               {formatFileName(file.filename, 25)}
                             </button> 
                             </div>
-                          </>)}
-                        </div>
+                        </>)}
                       </div>
-
                     </div>
-                    <hr />
-                  </>
+                    <hr className="p-3"/>
+                  </div>
                 ))}
             </section>
 

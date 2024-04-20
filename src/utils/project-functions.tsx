@@ -8,6 +8,8 @@ export const getProjectStatus = (_project: TProject) => {
 }
 
 export const formatFileName = (fileName: string, maxLength: number) => {
+    if (!(typeof fileName === 'string')) return ''
+    
     if (fileName.length <= maxLength) {
         return fileName;
     } else {
