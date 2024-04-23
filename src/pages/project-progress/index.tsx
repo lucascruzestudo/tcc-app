@@ -186,9 +186,9 @@ export function ProjectProgress() {
     }
   };
 
-  const handleDownloadFile = async (file: TFile, fileType: "file_path" | "return_file_path") => {
+  const handleDownloadFile = async (file: TFile, evaluated_document: boolean) => {
     const response = await projectsService.downloadProjectFile<BlobPart>(
-      project!._id, currentStage!.stageId, file.id, fileType
+      project!._id, currentStage!.stageId, file.id, { evaluated_document }
     );
 
     if (response.status !== 200) {
@@ -196,14 +196,17 @@ export function ProjectProgress() {
       return;
     }
 
+    const filename = evaluated_document ? file.return_filename : file.filename
+
     try {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', file.filename);
+        link.setAttribute('download', filename);
         document.body.appendChild(link);
         link.click();
         link.parentNode!.removeChild(link);
+        console.log('OPA');
     } catch (error) {
         console.error('Error Download file:', error);
     }
@@ -276,7 +279,7 @@ export function ProjectProgress() {
                           <div className="pt-1 pb-2"><strong>Upload do Aluno: </strong></div>
                           <div>
                             <button 
-                              onClick={() => handleDownloadFile(file, "file_path")} 
+                              onClick={() => handleDownloadFile(file, false)} 
                               type="button" 
                               className="btn btn-link p-0"
                             >
@@ -291,7 +294,7 @@ export function ProjectProgress() {
                           <div className="pt-1 pb-2"><strong>Retorno do avaliador: </strong></div>
                             <div>
                               <button 
-                              onClick={() => handleDownloadFile(file, "return_file_path")} 
+                              onClick={() => handleDownloadFile(file, true)} 
                               type="button" 
                               className="btn btn-link p-0"
                             >
