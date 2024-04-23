@@ -1,11 +1,11 @@
-import "./index.css";
 import { useEffect, useState } from "react";
-import { Project } from "../../components/project";
-import { TProject } from "../../components/project/types";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import ProjectsService from "src/services/projects";
 import { useAuth } from "src/hooks/authContextProvider";
+import ProjectsService from "src/services/projects";
+import { Project } from "../../components/project";
+import { TProject } from "../../components/project/types";
+import "./index.css";
 
 
 export function Projects() {
@@ -39,7 +39,7 @@ export function Projects() {
   const handleNavigate = (path: string) => navigate(path);
 
   return (
-    <div className="container-projects">
+    <div className="container-projects mb-5">
       <div className="new-project"></div>
 
       <div className="list-projects">
