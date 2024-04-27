@@ -1,13 +1,13 @@
-import "./index.css"
-import { useState } from "react"
-import { ToastContainer, toast } from "react-toastify";
-import { 
-    validEmail, 
-    validMarchet, 
-    validPassword, 
-} from "@utils/validators";
-import AuthService from "src/services/auth";
 import { LocalStorangeUser } from "@utils/types";
+import {
+    validEmail,
+    validMarchet,
+    validPassword,
+} from "@utils/validators";
+import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import AuthService from "src/services/auth";
+import "./index.css";
 
 class Validators {
     
@@ -85,7 +85,11 @@ export function Auth() {
         localStorage.setItem("accessToken", access_token);
         localStorage.setItem("refreshToken", refresh_token);
 
-        window.location.href = '/projects';
+        // const path = userData.role === 3 && userData.projectIds.length === 1  
+        //     ? `/project-progress/${userData.projectIds[0]}`
+        //     : '/projects';
+            
+        window.location.href = '/projects'
     }
 
     const submitForgotPassword = () => {

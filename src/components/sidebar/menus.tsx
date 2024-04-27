@@ -1,9 +1,4 @@
-export const menus = [
-    //{
-    //  title: "Inicio",
-    //  icon: "bx-grid-alt",
-    //  linkTo: "/project-progress"
-    //},
+export const AllMenus: Menus = [
     {
         title: "Projetos",
         icon: "bx-list-ul",
@@ -15,3 +10,9 @@ export const menus = [
         linkTo: "/my-account"
     },
 ]
+
+export type Menus = Array<{
+    title: string;
+    icon: string;
+    linkTo: string;
+}>

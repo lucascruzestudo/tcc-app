@@ -1,4 +1,4 @@
-import { UserRole } from "./enums"
+import { UserRole } from "./enums";
 
 /**
  * Users
@@ -11,4 +11,5 @@ export type LocalStorangeUser = {
     profile_picture: string;
     access_token: string;
     refresh_token: string;
+    // projectIds: Array<string>;
 }

@@ -1,15 +1,38 @@
-import { useState } from "react";
-import "./index.css"
-import { Link } from "react-router-dom";
-import { menus } from "./menus";
-import AuthService from "src/services/auth";
-import { useAuth } from "src/hooks/authContextProvider";
-import { UserRole } from "@utils/enums";
 import defaultProfile from "@assets/profile.jpeg";
+import { UserRole } from "@utils/enums";
+// import { LocalStorangeUser } from "@utils/types";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "src/hooks/authContextProvider";
+import AuthService from "src/services/auth";
+import "./index.css";
+import { AllMenus, Menus } from "./menus";
 
 export function SideBar() {
-    const userLocalStorage = useAuth().user!
+    const userLocalStorage = useAuth().user
     const authService = new AuthService();
+    const [menus, setMenus] = useState<Menus>([])
+
+    // function getMenus(user: LocalStorangeUser): Menus {
+    //     if (user.role !== 3) return AllMenus
+        
+    //     let _menus = AllMenus.filter(menu => menu.linkTo !== '/projects');
+
+    //     if (user.projectIds.length === 1) {
+    //         _menus.unshift({
+    //             title: "Projeto",
+    //             icon: "bx-list-ul",
+    //             linkTo: `/project-progress/${user.projectIds[0]}`
+    //         });
+    //     }
+
+    //     return _menus
+    // }
+
+    useEffect(() => {
+        // const _menus = userLocalStorage ? getMenus(userLocalStorage) : []
+        setMenus(AllMenus);
+    }, [userLocalStorage])
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -60,10 +83,10 @@ export function SideBar() {
 
                 <li className="profile">
                     <div className="profile_details">
-                        <img src={userLocalStorage.profile_picture || defaultProfile} alt="profile image" />
+                        <img src={userLocalStorage!.profile_picture || defaultProfile} alt="profile image" />
                         <div className="profile_content">
-                            <div className="name">{userLocalStorage.full_name}</div>
-                            <div className="designation">{getProfileName(userLocalStorage.role)}</div>
+                            <div className="name">{userLocalStorage!.full_name}</div>
+                            <div className="designation">{getProfileName(userLocalStorage!.role)}</div>
                         </div>
                     </div>
                     <i className="bx bx-log-out" id="log_out" onClick={handleLogout}></i>

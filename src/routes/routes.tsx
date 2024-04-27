@@ -1,8 +1,8 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
-import { ProjectProgress, NotFound404, MyAccount } from "../pages";
-import PrivateRoutes from "./privateRoutes";
+import { Navigate, createBrowserRouter } from "react-router-dom";
+import { MyAccount, NotFound404, ProjectProgress } from "../pages";
 import { Projects } from "../pages/projects";
 import { RetrieveProject } from "../pages/retrieve-project";
+import PrivateRoutes from "./privateRoutes";
 
 export const router = createBrowserRouter([
     {
