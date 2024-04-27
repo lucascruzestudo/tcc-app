@@ -1,6 +1,6 @@
 import defaultProfile from "@assets/profile.jpeg";
 import { UserRole } from "@utils/enums";
-// import { LocalStorangeUser } from "@utils/types";
+import { LocalStorangeUser } from "@utils/types";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "src/hooks/authContextProvider";
@@ -13,25 +13,27 @@ export function SideBar() {
     const authService = new AuthService();
     const [menus, setMenus] = useState<Menus>([])
 
-    // function getMenus(user: LocalStorangeUser): Menus {
-    //     if (user.role !== 3) return AllMenus
+    function getMenus(user: LocalStorangeUser): Menus {
+        let _menus = AllMenus
+
+        if (user.role === 2) {
+            _menus = _menus.filter(menu => menu.linkTo !== '/projects/final-approval');
+        }
         
-    //     let _menus = AllMenus.filter(menu => menu.linkTo !== '/projects');
+        // if (user.projectIds.length === 1) {
+        //     _menus.unshift({
+        //         title: "Projeto",
+        //         icon: "bx-list-ul",
+        //         linkTo: `/project-progress/${user.projectIds[0]}`
+        //     });
+        // }
 
-    //     if (user.projectIds.length === 1) {
-    //         _menus.unshift({
-    //             title: "Projeto",
-    //             icon: "bx-list-ul",
-    //             linkTo: `/project-progress/${user.projectIds[0]}`
-    //         });
-    //     }
-
-    //     return _menus
-    // }
+        return _menus
+    }
 
     useEffect(() => {
-        // const _menus = userLocalStorage ? getMenus(userLocalStorage) : []
-        setMenus(AllMenus);
+        const _menus = userLocalStorage ? getMenus(userLocalStorage) : []
+        setMenus(_menus);
     }, [userLocalStorage])
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -74,7 +76,7 @@ export function SideBar() {
                 {menus.map(menu => (
                     <li key={menu.title}>
                         <Link to={menu.linkTo}>
-                            <i className={`bx ${menu.icon}`} ></i>
+                            <i className={`${menu.icon}`} ></i>
                             <span className="link_name">{menu.title}</span>
                         </Link>
                         <span className="tooltip">{menu.title}</span>

@@ -1,0 +1,60 @@
+.container-project-final {
+    background-color: rgb(254, 255, 198);
+    
+    height: auto;
+    
+    border-radius: 10px;
+    padding: 10px;
+    margin: 15px 0px;
+
+    @media screen and (max-width: 750px) {  
+        width: 90%;
+    }
+
+    @media screen and (min-width: 750px) and (max-width: 1300px) {
+        width: 80%;
+    }
+
+    @media screen and (min-width: 1300px) {
+        width: 60%;
+    }
+    
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        flex-wrap: nowrap;
+    }
+
+    .description {
+        text-align: justify;
+    }
+
+    .body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .header :nth-child(1) {
+        max-width: 80%;
+    }
+
+    .btns {
+        .btn-warning {
+            color: #ffffff;
+        }
+
+        .btn {
+            margin: 3px;
+        }
+    }
+
+    .card-header {
+        padding: 5px 0px;
+    }
+
+}

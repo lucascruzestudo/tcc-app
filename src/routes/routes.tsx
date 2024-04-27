@@ -1,4 +1,5 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
+import { ProjectsFinalApproval } from "src/pages/projects-final-approval";
 import { MyAccount, NotFound404, ProjectProgress } from "../pages";
 import { Projects } from "../pages/projects";
 import { RetrieveProject } from "../pages/retrieve-project";
@@ -19,6 +20,10 @@ export const router = createBrowserRouter([
                 element: <ProjectProgress />
             },
             {
+                path: "/projects/final-approval",
+                element: <ProjectsFinalApproval />
+            },
+            {
                 path: "/projects",
                 element: <Projects />
             },
@@ -36,4 +41,8 @@ export const router = createBrowserRouter([
             },
         ]
     },
+    {
+        path: "/not-found",
+        element: <NotFound404 />,
+    }
 ])
