@@ -77,4 +77,12 @@ export default class ProjectsService {
       `project/${projectId}/${stageId}/file/${fileId}/download`, config)
     );
   }
+
+  proceedStage<T>(projectId: string): Promise<Response<T>> {
+    return this.request<T>(() => api.put(`project/${projectId}/proceed`));
+  }
+
+  revertStage<T>(projectId: string, stageId: number): Promise<Response<T>> {
+    return this.request<T>(() => api.put(`project/${projectId}/stage/${stageId}/revert`));
+  }
 }

@@ -213,6 +213,37 @@ export function ProjectProgress() {
 
   }
 
+  const handleApproveStage = async () => {
+    if (!projectId || !currentStage) return;
+
+    if (project?.currentStage !== currentStage.stageId) {
+      toast(`Ainda não é possivel aprovar essa etapa do projeto.`, { type: "error" });
+      return
+    }
+
+    const response = await projectsService.proceedStage(projectId);
+
+    if (response.status != 200) {
+      toast(`Error ao aprovar etapa atual.`, { type: "error" });
+      return
+    }
+
+    init();
+  }
+
+  const handleRevertStage = async (stageId: number) => {
+    if (!projectId || !currentStage || stageId < 1) return;
+
+    const response = await projectsService.revertStage(projectId, stageId);
+
+    if (response.status != 200) {
+      toast(`Error ao aprovar etapa atual.`, { type: "error" });
+      return
+    }
+
+    init();
+  }
+
   return (
     <div className="container-home">
       <div className="steps">
@@ -265,6 +296,7 @@ export function ProjectProgress() {
                         </label>
 
                         <input
+                          disabled={currentStage?.completed || false} 
                           className="form-control"
                           type="file"
                           name={`file-${file.id}`}
@@ -322,6 +354,7 @@ export function ProjectProgress() {
                 onChange={(e) => setComment(e.target.value)}
               ></textarea>
               <button
+                disabled={currentStage?.completed || false} 
                 className="mt-3 btn btn-primary"
                 type="button"
                 onClick={handleSubmitCommets}
@@ -354,6 +387,30 @@ export function ProjectProgress() {
             )}
           </>
         )}
+
+        {userLocalStorage.role !== 3 && currentStage && 
+          <div className="approve-stage">
+            { (currentStage.completed || false) && currentStage.stageId 
+              ?
+                <button 
+                    onClick={() => handleRevertStage(currentStage.stageId)} 
+                    type="button" 
+                    className="btn btn-warning"
+                  >
+                    Volta para essa Etapa
+                </button>
+              :
+                <button 
+                  onClick={handleApproveStage} 
+                  type="button" 
+                  className="btn btn-success"
+                >
+                    Aprovar Etapa
+                </button>
+            }
+          </div>
+        }
+
       </div>
     </div>
   );

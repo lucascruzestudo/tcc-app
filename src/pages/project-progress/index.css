@@ -161,5 +161,25 @@
         .moreComments {
             margin-top: 15px;
         }
+
+
+        .approve-stage {
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: row;
+            align-items: center;
+            margin-top: 20px;
+
+            button {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 20px;
+                border-radius: 10px;
+                cursor: pointer;
+                text-align: center;
+                font-size: medium;
+            }
+        }
     }
 }
