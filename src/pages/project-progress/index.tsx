@@ -395,7 +395,7 @@ export function ProjectProgress() {
                 <button 
                     onClick={() => handleRevertStage(currentStage.stageId)} 
                     type="button" 
-                    className="btn btn-warning"
+                    className="btn btn-secondary"
                   >
                     Volta para essa Etapa
                 </button>
