@@ -1,23 +1,16 @@
-import { getProjectStatus } from "@utils/project-functions";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import ProjectsService from "src/services/projects";
 import "./index.css";
 import { TProject } from "./types";
 
-export function Project({ project, userRole }: { project: TProject, userRole: number }) {
+export function ProjectFinalApproval({ project }: { project: TProject }) {
     const navigate = useNavigate();
     const expectedCompletion = new Date(project.expectedCompletion);
-    const projectsService = new ProjectsService();
     
     const [_project, _setProject] = useState<TProject>(project);
     
-    const handleAccessProject = (id: string): void => navigate(`/project-progress/${id}`);
-    const handleEditProject = (id: string): void => navigate(`/edit-project/${id}`);
-
-    const getStatus = () => getProjectStatus(_project);
-
+    const handleAccessProject = (id: string): void => navigate(`/project-final-approval/${id}`);
+    
     function getDate() {
         const year = expectedCompletion.getFullYear();
         const month = expectedCompletion.getMonth() + 1;
@@ -32,19 +25,9 @@ export function Project({ project, userRole }: { project: TProject, userRole: nu
         return `${hours < 10 ? '0' + hours : hours}:${ minutes < 10 ? '0' + minutes : minutes}`
     }
 
-    async function handleApproveProject (approve: boolean) {
-        const response = await projectsService.approvalProject(project._id, { approve });
-
-        if (response.status !== 200) {
-            toast("Opss. Não foi possivel concluir a operação!", { type: "error" });  
-            return;
-        }
-        
-        _setProject({..._project, creationApproved: approve})
-    }
     
     return (
-        <div className={`card container-project ${_project.creationApproved ? 'card-blue' : 'card-yellow'}`}>
+        <div className={`card container-project-final ${_project.completed ? 'card-approved' : 'card-pending-approval'}`}>
             
             <div className="header">
                 <p>
@@ -52,22 +35,8 @@ export function Project({ project, userRole }: { project: TProject, userRole: nu
                     {_project.projectName}
                 </p>
                 <p>
-                    <strong>Status: </strong>
-                    {getStatus()}
+                    <strong>Status: {project.completed ? 'Aprovado' : 'Aguardando aprovação.'}</strong>
                 </p>
-                {userRole === 1 && 
-                    <div className="form-check form-switch">
-                        <input onChange={(e) => handleApproveProject(e.target.checked)} 
-                            className="form-check-input" 
-                            type="checkbox" 
-                            id="flexSwitchCheckApproveTCC"
-                            checked={_project.creationApproved}
-                        />
-                        <label className="form-check-label" htmlFor="flexSwitchCheckApproveTCC">
-                            {project.creationApproved ? 'Reprovar' : 'Aprovar'} Ideia
-                        </label>
-                    </div>
-                }
             </div>
 
             <hr className="p-0 m-0 mt-1 mb-3"/>
@@ -103,11 +72,8 @@ export function Project({ project, userRole }: { project: TProject, userRole: nu
                         {getHour()}
                     </p>
                     <div className="mt-3 btns">
-                        <button className="btn btn-primary" disabled={!project.creationApproved} onClick={() => handleAccessProject(project._id)}>
-                            Acessar
-                        </button>
-                        <button className="btn btn-warning" onClick={() => handleEditProject(project._id)}>
-                            Editar
+                        <button className="btn btn-primary" onClick={() => handleAccessProject(project._id)}>
+                            Analisar
                         </button>
                     </div>
                 </div>

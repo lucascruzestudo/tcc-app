@@ -7,9 +7,9 @@ export function NotFound404() {
             <div className="notfound">
                 <div className="notfound-404">
                     <h1>Oops!</h1>
-                    <h2>404 - The Page can"t be found</h2>
+                    <h2>404 - Página não encontrada!</h2>
                 </div>
-                <Link to="/">Go TO Home</Link>
+                <Link to="/">Voltar para o inicio</Link>
             </div>
         </div>
     )

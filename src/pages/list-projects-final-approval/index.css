@@ -1,0 +1,22 @@
+.container-projects {
+
+    .list-projects-final {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        
+    }
+
+    .btn-new-project {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        text-align: center;
+        font-size: medium;
+    }
+    
+}

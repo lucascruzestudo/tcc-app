@@ -1,35 +1,57 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
-import { Home, NotFound404, Auth, Settings } from "../pages";
+import {
+    ListProjects,
+    ListProjectsFinalApproval,
+    MyAccount,
+    NotFound404,
+    ProjectProgress,
+    ProjectProgressFinalApproval,
+    RetrieveProject
+} from "@pages/index";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import PrivateRoutes from "./privateRoutes";
-import { Projects } from "../pages/projects";
 
 export const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Navigate to="/home" replace />,
-        children: []
-    },
     {
         path: "/",
         element: <PrivateRoutes />,
         errorElement: <NotFound404 />,
         children: [
             {
-                path: "/home",
-                element: <Home />
+                path: "/",
+                element: <Navigate to="/projects" replace />,
+            },
+            {
+                path: "/project-progress/:projectId",
+                element: <ProjectProgress />
+            },
+            {
+                path: "/projects/final-approval",
+                element: <ListProjectsFinalApproval />
+            },
+            {
+                path: "/project-final-approval/:projectId",
+                element: <ProjectProgressFinalApproval />
             },
             {
                 path: "/projects",
-                element: <Projects />
+                element: <ListProjects />
             },
             {
-                path: "/settings",
-                element: <Settings />
+                path: "/new-project",
+                element: <RetrieveProject />
+            },
+            {
+                path: "/edit-project/:projectId",
+                element: <RetrieveProject />
+            },
+            {
+                path: "/my-account",
+                element: <MyAccount />
             },
         ]
     },
     {
-        path: "/auth",
-        element: <Auth />
+        path: "/not-found",
+        element: <NotFound404 />,
     }
 ])

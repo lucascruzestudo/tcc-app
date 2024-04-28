@@ -1,0 +1,28 @@
+.container-new-project {
+    width: 70%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+
+    border: solid 0.5px;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 5%;
+
+    .toggleApproveProject {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .container-new-project {
+        width: 80%;
+    }  
+}
+
+@media only screen and (max-width: 800px) {
+    .container-new-project {
+        width: 90%;
+    }  
+}

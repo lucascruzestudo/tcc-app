@@ -5,8 +5,8 @@ export const validUsername = (username: string): boolean => {
 
 
 export const validEmail = (email: string): boolean => {
-    const regex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i;
-    return regex.test(email);
+    const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regexEmail.test(email);
 }
 
 
@@ -19,7 +19,7 @@ export const validPassword = (password: string): {
     if (_password.length < 8) {
         return { 
             valid: true, 
-            message: "The password must contain at least 8 characters." 
+            message: "A senha deve conter pelo menos 8 caracteres."
         };
     }
 
@@ -31,8 +31,8 @@ export const validPassword = (password: string): {
     if (!(hasNumber && hasUpperCase && hasLowerCase && hasSpecialChar)) {
         return { 
             valid: true, 
-            message: `Password must contain at least one number, one uppercase letter, 
-                one lowercase letter, and one special character.` 
+            message: `A senha deve conter pelo menos um número, uma letra maiúscula,
+            uma letra minúscula e um caractere especial.` 
         };
     }    
 

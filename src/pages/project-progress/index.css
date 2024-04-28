@@ -18,7 +18,7 @@
             border-radius: 10px;
             margin-top: 20px;
             padding: 10px;
-            background-color: #e0e0e0;
+            background-color: #0d6efd;
             min-width: 400px;
             overflow-x: auto;
                         
@@ -29,19 +29,15 @@
                 text-align: center;
                 text-decoration: none;
                 display: inline-block;
-                font-size: 16px;
+                font-size: 12px;
                 margin: 4px 2px;
                 cursor: pointer;
-                padding: 8px;
-                    
-                
-                &:hover {
-                    background-color: #ffffffcc
-                }
+                padding: 6px;
+                color: #ffffff;
             }
             
             .active-step {
-                background-color: #ffffff;
+                border: solid 1px #ffffff;
             }
             
             box-shadow: 0px 5px #aeaeae;
@@ -80,52 +76,28 @@
         .title-upload-files {
             margin-top: 20px;
         }
-
+        
         .upload-files {
-            display: flex;
-            flex-direction: row;
-            
-            div:nth-child(1) {
-                flex: 5;
-                margin-right: 10px;
-            }
-
-            div:nth-child(2) {
-                flex: 2;
-            }
- 
             .files {
-                margin-top: 10px;
                 display: flex;
-                flex-direction: column;
-                gap: 15px;
-                justify-content: center;
-                align-items: flex-start;
-                
-                input[type="file"] {
-                    display: none;
-                }
-
-                label {
-                    padding: 10px 5px;
-                    width: 200px;
-                    background-color: #e9e9e9;
-                    text-align: center;
-                    display: block;
-                    margin-top: 10px;
-                    cursor: pointer;
-                }
-                        
-                .file {
-                    display: flex;
-                    flex-wrap: nowrap;
-                    justify-content: flex-start;
-                    align-items: center;
-                    flex-direction: row;
-                    gap: 10px;
-                }
-
+                justify-content: stretch;
+                flex-direction: row;
+                align-items: start;
+                flex-wrap: wrap;
+                gap: 20px;
+                width: 100%;
             }
+
+            .attachment {
+                display: flex;
+                justify-content: flex-start;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .upload-area {
+                min-width: 40%;
+            } 
         }
         
         .comments-form {
@@ -138,14 +110,6 @@
             
             h3 {
                 margin: 10px 0px;
-            }
-
-            button {
-                margin-top: 10px;
-                padding: 5px;
-                border-radius: 5px;
-                float: right;
-                text-align: right;
             }
 
             textarea {
@@ -175,18 +139,47 @@
             max-height: 500px;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 5px;
+            padding: 15px 5px;
             
             border-radius: 10px;
             border: 1px solid black;
-
-            .comment {
-                margin: 30px 0px;
+         
+            .my-comment, .team-comment {
+                padding: 3px 8px;
+                border-radius: 10px;
+                max-width: 95%;
             }
+
+            .my-comment {
+                background-color: rgba(31, 199, 31, 0.506);
+            }
+            .team-comment {
+                background-color: rgba(31, 109, 199, 0.506);
+            }            
         }
 
         .moreComments {
             margin-top: 15px;
+        }
+
+
+        .approve-stage {
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: row;
+            align-items: center;
+            margin-top: 20px;
+
+            button {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 20px;
+                border-radius: 10px;
+                cursor: pointer;
+                text-align: center;
+                font-size: medium;
+            }
         }
     }
 }
