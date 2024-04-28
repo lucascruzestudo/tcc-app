@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, ReactNode, useEffect, Dispatch, SetStateAction } from "react";
 import { LocalStorangeUser } from "@utils/types";
+import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
     isAuthenticated: boolean;

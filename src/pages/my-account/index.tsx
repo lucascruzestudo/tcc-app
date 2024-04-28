@@ -1,6 +1,7 @@
-import defaultProfile from "@assets/profile.jpeg";
+import defaultProfile from "@assets/photo-profile-default.png";
 import { Spinner } from "@components/index";
 import UserService from "@services/user";
+import { LocalStorangeUser } from "@utils/types";
 import { useEffect, useState } from "react";
 import { TbPhotoEdit } from "react-icons/tb";
 import { toast } from "react-toastify";
@@ -10,9 +11,12 @@ import { UpdateUser } from "./types";
 
 export function MyAccount() {
     const userLocalStorage = useAuth().user!
+
     const userService = new UserService()
     const [profileImg, setProfileImg] = useState<string>('');
-    const [loading, setloading] = useState<boolean>(false);     
+    const [loading, setloading] = useState<boolean>(false);
+    const [loadingChangeProfile, setLoadingChangeProfile] = useState<boolean>(false);
+    
     const [user, setUser] = useState<UpdateUser>({
         full_name: "",
         email: "",
@@ -30,28 +34,23 @@ export function MyAccount() {
     useEffect(() => {
         setloading(true);
 
+        const _userLocalStorage: LocalStorangeUser = JSON.parse(localStorage.getItem('user')!);
+
         const user = {
             currentPassword: "",
             newPassword: "",
             confirmNewPassword: "",
-            profile_picture: userLocalStorage.profile_picture || "",
-            email: userLocalStorage.email || "",
-            full_name: userLocalStorage.full_name || "",
+            profile_picture: _userLocalStorage.profile_picture || "",
+            email: _userLocalStorage.email || "",
+            full_name: _userLocalStorage.full_name || "",
         };
-        
+
+        setProfileImg(_userLocalStorage.profile_picture || defaultProfile);
         setUser(user);
 
-        userService.getProfile<BlobPart>(userLocalStorage.id).then(({data}) => {
-            if (!data) return;
-            if (profileImg) URL.revokeObjectURL(profileImg);
-
-            const blob = new Blob([data]);
-            const url = URL.createObjectURL(blob);
-            //useAuth().setUser({...userLocalStorage, profile_picture: url});
-            setProfileImg(url);
-        });
-
         setloading(false);
+
+        return () => {}
     }, []);
 
     const handleUpdateGeneralData = async () => {
@@ -122,6 +121,8 @@ export function MyAccount() {
     }
 
     const handlePhotoChange = async (e: any) => {
+        setLoadingChangeProfile(true);
+
         const file = e.target.files[0];
 
         const formData = new FormData();
@@ -129,17 +130,25 @@ export function MyAccount() {
         
         const id: string = userLocalStorage.id
 
-        await userService.editprofile(id, formData);
+        const response = await userService.editprofile(id, formData);
 
-        userService.getProfile<BlobPart>(userLocalStorage.id).then(({data}) => {
-            if (!data) return;
-            if (profileImg) URL.revokeObjectURL(profileImg);
+        if (response.status !== 200) {
+            toast("Não foi possivel alterar a foto de perfil!",  {type: "error"});
+            return
+        }
 
-            const blob = new Blob([data]);
-            const url = URL.createObjectURL(blob);
-            //useAuth().setUser({...userLocalStorage, profile_picture: url});
-            setProfileImg(url);
-        });
+        let _userLocalStorage: LocalStorangeUser = JSON.parse(localStorage.getItem('user')!);
+        
+        if (_userLocalStorage.profile_picture) {
+            URL.revokeObjectURL(_userLocalStorage.profile_picture);
+        }
+
+        _userLocalStorage = {..._userLocalStorage, profile_picture: ''};
+        localStorage.setItem('user', JSON.stringify(_userLocalStorage));
+        
+        setTimeout(() => {
+            window.location.reload();
+        }, 500);
     };
 
     return(
@@ -149,10 +158,20 @@ export function MyAccount() {
             <div className="row mb-5">
                 <div className="col">
                     <div className="profile-picture">
-                        <img src={profileImg || defaultProfile} alt="Foto de Perfil" id="profile-img" />
-                        <input onChange={handlePhotoChange} type="file" id="file-input" />
-                        <label id="file-input" htmlFor="file-input"><TbPhotoEdit /></label>
+                        {loadingChangeProfile 
+                        ? 
+                            <div className="text-center">
+                                <div className="spinner-grow" role="status"> </div> 
+                            </div>
+                        :
+                            <>
+                                <img src={profileImg} alt="Foto de Perfil" id="profile-img" />
+                                <input onChange={handlePhotoChange} type="file" id="file-input" />
+                                <label id="file-input" htmlFor="file-input"><TbPhotoEdit /></label>
+                            </>
+                        }                        
                     </div>
+
                 </div>
             </div>
 

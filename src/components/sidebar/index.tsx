@@ -1,15 +1,16 @@
-import defaultProfile from "@assets/profile.jpeg";
+import defaultProfile from "@assets/photo-profile-default.png";
+import UserService from "@services/user";
 import { UserRole } from "@utils/enums";
 import { LocalStorangeUser } from "@utils/types";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "src/hooks/authContextProvider";
 import AuthService from "src/services/auth";
 import "./index.css";
 import { AllMenus, Menus } from "./menus";
 
 export function SideBar() {
-    const userLocalStorage = useAuth().user
+    const [userLocalStorage, setUserLocalStorage] = useState<LocalStorangeUser|null>(null)
+    const userService = new UserService()
     const authService = new AuthService();
     const [menus, setMenus] = useState<Menus>([])
 
@@ -32,10 +33,33 @@ export function SideBar() {
     }
 
     useEffect(() => {
-        const _menus = userLocalStorage ? getMenus(userLocalStorage) : []
-        setMenus(_menus);
-    }, [userLocalStorage])
+        const _userLocalStorage: LocalStorangeUser = JSON.parse(localStorage.getItem('user')!);
+        if (_userLocalStorage) {
+            getProfileImg(_userLocalStorage);
+            const _menus = getMenus(_userLocalStorage);
+            setMenus(_menus);
+        }
+    }, []);
 
+    const getProfileImg = (_userLocalStorage: LocalStorangeUser) => {
+
+        if (!_userLocalStorage.profile_picture) {
+            userService.getProfile<BlobPart>(_userLocalStorage.id).then(({status, data}) => {
+                if (status !== 200) return;
+        
+                const blob = new Blob([data]);
+                const url = URL.createObjectURL(blob);
+                
+                const user = {..._userLocalStorage, profile_picture: url};
+                setUserLocalStorage(user);
+                localStorage.setItem('user', JSON.stringify(user));
+
+                window.location.reload();
+            });
+        } else {
+            setUserLocalStorage(_userLocalStorage);
+        }
+    }
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     const toggleSidebar = () => {
@@ -43,7 +67,13 @@ export function SideBar() {
     };
 
     const handleLogout = async () => {
-        authService.logout();
+        await authService.logout();
+
+        let _userLocalStorage: LocalStorangeUser = JSON.parse(localStorage.getItem('user')!);
+        
+        if (_userLocalStorage.profile_picture) {
+            URL.revokeObjectURL(_userLocalStorage.profile_picture);
+        }
         
         localStorage.removeItem('user');
         localStorage.removeItem('accessToken');
@@ -85,11 +115,13 @@ export function SideBar() {
 
                 <li className="profile">
                     <div className="profile_details">
-                        <img src={userLocalStorage!.profile_picture || defaultProfile} alt="profile image" />
-                        <div className="profile_content">
-                            <div className="name">{userLocalStorage!.full_name}</div>
-                            <div className="designation">{getProfileName(userLocalStorage!.role)}</div>
-                        </div>
+                        {userLocalStorage && <>
+                            <img src={userLocalStorage.profile_picture || defaultProfile} alt="profile image" />
+                            <div className="profile_content">
+                                <div className="name">{userLocalStorage.full_name}</div>
+                                <div className="designation">{getProfileName(userLocalStorage.role)}</div>
+                            </div>
+                        </>}
                     </div>
                     <i className="bx bx-log-out" id="log_out" onClick={handleLogout}></i>
                 </li>
