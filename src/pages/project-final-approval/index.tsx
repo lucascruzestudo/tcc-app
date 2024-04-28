@@ -34,7 +34,7 @@ export function ProjectProgressFinalApproval() {
   }, [currentStage]);
 
   useEffect(() => {
-    if (userLocalStorage.role !== 1) {
+    if (userLocalStorage.role === 3) {
       navigate('/not-found');
     } else {
       init();
@@ -101,7 +101,7 @@ export function ProjectProgressFinalApproval() {
   };
 
   const handleUploadFile = async (event: any, _file: UploadFile) => {
-    if (!project || !currentStage || event.cancelable) return;
+    if (!project || !currentStage || event.cancelable || userLocalStorage.role === 3) return;
 
     const file = event.target.files[0];
 
@@ -116,8 +116,10 @@ export function ProjectProgressFinalApproval() {
     const formData = new FormData()
     formData.append('file', file)
 
+    const file_type = userLocalStorage.role === 2 ? 1 : 2
+
     const response = await projectsService.uploadProjectFile<TFile>(
-      project._id, currentStage.stageId, _file.id, formData
+      project._id, currentStage.stageId, _file.id, file_type, formData
     );
 
     if (response.status !== 200) {
@@ -187,9 +189,9 @@ export function ProjectProgressFinalApproval() {
     }
   };
 
-  const handleDownloadFile = async (file: TFile, evaluated_document: boolean) => {
+  const handleDownloadFile = async (file: TFile, file_type: 1 | 2) => {
     const response = await projectsService.downloadProjectFile<BlobPart>(
-      project!._id, currentStage!.stageId, file.id, { evaluated_document }
+      project!._id, currentStage!.stageId, file.id, { file_type }
     );
 
     if (response.status !== 200) {
@@ -197,7 +199,7 @@ export function ProjectProgressFinalApproval() {
       return;
     }
 
-    const filename = evaluated_document ? file.return_filename : file.filename
+    const filename = file_type ? file.return_filename : file.filename
 
     try {
         const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -279,10 +281,10 @@ export function ProjectProgressFinalApproval() {
 
                       <div className="attachment">
                         {file.file_path && (<>
-                          <div className="pt-1 pb-2"><strong>Upload do Aluno: </strong></div>
+                          <div className="pt-1 pb-2"><strong>Upload do Orientador: </strong></div>
                           <div>
                             <button 
-                              onClick={() => handleDownloadFile(file, false)} 
+                              onClick={() => handleDownloadFile(file, 1)} 
                               type="button" 
                               className="btn btn-link p-0"
                             >
@@ -294,10 +296,10 @@ export function ProjectProgressFinalApproval() {
 
                       <div className="attachment">
                         {file.return_file_path && (<>
-                          <div className="pt-1 pb-2"><strong>Retorno do avaliador: </strong></div>
+                          <div className="pt-1 pb-2"><strong>Retorno do Coordenador: </strong></div>
                             <div>
                               <button 
-                              onClick={() => handleDownloadFile(file, true)} 
+                              onClick={() => handleDownloadFile(file, 2)} 
                               type="button" 
                               className="btn btn-link p-0"
                             >

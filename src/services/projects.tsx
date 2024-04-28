@@ -58,12 +58,14 @@ export default class ProjectsService {
     projectId: string,
     stageId: number,
     fileId: string,
+    file_type: 1 | 2,
     data: any,
   ): Promise<Response<T>> {
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data'
-      }
+      },
+      params: { file_type }
     }
     return this.request<T>(() => api.post(`project/${projectId}/${stageId}/file/${fileId}/upload`, data, config));
   }
@@ -72,7 +74,7 @@ export default class ProjectsService {
     projectId: string,
     stageId: number,
     fileId: string,
-    params: { evaluated_document: boolean }
+    params: { file_type: 1 | 2 }
   ): Promise<Response<T>> {
     const config: AxiosRequestConfig = {
       responseType: 'blob',
