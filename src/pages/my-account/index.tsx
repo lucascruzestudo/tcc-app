@@ -1,4 +1,5 @@
 import defaultProfile from "@assets/profile.jpeg";
+import { Spinner } from "@components/index";
 import UserService from "@services/user";
 import { useEffect, useState } from "react";
 import { TbPhotoEdit } from "react-icons/tb";
@@ -11,7 +12,7 @@ export function MyAccount() {
     const userLocalStorage = useAuth().user!
     const userService = new UserService()
     const [profileImg, setProfileImg] = useState<string>('');
-     
+    const [loading, setloading] = useState<boolean>(false);     
     const [user, setUser] = useState<UpdateUser>({
         full_name: "",
         email: "",
@@ -27,6 +28,8 @@ export function MyAccount() {
     };
 
     useEffect(() => {
+        setloading(true);
+
         const user = {
             currentPassword: "",
             newPassword: "",
@@ -47,6 +50,8 @@ export function MyAccount() {
             //useAuth().setUser({...userLocalStorage, profile_picture: url});
             setProfileImg(url);
         });
+
+        setloading(false);
     }, []);
 
     const handleUpdateGeneralData = async () => {
@@ -139,7 +144,8 @@ export function MyAccount() {
 
     return(
         <div className="container-user row mt-3">
-            
+            <Spinner loading={loading} />
+
             <div className="row mb-5">
                 <div className="col">
                     <div className="profile-picture">

@@ -1,14 +1,15 @@
-import "./index.css";
-import { useEffect, useState } from "react";
-import { IoTrashOutline } from "react-icons/io5";
-import { FaPlus } from "react-icons/fa";
-import { toast } from "react-toastify";
-import { format } from "date-fns";
-import ProjectsService from "src/services/projects";
-import { useParams } from "react-router-dom";
 import { TProject } from "@components/project/types";
-import { useAuth } from "src/hooks/authContextProvider";
+import { Spinner } from "@components/spinner";
 import { validEmail } from "@utils/validators";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { IoTrashOutline } from "react-icons/io5";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useAuth } from "src/hooks/authContextProvider";
+import ProjectsService from "src/services/projects";
+import "./index.css";
 
 type Student = {
   email: string;
@@ -27,6 +28,7 @@ export function RetrieveProject() {
   const [advisorEmail, setAdvisorEmail] = useState<string>('');
   const [coordinatorEmail, setCoordinatorEmail] = useState<string>('');
   const [approve, setApprove] = useState<boolean>(false);
+  const [loading, setloading] = useState<boolean>(false);
 
   useEffect(() => {
     onInit();
@@ -52,6 +54,8 @@ export function RetrieveProject() {
   };
 
   async function onInit() {
+    setloading(true);
+
     if (projectId) {
       const response = await projectsService.getProject<TProject>(projectId)
 
@@ -94,6 +98,8 @@ export function RetrieveProject() {
       setStudents(updatedStudents);
       setStudentsIds([id]);
     }
+
+    setloading(false);
   }
 
   const handleEmailChange = (id: string, email: string) => {
@@ -205,152 +211,155 @@ export function RetrieveProject() {
 }
 
   return (
-    <div className="container-new-project">
-      <div className="row m-0 p-0">
+    <>
+      <Spinner loading={loading} />
 
-        {userLocalStorage.role === 1 && projectId &&
-          <div className="row form-group m-0">
-            <div className="offset-8 col-4 mt-2 form-check form-switch">
-              <input onChange={(e) => handleApproveProject(e.target.checked)} 
-                  className="form-check-input" 
-                  type="checkbox" 
-                  id="flexSwitchCheckApproveTCC"
-                  checked={approve}
-              />
-              <label className="form-check-label" htmlFor="flexSwitchCheckApproveTCC">
-                {approve ? 'Reprovar' : 'Aprovar'} Ideia
-              </label>
+      <div hidden={loading} className="container-new-project">
+        <div className="row m-0 p-0">
+          {userLocalStorage.role === 1 && projectId &&
+            <div className="row form-group m-0">
+              <div className="offset-8 col-4 mt-2 form-check form-switch">
+                <input onChange={(e) => handleApproveProject(e.target.checked)} 
+                    className="form-check-input" 
+                    type="checkbox" 
+                    id="flexSwitchCheckApproveTCC"
+                    checked={approve}
+                />
+                <label className="form-check-label" htmlFor="flexSwitchCheckApproveTCC">
+                  {approve ? 'Reprovar' : 'Aprovar'} Ideia
+                </label>
+              </div>
             </div>
-          </div>
-        }
+          }
 
-        <div className="row form-group mt-3">
-          <div className="col-8">
-            <input
-              type="email"
-              className="form-control"
-              id="name"
-              placeholder="Nome do projeto"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="col-4">
-            <input
-              type="datetime-local"
-              className="form-control"
-              id="name"
-              placeholder="Data de finalização"
-              value={expectedCompletion || ""}
-              onChange={(e) => setExpectedCompletion(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="row form-group mt-3">
-          <div className="col">
-            <textarea
-              className="form-control"
-              id="description"
-              placeholder="Descrição do projeto"
-              value={description}
-              style={{ height: `${Math.max(3, description.length / 30)}em` }}
-              maxLength={500}
-              onChange={(e) => setDescription(e.target.value)}
-            ></textarea>
-          </div>
-        </div>
-
-        <div className="row">
-          <label className="col-8 mb-1 mt-4" htmlFor={`email`}>
-            E-mail:
-          </label>
-
-          <label className="col-4 mb-1 mt-4" htmlFor={`select-profile`}>
-            Perfil:
-          </label>
-        </div>
-
-        <div className="row mt-4">
+          <div className="row form-group mt-3">
             <div className="col-8">
               <input
                 type="email"
                 className="form-control"
-                placeholder="E-mail"
-                value={coordinatorEmail}
-                onChange={(e) => setCoordinatorEmail(e.target.value)}
+                id="name"
+                placeholder="Nome do projeto"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
-
-            <div className="form-group col-3">
-              <span>Coordenador</span>
-            </div>
-        </div>
-
-        <div className="row mt-4">
-            <div className="col-8">
+            <div className="col-4">
               <input
-                type="email"
+                type="datetime-local"
                 className="form-control"
-                placeholder="E-mail"
-                value={advisorEmail}
-                onChange={(e) => setAdvisorEmail(e.target.value)}
+                id="name"
+                placeholder="Data de finalização"
+                value={expectedCompletion || ""}
+                onChange={(e) => setExpectedCompletion(e.target.value)}
               />
             </div>
+          </div>
 
-            <div className="form-group col-3">
-              <span>Orientador</span>
-            </div>
-        </div>
-
-        {Array.from(students).map(([id, student], index) => (
-          <div className="row mt-4" key={id}>
-            <div className="col-8">
-              <input
-                type="email"
+          <div className="row form-group mt-3">
+            <div className="col">
+              <textarea
                 className="form-control"
-                placeholder="E-mail"
-                value={student.email}
-                onChange={(e) => handleEmailChange(id, e.target.value)}
-              />
+                id="description"
+                placeholder="Descrição do projeto"
+                value={description}
+                style={{ height: `${Math.max(3, description.length / 30)}em` }}
+                maxLength={500}
+                onChange={(e) => setDescription(e.target.value)}
+              ></textarea>
             </div>
+          </div>
 
-            <div className="form-group col-3">
-              <span>Aluno</span>
+          <div className="row">
+            <label className="col-8 mb-1 mt-4" htmlFor={`email`}>
+              E-mail:
+            </label>
+
+            <label className="col-4 mb-1 mt-4" htmlFor={`select-profile`}>
+              Perfil:
+            </label>
+          </div>
+
+          <div className="row mt-4">
+              <div className="col-8">
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="E-mail"
+                  value={coordinatorEmail}
+                  onChange={(e) => setCoordinatorEmail(e.target.value)}
+                />
+              </div>
+
+              <div className="form-group col-3">
+                <span>Coordenador</span>
+              </div>
+          </div>
+
+          <div className="row mt-4">
+              <div className="col-8">
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="E-mail"
+                  value={advisorEmail}
+                  onChange={(e) => setAdvisorEmail(e.target.value)}
+                />
+              </div>
+
+              <div className="form-group col-3">
+                <span>Orientador</span>
+              </div>
+          </div>
+
+          {Array.from(students).map(([id, student], index) => (
+            <div className="row mt-4" key={id}>
+              <div className="col-8">
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="E-mail"
+                  value={student.email}
+                  onChange={(e) => handleEmailChange(id, e.target.value)}
+                />
+              </div>
+
+              <div className="form-group col-3">
+                <span>Aluno</span>
+              </div>
+
+              {index > 0 && (
+                <div className="col-1 d-flex flex-column justify-content-end align-items-center">
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => removeStudent(id)}
+                  >
+                    <IoTrashOutline />
+                  </button>
+                </div>
+              )}
             </div>
+          ))}
 
-            {index > 0 && (
-              <div className="col-1 d-flex flex-column justify-content-end align-items-center">
-                <button
-                  className="btn btn-danger"
-                  onClick={() => removeStudent(id)}
-                >
-                  <IoTrashOutline />
+          {studentsIds.length < 6 && (
+            <div className="row">
+              <div className="mt-4 offset-11 col-1 d-flex flex-column justify-content-end align-items-center">
+                <button className="btn btn-primary" onClick={addStudent}>
+                  <FaPlus />
                 </button>
               </div>
-            )}
-          </div>
-        ))}
-
-        {studentsIds.length < 6 && (
-          <div className="row">
-            <div className="mt-4 offset-11 col-1 d-flex flex-column justify-content-end align-items-center">
-              <button className="btn btn-primary" onClick={addStudent}>
-                <FaPlus />
-              </button>
             </div>
-          </div>
-        )}
+          )}
 
-        <div className="row mt-5">
-          <button
-            className="offset-10 col-2 btn btn-primary p-2"
-            onClick={handleSubmit}
-          >
-          {projectId ? "Atualizar" : "Criar"}
-          </button>
+          <div className="row mt-5">
+            <button
+              className="offset-10 col-2 btn btn-primary p-2"
+              onClick={handleSubmit}
+            >
+            {projectId ? "Atualizar" : "Criar"}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

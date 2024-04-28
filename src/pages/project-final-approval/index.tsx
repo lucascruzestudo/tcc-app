@@ -1,3 +1,4 @@
+import { Spinner } from "@components/index";
 import { TFile, TProject, TStages } from "@components/project/types";
 import ProjectsService from "@services/projects";
 import { formatFileName } from "@utils/project-functions";
@@ -27,6 +28,7 @@ export function ProjectProgressFinalApproval() {
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoadingComments, setIsLoadingComments] = useState(false);
+  const [loading, setloading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!currentStage) return
@@ -51,6 +53,8 @@ export function ProjectProgressFinalApproval() {
   async function init() {
     if (!projectId) return
 
+    setloading(true);
+
     const response = await projectsService.getProject<TProject>(
       projectId, {include_final_stage: true, pending_final_approval: true}
     );
@@ -70,6 +74,8 @@ export function ProjectProgressFinalApproval() {
     const step = project.stages.find((step) => step.stageId === project.currentStage) ?? null;
 
     if (step) changeStep(step);
+
+    setloading(false);
   }
 
   const getComment = async (stageId: number) => {
@@ -231,10 +237,12 @@ export function ProjectProgressFinalApproval() {
 
   return (
     <div className="container-step-final">
+      <Spinner loading={loading} />
+
       <div className="step-final">
-        <hr />
         {currentStage && (
           <>
+          <hr />
             <section className="header">
               <div>
                 <span>

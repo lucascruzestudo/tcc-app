@@ -1,4 +1,4 @@
-import { ProjectFinalApproval } from "@components/project-final-approval";
+import { ProjectFinalApproval, Spinner } from "@components/index";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "src/hooks/authContextProvider";
@@ -13,6 +13,7 @@ export function ListProjectsFinalApproval() {
   const userLocalStorage = useAuth().user!
   
   const [projects, setProjects] = useState<TProject[]>([]);
+  const [loading, setloading] = useState<boolean>(false);
 
   useEffect(() => {
     if (userLocalStorage.role === 3) {
@@ -23,6 +24,8 @@ export function ListProjectsFinalApproval() {
   }, []);
 
   const onInit = async () => {
+    setloading(true);
+
     const response = await projectsService.getProjects<Array<TProject>>({
       include_final_stage: true, pending_final_approval: true
     });
@@ -38,11 +41,14 @@ export function ListProjectsFinalApproval() {
         startDate: p.startDate ? (new Date(p.startDate)).toISOString() : '-',
       }))
     );
-    
+
+    setloading(false);    
   }
 
   return (
     <div className="container-projects mb-5">
+      <Spinner loading={loading} />
+
       <div className="list-projects-final">
         {projects.map((project) => (
           <ProjectFinalApproval project={project} key={project._id} />

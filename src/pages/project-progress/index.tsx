@@ -1,3 +1,4 @@
+import { Spinner } from "@components/index";
 import { TFile, TProject, TStages } from "@components/project/types";
 import ProjectsService from "@services/projects";
 import { formatFileName } from "@utils/project-functions";
@@ -27,6 +28,7 @@ export function ProjectProgress() {
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoadingComments, setIsLoadingComments] = useState(false);
+  const [loading, setloading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!currentStage) return
@@ -47,23 +49,27 @@ export function ProjectProgress() {
   async function init() {
     if (!projectId) return
 
+    setloading(true);
+
     const response = await projectsService.getProject<TProject>(projectId);
 
     if (response.status !== 200) return
-   
+
     let project = response.data;
-    
+
     project = {
       ...project,
-      currentStage: project.currentStage > project.stages.length ? project.stages.length : project.currentStage 
+      currentStage: project.currentStage > project.stages.length ? project.stages.length : project.currentStage
     }
-    
+
     setProject(project);
     setSteps(response.data.stages);
 
     const step = project.stages.find((step) => step.stageId === project.currentStage) ?? null;
 
     if (step) changeStep(step);
+
+    setloading(false);
   }
 
   const getComment = async (stageId: number) => {
@@ -116,7 +122,7 @@ export function ProjectProgress() {
       event.target.value = null;
       return;
     }
-    
+
     const formData = new FormData()
     formData.append('file', file);
 
@@ -132,20 +138,20 @@ export function ProjectProgress() {
     }
 
     const newAttachments = currentStage.attachments.map((att) => {
-      if(att.id === response.data.id) return response.data
+      if (att.id === response.data.id) return response.data
       return att
     })
 
-    const _stage = {...currentStage, attachments: newAttachments}
+    const _stage = { ...currentStage, attachments: newAttachments }
 
     setCurrentStage(_stage);
 
     const _stages = project.stages.map((stg) => {
-      if(stg.stageId === _stage.stageId) return _stage
+      if (stg.stageId === _stage.stageId) return _stage
       return stg
     });
 
-    setProject({...project, stages: _stages});
+    setProject({ ...project, stages: _stages });
   };
 
   const handleSubmitCommets = async () => {
@@ -165,7 +171,7 @@ export function ProjectProgress() {
         toast("Oppss... Ocorreu um erro ao enviar o comentário.", { type: "error" });
         return;
       }
-      
+
       setComment("");
       setComments((prevComments) => [response.data, ...prevComments]);
     } catch (error) {
@@ -206,16 +212,16 @@ export function ProjectProgress() {
     const filename = file_type ? file.return_filename : file.filename
 
     try {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', filename);
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode!.removeChild(link);
-        console.log('OPA');
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode!.removeChild(link);
+      console.log('OPA');
     } catch (error) {
-        console.error('Error Download file:', error);
+      console.error('Error Download file:', error);
     }
 
   }
@@ -253,22 +259,24 @@ export function ProjectProgress() {
 
   return (
     <div className="container-home">
-      <div className="steps">
-        <nav className="menu-step">
-          {steps.map(({ stageId, stageName }) => (
-            <div key={`step-${stageId}`}>
-              <button
-                className={stageId === currentStage?.stageId ? "active-step" : ""}
-                onClick={() => nextStep(stageId)}
-              >
-                {stageName}
-              </button>
-            </div>
-          ))}
-        </nav>
+      <Spinner loading={loading} />
 
+      <div className="steps">
         {currentStage && (
           <>
+            <nav className="menu-step">
+              {steps.map(({ stageId, stageName }) => (
+                <div key={`step-${stageId}`}>
+                  <button
+                    className={stageId === currentStage?.stageId ? "active-step" : ""}
+                    onClick={() => nextStep(stageId)}
+                  >
+                    {stageName}
+                  </button>
+                </div>
+              ))}
+            </nav>
+
             <section className="header">
               <div>
                 <span>
@@ -286,7 +294,7 @@ export function ProjectProgress() {
                 <div className="project-end-date">{endDate}</div>
               </div>
             </section>
-            
+
             {currentStage.attachments.length > 0 &&
               <p className="title-upload-files">
                 <FaFileUpload /> Faça upload dos seus documentos aqui:
@@ -294,58 +302,58 @@ export function ProjectProgress() {
             }
 
             <section className="upload-files">
-                {currentStage.attachments.map((file, index) => (
-                  <div key={index}>
-                    <div key={file.id} className="files">
-                      <div className="attachment upload-area">
-                        <label htmlFor={`file-${file.id}`} className="form-label">
-                          Tipo do arquivo (.{file.extension}) {file.filename ? <FcOk title="Upload feito" className="mb-1" /> : ''}
-                        </label>
+              {currentStage.attachments.map((file, index) => (
+                <div key={index}>
+                  <div key={file.id} className="files">
+                    <div className="attachment upload-area">
+                      <label htmlFor={`file-${file.id}`} className="form-label">
+                        Tipo do arquivo (.{file.extension}) {file.filename ? <FcOk title="Upload feito" className="mb-1" /> : ''}
+                      </label>
 
-                        <input
-                          disabled={currentStage?.completed || false} 
-                          className="form-control"
-                          type="file"
-                          name={`file-${file.id}`}
-                          id={`file-${file.id}`}
-                          accept={`.${file.extension}`}
-                          onChange={(event) => handleUploadFile(event, file)}
-                        />
-                      </div>
-
-                      <div className="attachment">
-                        {file.file_path && (<>
-                          <div className="pt-1 pb-2"><strong>Upload do Aluno: </strong></div>
-                          <div>
-                            <button 
-                              onClick={() => handleDownloadFile(file, 1)} 
-                              type="button" 
-                              className="btn btn-link p-0"
-                            >
-                              {formatFileName(file.filename, 25)}
-                            </button>
-                          </div> 
-                        </>)}
-                      </div>
-
-                      <div className="attachment">
-                        {file.return_file_path && (<>
-                          <div className="pt-1 pb-2"><strong>Retorno do Orientador: </strong></div>
-                            <div>
-                              <button 
-                              onClick={() => handleDownloadFile(file, 2)} 
-                              type="button" 
-                              className="btn btn-link p-0"
-                            >
-                              {formatFileName(file.return_filename, 25)}
-                            </button> 
-                            </div>
-                        </>)}
-                      </div>
+                      <input
+                        disabled={currentStage?.completed || false}
+                        className="form-control"
+                        type="file"
+                        name={`file-${file.id}`}
+                        id={`file-${file.id}`}
+                        accept={`.${file.extension}`}
+                        onChange={(event) => handleUploadFile(event, file)}
+                      />
                     </div>
-                    <hr className="p-3"/>
+
+                    <div className="attachment">
+                      {file.file_path && (<>
+                        <div className="pt-1 pb-2"><strong>Upload do Aluno: </strong></div>
+                        <div>
+                          <button
+                            onClick={() => handleDownloadFile(file, 1)}
+                            type="button"
+                            className="btn btn-link p-0"
+                          >
+                            {formatFileName(file.filename, 25)}
+                          </button>
+                        </div>
+                      </>)}
+                    </div>
+
+                    <div className="attachment">
+                      {file.return_file_path && (<>
+                        <div className="pt-1 pb-2"><strong>Retorno do Orientador: </strong></div>
+                        <div>
+                          <button
+                            onClick={() => handleDownloadFile(file, 2)}
+                            type="button"
+                            className="btn btn-link p-0"
+                          >
+                            {formatFileName(file.return_filename, 25)}
+                          </button>
+                        </div>
+                      </>)}
+                    </div>
                   </div>
-                ))}
+                  <hr className="p-3" />
+                </div>
+              ))}
             </section>
 
             <section className="comments-form">
@@ -361,7 +369,7 @@ export function ProjectProgress() {
                 onChange={(e) => setComment(e.target.value)}
               ></textarea>
               <button
-                disabled={currentStage?.completed || false} 
+                disabled={currentStage?.completed || false}
                 className="mt-3 btn btn-primary"
                 type="button"
                 onClick={handleSubmitCommets}
@@ -375,10 +383,10 @@ export function ProjectProgress() {
                 <div className="d-flex" key={message._id}>
                   <p
                     className={`
-                      ${message.user_id === userLocalStorage.id 
-                      ? 'my-comment' 
-                      : 'team-comment'}`
-                    } 
+                      ${message.user_id === userLocalStorage.id
+                        ? 'my-comment'
+                        : 'team-comment'}`
+                    }
                     key={index}
                   >
                     <strong>{message.full_name}: </strong>
@@ -395,30 +403,31 @@ export function ProjectProgress() {
           </>
         )}
 
-        {userLocalStorage.role !== 3 && currentStage && 
+        {userLocalStorage.role !== 3 && currentStage &&
           <div className="approve-stage">
-            { (currentStage.completed || false) && currentStage.stageId 
+            {(currentStage.completed || false) && currentStage.stageId
               ?
-                <button 
-                    onClick={() => handleRevertStage(currentStage.stageId)} 
-                    type="button" 
-                    className="btn btn-secondary"
-                  >
-                    Volta para essa Etapa
-                </button>
+              <button
+                onClick={() => handleRevertStage(currentStage.stageId)}
+                type="button"
+                className="btn btn-secondary"
+              >
+                Volta para essa Etapa
+              </button>
               :
-                <button 
-                  onClick={handleApproveStage} 
-                  type="button" 
-                  className="btn btn-success"
-                >
-                    Aprovar Etapa
-                </button>
+              <button
+                onClick={handleApproveStage}
+                type="button"
+                className="btn btn-success"
+              >
+                Aprovar Etapa
+              </button>
             }
           </div>
         }
 
       </div>
+      
     </div>
   );
 }

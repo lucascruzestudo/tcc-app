@@ -54,6 +54,7 @@ export function Auth() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
+    const [loading, setloading] = useState<boolean>(false);
 
     const changeState = (value: string, setState: any) => setState(value);
 
@@ -62,6 +63,8 @@ export function Auth() {
         const _password = Validators.validatePassword(password);
 
         if (!_email || !_password) return;
+
+        setloading(true);
         
         const response = await authService.login<LocalStorangeUser>({
             email: _email,
@@ -72,8 +75,10 @@ export function Auth() {
             toast("O E-mail ou senha está incorreto.", { type: "error" });
             return
         }
-        
-        if (response.status !== 200) return
+
+        setloading(false);
+
+        if (response.status !== 200) return       
 
         const {
             access_token,
@@ -117,6 +122,8 @@ export function Auth() {
             return
         }
 
+        setloading(true);
+
         const response = await authService.register({
             password: _password,
             email: _email,
@@ -124,6 +131,8 @@ export function Auth() {
             role: 3,
         });
 
+        setloading(false);
+        
         if (response.status !== 201) return;
 
         submitLogin();
@@ -178,7 +187,14 @@ export function Auth() {
                                 value={password || ""}
                             />
 
-                            <button type="button" onClick={submitLogin}>Acessar</button>
+                            <button type="button" onClick={submitLogin}>
+                                {loading 
+                                    ?
+                                        <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                    : 
+                                        <span>Acessar</span>
+                                }   
+                            </button>
                         </div>
                     }
 
@@ -240,7 +256,14 @@ export function Auth() {
                                 value={email || ""}
                             />
 
-                            <button type="button" onClick={submitForgotPassword}>Enviar</button>
+                            <button type="button" onClick={submitForgotPassword}>
+                                {loading 
+                                    ?
+                                        <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                    : 
+                                        <span>Cadastrar</span>
+                                }                                
+                            </button>
                         </div>
                     }
 

@@ -1,9 +1,9 @@
+import { Project, Spinner } from "@components/index";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "src/hooks/authContextProvider";
 import ProjectsService from "src/services/projects";
-import { Project } from "../../components/project";
 import { TProject } from "../../components/project/types";
 import "./index.css";
 
@@ -11,8 +11,10 @@ import "./index.css";
 export function ListProjects() {
   const projectsService = new ProjectsService();
   const userLocalStorage = useAuth().user!
-  
+
   const [projects, setProjects] = useState<TProject[]>([]);
+  const [loading, setloading] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,8 +22,10 @@ export function ListProjects() {
   }, []);
 
   const onInit = async () => {
+    setloading(true);
+
     const response = await projectsService.getProjects<Array<TProject>>();
-    
+
     if (response.status !== 200) return;
 
     setProjects(
@@ -33,14 +37,15 @@ export function ListProjects() {
         startDate: p.startDate ? (new Date(p.startDate)).toISOString() : '-',
       }))
     );
-    
+
+    setloading(false);
   }
 
   const handleNavigate = (path: string) => navigate(path);
 
   return (
     <div className="container-projects mb-5">
-      <div className="new-project"></div>
+      <Spinner loading={loading} />
 
       <div className="list-projects">
         {projects.map((project) => (
