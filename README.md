@@ -30,4 +30,14 @@ export default {
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
 
-Versão do Node ^20 ou superior!
+
+
+
+## Como rodar ?
+
+### Versão do Node ^20 ou superior!
+
+- Clone o projeto
+- Na raiz do projeto digite `npm install`
+- Crie e adicione um arquivo com o nome `.env` na raiz do projeto e adicione a seguinte linha: VITE_API_V1_URL="http://localhost:2000/api/v1"
+- Agora é só digitar o seguinte comando: `npm run dev`
