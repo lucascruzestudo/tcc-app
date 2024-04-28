@@ -56,11 +56,11 @@ export function ProjectProgressFinalApproval() {
     setloading(true);
 
     const response = await projectsService.getProject<TProject>(
-      projectId, {include_final_stage: true, pending_final_approval: true}
+      projectId, { include_final_stage: true, pending_final_approval: true }
     );
 
     if (response.status !== 200) return
-   
+
     const project = response.data;
 
     if (project.currentStage !== project.stages.length) {
@@ -68,7 +68,7 @@ export function ProjectProgressFinalApproval() {
       navigate('/projects/final-approval');
       return
     }
-    
+
     setProject(project);
 
     const step = project.stages.find((step) => step.stageId === project.currentStage) ?? null;
@@ -118,7 +118,7 @@ export function ProjectProgressFinalApproval() {
       event.target.value = null;
       return;
     }
-    
+
     const formData = new FormData()
     formData.append('file', file)
 
@@ -134,20 +134,20 @@ export function ProjectProgressFinalApproval() {
     }
 
     const newAttachments = currentStage.attachments.map((att) => {
-      if(att.id === response.data.id) return response.data
+      if (att.id === response.data.id) return response.data
       return att
     })
 
-    const _stage = {...currentStage, attachments: newAttachments}
+    const _stage = { ...currentStage, attachments: newAttachments }
 
     setCurrentStage(_stage);
 
     const _stages = project.stages.map((stg) => {
-      if(stg.stageId === _stage.stageId) return _stage
+      if (stg.stageId === _stage.stageId) return _stage
       return stg
     });
 
-    setProject({...project, stages: _stages});
+    setProject({ ...project, stages: _stages });
   };
 
   const handleSubmitCommets = async () => {
@@ -167,7 +167,7 @@ export function ProjectProgressFinalApproval() {
         toast("Oppss... Ocorreu um erro ao enviar o comentário.", { type: "error" });
         return;
       }
-      
+
       setComment("");
       setComments((prevComments) => [response.data, ...prevComments]);
     } catch (error) {
@@ -208,29 +208,33 @@ export function ProjectProgressFinalApproval() {
     const filename = file_type ? file.return_filename : file.filename
 
     try {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', filename);
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode!.removeChild(link);
-        console.log('OPA');
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode!.removeChild(link);
+      console.log('OPA');
     } catch (error) {
-        console.error('Error Download file:', error);
+      console.error('Error Download file:', error);
     }
 
   }
 
   const handleApproveProject = async () => {
-    if (!projectId || !currentStage || project?.currentStage === project?.stages.length) return;
+    if (!projectId || !currentStage || !project || project.currentStage !== project.stages.length) return;
 
-    // const response = await projectsService.revertStage(projectId);
+    const response = await projectsService.completedProject(projectId);
 
-    // if (response.status != 200) {
-    //   toast(`Error ao aprovar etapa atual.`, { type: "error" });
-    //   return
-    // }
+    if (response.status != 200) {
+      toast(`Error ao aprovar etapa atual.`, { type: "error" });
+      return
+    }
+
+    if (!project.completed) {
+      toast(`Projeto aprovado com sucesso!`, { type: "success" });
+    }
 
     init();
   }
@@ -242,7 +246,7 @@ export function ProjectProgressFinalApproval() {
       <div className="step-final">
         {currentStage && (
           <>
-          <hr />
+            <hr />
             <section className="header">
               <div>
                 <span>
@@ -260,7 +264,7 @@ export function ProjectProgressFinalApproval() {
                 <div className="project-end-date">{endDate}</div>
               </div>
             </section>
-            
+
             {currentStage.attachments.length > 0 &&
               <p className="title-upload-files">
                 <FaFileUpload /> Faça upload dos seus documentos aqui:
@@ -268,58 +272,58 @@ export function ProjectProgressFinalApproval() {
             }
 
             <section className="upload-files">
-                {currentStage.attachments.map((file, index) => (
-                  <div key={index}>
-                    <div key={file.id} className="files">
-                      <div className="attachment upload-area">
-                        <label htmlFor={`file-${file.id}`} className="form-label">
-                          Tipo do arquivo (.{file.extension}) {file.filename ? <FcOk title="Upload feito" className="mb-1" /> : ''}
-                        </label>
+              {currentStage.attachments.map((file, index) => (
+                <div key={index}>
+                  <div key={file.id} className="files">
+                    <div className="attachment upload-area">
+                      <label htmlFor={`file-${file.id}`} className="form-label">
+                        Tipo do arquivo (.{file.extension}) {file.filename ? <FcOk title="Upload feito" className="mb-1" /> : ''}
+                      </label>
 
-                        <input
-                          disabled={currentStage?.completed || false} 
-                          className="form-control"
-                          type="file"
-                          name={`file-${file.id}`}
-                          id={`file-${file.id}`}
-                          accept={`.${file.extension}`}
-                          onChange={(event) => handleUploadFile(event, file)}
-                        />
-                      </div>
-
-                      <div className="attachment">
-                        {file.file_path && (<>
-                          <div className="pt-1 pb-2"><strong>Upload do Orientador: </strong></div>
-                          <div>
-                            <button 
-                              onClick={() => handleDownloadFile(file, 1)} 
-                              type="button" 
-                              className="btn btn-link p-0"
-                            >
-                              {formatFileName(file.filename, 25)}
-                            </button>
-                          </div> 
-                        </>)}
-                      </div>
-
-                      <div className="attachment">
-                        {file.return_file_path && (<>
-                          <div className="pt-1 pb-2"><strong>Retorno do Coordenador: </strong></div>
-                            <div>
-                              <button 
-                              onClick={() => handleDownloadFile(file, 2)} 
-                              type="button" 
-                              className="btn btn-link p-0"
-                            >
-                              {formatFileName(file.return_filename, 25)}
-                            </button> 
-                            </div>
-                        </>)}
-                      </div>
+                      <input
+                        disabled={currentStage?.completed || false}
+                        className="form-control"
+                        type="file"
+                        name={`file-${file.id}`}
+                        id={`file-${file.id}`}
+                        accept={`.${file.extension}`}
+                        onChange={(event) => handleUploadFile(event, file)}
+                      />
                     </div>
-                    <hr className="p-3"/>
+
+                    <div className="attachment">
+                      {file.file_path && (<>
+                        <div className="pt-1 pb-2"><strong>Upload do Orientador: </strong></div>
+                        <div>
+                          <button
+                            onClick={() => handleDownloadFile(file, 1)}
+                            type="button"
+                            className="btn btn-link p-0"
+                          >
+                            {formatFileName(file.filename, 25)}
+                          </button>
+                        </div>
+                      </>)}
+                    </div>
+
+                    <div className="attachment">
+                      {file.return_file_path && (<>
+                        <div className="pt-1 pb-2"><strong>Retorno do Coordenador: </strong></div>
+                        <div>
+                          <button
+                            onClick={() => handleDownloadFile(file, 2)}
+                            type="button"
+                            className="btn btn-link p-0"
+                          >
+                            {formatFileName(file.return_filename, 25)}
+                          </button>
+                        </div>
+                      </>)}
+                    </div>
                   </div>
-                ))}
+                  <hr className="p-3" />
+                </div>
+              ))}
             </section>
 
             <section className="comments-form">
@@ -335,7 +339,7 @@ export function ProjectProgressFinalApproval() {
                 onChange={(e) => setComment(e.target.value)}
               ></textarea>
               <button
-                disabled={currentStage?.completed || false} 
+                disabled={currentStage?.completed || false}
                 className="mt-3 btn btn-primary"
                 type="button"
                 onClick={handleSubmitCommets}
@@ -349,10 +353,10 @@ export function ProjectProgressFinalApproval() {
                 <div className="d-flex" key={message._id}>
                   <p
                     className={`
-                      ${message.user_id === userLocalStorage.id 
-                      ? 'my-comment' 
-                      : 'team-comment'}`
-                    } 
+                      ${message.user_id === userLocalStorage.id
+                        ? 'my-comment'
+                        : 'team-comment'}`
+                    }
                     key={index}
                   >
                     <strong>{message.full_name}: </strong>
@@ -369,14 +373,14 @@ export function ProjectProgressFinalApproval() {
           </>
         )}
 
-        {userLocalStorage.role === 1 &&
+        {userLocalStorage.role === 1 && project &&
           <div className="approve-stage">
-            <button 
-              onClick={handleApproveProject} 
-              type="button" 
-              className="btn btn-success"
+            <button
+              onClick={handleApproveProject}
+              type="button"
+              className={`btn btn-${project.completed ? 'secondary' : 'success'}`}
             >
-                Aprovar Projeto
+              {project.completed ? 'Revogar Aprovação' : 'Aprovar Projeto'}
             </button>
           </div>
         }

@@ -1,6 +1,4 @@
 .container-project-final {
-    background-color: rgb(212, 240, 188);
-    
     height: auto;
     
     border-radius: 10px;
@@ -57,4 +55,13 @@
         padding: 5px 0px;
     }
 
+}
+
+.card-pending-approval {
+    background-color: rgba(255, 255, 130, 0.61);
+}
+
+
+.card-approved {
+    background-color: rgba(66, 230, 134, 0.541);
 }

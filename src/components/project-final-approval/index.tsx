@@ -27,7 +27,7 @@ export function ProjectFinalApproval({ project }: { project: TProject }) {
 
     
     return (
-        <div className="card container-project-final">
+        <div className={`card container-project-final ${_project.completed ? 'card-approved' : 'card-pending-approval'}`}>
             
             <div className="header">
                 <p>
@@ -35,7 +35,7 @@ export function ProjectFinalApproval({ project }: { project: TProject }) {
                     {_project.projectName}
                 </p>
                 <p>
-                    <strong>Status: Aguardando aprovação.</strong>
+                    <strong>Status: {project.completed ? 'Aprovado' : 'Aguardando aprovação.'}</strong>
                 </p>
             </div>
 

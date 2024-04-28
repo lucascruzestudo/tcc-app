@@ -92,4 +92,8 @@ export default class ProjectsService {
   revertStage<T>(projectId: string, stageId: number): Promise<Response<T>> {
     return this.request<T>(() => api.put(`project/${projectId}/stage/${stageId}/revert`));
   }
+
+  completedProject<T>(projectId: string): Promise<Response<T>> {
+    return this.request<T>(() => api.post(`project/${projectId}/completed`));
+  }
 }
