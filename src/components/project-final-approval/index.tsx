@@ -9,7 +9,7 @@ export function ProjectFinalApproval({ project }: { project: TProject }) {
     
     const [_project, _setProject] = useState<TProject>(project);
     
-    const handleAccessProject = (id: string): void => navigate(`/project-progress/${id}`);
+    const handleAccessProject = (id: string): void => navigate(`/project-final-approval/${id}`);
     
     function getDate() {
         const year = expectedCompletion.getFullYear();
@@ -72,7 +72,7 @@ export function ProjectFinalApproval({ project }: { project: TProject }) {
                         {getHour()}
                     </p>
                     <div className="mt-3 btns">
-                        <button className="btn btn-primary" disabled={!project.creationApproved} onClick={() => handleAccessProject(project._id)}>
+                        <button className="btn btn-primary" onClick={() => handleAccessProject(project._id)}>
                             Analisar
                         </button>
                     </div>

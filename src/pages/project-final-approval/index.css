@@ -1,0 +1,192 @@
+.container-step-final {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+    .step-final {
+        margin-top: 20px;
+
+        /* border: solid 1px;
+        border-radius: 20px;
+        padding: 15px;
+        width: 85%; */
+
+        width: 80%;
+        margin-bottom: 100px;
+
+        .menu-step {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 10px;
+            border-radius: 10px;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #0d6efd;
+            min-width: 400px;
+            overflow-x: auto;
+                        
+            button {
+                background: none;
+                border: none;
+                border-radius: 10px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 12px;
+                margin: 4px 2px;
+                cursor: pointer;
+                padding: 6px;
+                color: #ffffff;
+            }
+            
+            .active-step {
+                border: solid 1px #ffffff;
+            }
+            
+            box-shadow: 0px 5px #aeaeae;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            margin-top: 30px;
+
+            .description {
+                margin-top: 5px;
+
+                small {
+                    text-align: justify;
+                    text-justify: inter-word;
+                }
+            }
+
+            div:nth-child(1) {
+                flex: 5;
+                margin-right: 10px;
+            }
+
+            div:nth-child(2) {
+                flex: 2;
+            }
+            
+            .project-end-date {
+                margin-top: 5px;
+            }
+        }
+
+        .title-upload-files {
+            margin-top: 20px;
+        }
+        
+        .upload-files {
+            .files {
+                display: flex;
+                justify-content: stretch;
+                flex-direction: row;
+                align-items: start;
+                flex-wrap: wrap;
+                gap: 20px;
+                width: 100%;
+            }
+
+            .attachment {
+                display: flex;
+                justify-content: flex-start;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .upload-area {
+                min-width: 40%;
+            } 
+        }
+        
+        .comments-form {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            flex-direction: column;
+            margin-top: 5%;
+            width: 100%;
+            
+            h3 {
+                margin: 10px 0px;
+            }
+
+            textarea {
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+            }
+              
+            textarea {
+                padding: 10px;
+                max-width: 100%;
+                line-height: 1.5;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                box-shadow: 1px 1px 1px #999;
+            }
+              
+            label {
+                display: block;
+                margin-bottom: 10px;
+            }
+        }
+
+        .comments {
+            margin-top: 30px;
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 15px 5px;
+            
+            border-radius: 10px;
+            border: 1px solid black;
+         
+            .my-comment, .team-comment {
+                padding: 3px 8px;
+                border-radius: 10px;
+                max-width: 95%;
+            }
+
+            .my-comment {
+                background-color: rgba(31, 199, 31, 0.506);
+            }
+            .team-comment {
+                background-color: rgba(31, 109, 199, 0.506);
+            }            
+        }
+
+        .moreComments {
+            margin-top: 15px;
+        }
+
+
+        .approve-stage {
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: row;
+            align-items: center;
+            margin-top: 20px;
+
+            button {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 20px;
+                border-radius: 10px;
+                cursor: pointer;
+                text-align: center;
+                font-size: medium;
+            }
+        }
+    }
+}

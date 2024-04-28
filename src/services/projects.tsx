@@ -18,29 +18,34 @@ export default class ProjectsService {
     }
   }
 
-  getProject<T>(id: string): Promise<Response<T>> {
-    return this.request<T>(() => api.get(`/project/${id}`));
+  getProject<T>(
+    id: string,
+    params?: { pending_final_approval?: boolean, include_final_stage?: boolean }
+  ): Promise<Response<T>> {
+    return this.request<T>(() => api.get(`/project/${id}`, { params }));
   }
-  
-  getProjects<T>(): Promise<Response<T>> {
-    return this.request<T>(() => api.get("/projects"));
+
+  getProjects<T>(
+    params?: { pending_final_approval?: boolean, include_final_stage?: boolean }
+  ): Promise<Response<T>> {
+    return this.request<T>(() => api.get("/projects", { params }));
   }
 
   createProject<T>(data: any): Promise<Response<T>> {
     return this.request<T>(() => api.post("/projects", data));
   }
-  
+
   updateProject<T>(id: string, data: any): Promise<Response<T>> {
     return this.request<T>(() => api.put(`/project/${id}`, data));
   }
 
-  approvalProject<T>(id: string, data: {approve: boolean}): Promise<Response<T>> {
+  approvalProject<T>(id: string, data: { approve: boolean }): Promise<Response<T>> {
     return this.request<T>(() => api.put(`/project/${id}/approval`, data));
   }
 
   sendNewCommentProject<T>(
-    id: string, 
-    data: { message: string, stageId: number}
+    id: string,
+    data: { message: string, stageId: number }
   ): Promise<Response<T>> {
     return this.request<T>(() => api.post(`/project/${id}/comment`, data));
   }
@@ -48,10 +53,10 @@ export default class ProjectsService {
   getCommentsFromStage<T>(projectId: string, stageId: number): Promise<Response<T>> {
     return this.request<T>(() => api.get(`project/${projectId}/stage/${stageId}`));
   }
- 
+
   uploadProjectFile<T>(
-    projectId: string, 
-    stageId: number, 
+    projectId: string,
+    stageId: number,
     fileId: string,
     data: any,
   ): Promise<Response<T>> {
@@ -64,8 +69,8 @@ export default class ProjectsService {
   }
 
   downloadProjectFile<T>(
-    projectId: string, 
-    stageId: number, 
+    projectId: string,
+    stageId: number,
     fileId: string,
     params: { evaluated_document: boolean }
   ): Promise<Response<T>> {

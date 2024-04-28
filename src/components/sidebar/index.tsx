@@ -16,7 +16,7 @@ export function SideBar() {
     function getMenus(user: LocalStorangeUser): Menus {
         let _menus = AllMenus
 
-        if (user.role === 2) {
+        if (user.role === 3) {
             _menus = _menus.filter(menu => menu.linkTo !== '/projects/final-approval');
         }
         

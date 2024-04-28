@@ -13,6 +13,7 @@
       "@config/*": ["src/config/*"],
       "@services/*": ["src/services/*"],
       "@assets/*": ["src/assets/*"],
+      "@pages/*": ["src/pages/*"]
     },
 
     /* Bundler mode */

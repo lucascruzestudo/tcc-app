@@ -4,15 +4,16 @@ import { formatFileName } from "@utils/project-functions";
 import { useEffect, useRef, useState } from "react";
 import { FaFileUpload } from "react-icons/fa";
 import { FcOk } from "react-icons/fc";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "src/hooks/authContextProvider";
 import useIsElementVisible from "../../hooks/useIsElementVisible";
 import "./index.css";
 import { Comment, UploadFile } from "./types";
 
-export function ProjectProgress() {
+export function ProjectProgressFinalApproval() {
   const { projectId } = useParams();
+  const navigate = useNavigate();
   const projectsService = new ProjectsService()
   const userLocalStorage = useAuth().user!
 
@@ -22,7 +23,6 @@ export function ProjectProgress() {
 
   const [currentStage, setCurrentStage] = useState<TStages | null>(null);
   const [project, setProject] = useState<TProject | null>(null);
-  const [steps, setSteps] = useState<TStages[]>([]);
   const [endDate, setEndDate] = useState<string>("");
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<Comment[]>([]);
@@ -34,7 +34,11 @@ export function ProjectProgress() {
   }, [currentStage]);
 
   useEffect(() => {
-    init();
+    if (userLocalStorage.role !== 1) {
+      navigate('/not-found');
+    } else {
+      init();
+    }
   }, []);
 
   // Async Scroll
@@ -47,19 +51,21 @@ export function ProjectProgress() {
   async function init() {
     if (!projectId) return
 
-    const response = await projectsService.getProject<TProject>(projectId);
+    const response = await projectsService.getProject<TProject>(
+      projectId, {include_final_stage: true, pending_final_approval: true}
+    );
 
     if (response.status !== 200) return
    
-    let project = response.data;
-    
-    project = {
-      ...project,
-      currentStage: project.currentStage > project.stages.length ? project.stages.length : project.currentStage 
+    const project = response.data;
+
+    if (project.currentStage !== project.stages.length) {
+      toast(`Projeto não está na última Etapa.`, { type: "error" });
+      navigate('/projects/final-approval');
+      return
     }
     
     setProject(project);
-    setSteps(response.data.stages);
 
     const step = project.stages.find((step) => step.stageId === project.currentStage) ?? null;
 
@@ -77,16 +83,6 @@ export function ProjectProgress() {
       setComments(response.data)
     }
   }
-
-  const nextStep = (step_id: number) => {
-    if (!project) return;
-
-    const _step = steps.find((step) => step.stageId === step_id) ?? null;
-    if (!_step || _step.stageId > project.currentStage) return;
-
-    setComments([]);
-    changeStep(_step);
-  };
 
   const changeStep = (step: TStages) => {
     setCurrentStage(step);
@@ -218,53 +214,23 @@ export function ProjectProgress() {
 
   }
 
-  const handleApproveStage = async () => {
-    if (!projectId || !currentStage) return;
+  const handleApproveProject = async () => {
+    if (!projectId || !currentStage || project?.currentStage === project?.stages.length) return;
 
-    if (project?.currentStage !== currentStage.stageId) {
-      toast(`Ainda não é possivel aprovar essa etapa do projeto.`, { type: "error" });
-      return
-    }
+    // const response = await projectsService.revertStage(projectId);
 
-    const response = await projectsService.proceedStage(projectId);
-
-    if (response.status != 200) {
-      toast(`Error ao aprovar etapa atual.`, { type: "error" });
-      return
-    }
-
-    init();
-  }
-
-  const handleRevertStage = async (stageId: number) => {
-    if (!projectId || !currentStage || stageId < 1) return;
-
-    const response = await projectsService.revertStage(projectId, stageId);
-
-    if (response.status != 200) {
-      toast(`Error ao aprovar etapa atual.`, { type: "error" });
-      return
-    }
+    // if (response.status != 200) {
+    //   toast(`Error ao aprovar etapa atual.`, { type: "error" });
+    //   return
+    // }
 
     init();
   }
 
   return (
-    <div className="container-home">
-      <div className="steps">
-        <nav className="menu-step">
-          {steps.map(({ stageId, stageName }) => (
-            <div key={`step-${stageId}`}>
-              <button
-                className={stageId === currentStage?.stageId ? "active-step" : ""}
-                onClick={() => nextStep(stageId)}
-              >
-                {stageName}
-              </button>
-            </div>
-          ))}
-        </nav>
-
+    <div className="container-step-final">
+      <div className="step-final">
+        <hr />
         {currentStage && (
           <>
             <section className="header">
@@ -393,26 +359,15 @@ export function ProjectProgress() {
           </>
         )}
 
-        {userLocalStorage.role !== 3 && currentStage && 
+        {userLocalStorage.role === 1 &&
           <div className="approve-stage">
-            { (currentStage.completed || false) && currentStage.stageId 
-              ?
-                <button 
-                    onClick={() => handleRevertStage(currentStage.stageId)} 
-                    type="button" 
-                    className="btn btn-secondary"
-                  >
-                    Volta para essa Etapa
-                </button>
-              :
-                <button 
-                  onClick={handleApproveStage} 
-                  type="button" 
-                  className="btn btn-success"
-                >
-                    Aprovar Etapa
-                </button>
-            }
+            <button 
+              onClick={handleApproveProject} 
+              type="button" 
+              className="btn btn-success"
+            >
+                Aprovar Projeto
+            </button>
           </div>
         }
 

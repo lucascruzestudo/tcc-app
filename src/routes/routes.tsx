@@ -1,8 +1,13 @@
+import {
+    ListProjects,
+    ListProjectsFinalApproval,
+    MyAccount,
+    NotFound404,
+    ProjectProgress,
+    ProjectProgressFinalApproval,
+    RetrieveProject
+} from "@pages/index";
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import { ProjectsFinalApproval } from "src/pages/projects-final-approval";
-import { MyAccount, NotFound404, ProjectProgress } from "../pages";
-import { Projects } from "../pages/projects";
-import { RetrieveProject } from "../pages/retrieve-project";
 import PrivateRoutes from "./privateRoutes";
 
 export const router = createBrowserRouter([
@@ -21,11 +26,15 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/projects/final-approval",
-                element: <ProjectsFinalApproval />
+                element: <ListProjectsFinalApproval />
+            },
+            {
+                path: "/project-final-approval/:projectId",
+                element: <ProjectProgressFinalApproval />
             },
             {
                 path: "/projects",
-                element: <Projects />
+                element: <ListProjects />
             },
             {
                 path: "/new-project",
