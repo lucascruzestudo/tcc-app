@@ -19,7 +19,9 @@ export function RetrieveProject() {
   const projectsService = new ProjectsService()
   const { projectId } = useParams();
   const userLocalStorage = useAuth().user!
-
+  const [project, setProject] = useState<TProject>();
+  const [canEdit, setCanEdit] = useState<boolean>();
+  
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [expectedCompletion, setExpectedCompletion] = useState<string | undefined>();
@@ -60,6 +62,10 @@ export function RetrieveProject() {
       const response = await projectsService.getProject<TProject>(projectId)
 
       if (response.status !== 200) return
+
+      setProject(response.data);
+
+      setCanEdit(response.data.creationApproved ? userLocalStorage.role === 1 : false);
       
       setName(response.data.projectName);
       setDescription(response.data.description);
@@ -215,7 +221,7 @@ export function RetrieveProject() {
       <Spinner loading={loading} />
 
       <div hidden={loading} className="container-new-project">
-        <div className="row m-0 p-0">
+        <div className={`row m-0 p-0 ${canEdit ? '' : 'disable-interaction'}`} >
           {userLocalStorage.role === 1 && projectId &&
             <div className="row form-group m-0">
               <div className="offset-8 col-4 mt-2 form-check form-switch">
@@ -233,7 +239,7 @@ export function RetrieveProject() {
           }
 
           <div className="row form-group mt-3">
-            <div className="col-8">
+            <div className="col-7">
               <input
                 type="email"
                 className="form-control"
@@ -243,7 +249,7 @@ export function RetrieveProject() {
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-            <div className="col-4">
+            <div className="col-5">
               <input
                 type="datetime-local"
                 className="form-control"
@@ -358,6 +364,12 @@ export function RetrieveProject() {
             {projectId ? "Atualizar" : "Criar"}
             </button>
           </div>
+
+          {!canEdit && 
+            <div className="text-center mt-5">
+              <p>Você não pode atualizar esse projeto após aprovação!</p>
+            </div>
+          }
         </div>
       </div>
     </>

@@ -9,7 +9,7 @@ type Register = {
   password: string;
   email: string;
   full_name: string;
-  role: 1 | 2 | 3 | 4;
+  role: number;
 }
 
 type Response<T = any> = {

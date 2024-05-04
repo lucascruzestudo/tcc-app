@@ -42,10 +42,12 @@ export function SideBar() {
     }, []);
 
     const getProfileImg = (_userLocalStorage: LocalStorangeUser) => {
-
         if (!_userLocalStorage.profile_picture) {
             userService.getProfile<BlobPart>(_userLocalStorage.id).then(({status, data}) => {
-                if (status !== 200) return;
+                if (status !== 200) {
+                    setUserLocalStorage(_userLocalStorage);
+                    return
+                }
         
                 const blob = new Blob([data]);
                 const url = URL.createObjectURL(blob);

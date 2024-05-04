@@ -86,7 +86,7 @@ export function ProjectProgressFinalApproval() {
     );
 
     if (response.status === 200) {
-      setComments(response.data)
+      setComments([response.data[0]])
     }
   }
 

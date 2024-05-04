@@ -17,3 +17,9 @@
     left: 250px;
     width: calc(100% - 250px);
 }
+
+
+.disable-interaction {
+    pointer-events: none;
+    opacity: 0.8;
+}

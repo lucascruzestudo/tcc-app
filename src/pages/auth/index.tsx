@@ -10,7 +10,7 @@ import AuthService from "src/services/auth";
 import "./index.css";
 
 class Validators {
-    
+
     static validateEmail = (email: string) => {
         const validator = validEmail(email);
 
@@ -52,6 +52,7 @@ export function Auth() {
 
     const [fullName, setFullName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
+    const [profile, setProfile] = useState<number>(3);
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [loading, setloading] = useState<boolean>(false);
@@ -65,7 +66,7 @@ export function Auth() {
         if (!_email || !_password) return;
 
         setloading(true);
-        
+
         const response = await authService.login<LocalStorangeUser>({
             email: _email,
             password: _password,
@@ -73,12 +74,13 @@ export function Auth() {
 
         if (response.status === 401) {
             toast("O E-mail ou senha está incorreto.", { type: "error" });
+            setloading(false);
             return
         }
 
         setloading(false);
 
-        if (response.status !== 200) return       
+        if (response.status !== 200) return
 
         const {
             access_token,
@@ -93,7 +95,7 @@ export function Auth() {
         // const path = userData.role === 3 && userData.projectIds.length === 1  
         //     ? `/project-progress/${userData.projectIds[0]}`
         //     : '/projects';
-            
+
         window.location.href = '/projects'
     }
 
@@ -115,10 +117,11 @@ export function Auth() {
             !_email ||
             !_password ||
             !_confirmPassword ||
-
-            fullName.length < 4
+            fullName.length < 4 ||
+            !([1,2,3].includes(profile))
         ) {
             toast("Dados inválidos.", { type: "error" });
+            setloading(false);
             return
         }
 
@@ -128,11 +131,11 @@ export function Auth() {
             password: _password,
             email: _email,
             full_name: fullName,
-            role: 3,
+            role: profile,
         });
 
         setloading(false);
-        
+
         if (response.status !== 201) return;
 
         submitLogin();
@@ -188,12 +191,12 @@ export function Auth() {
                             />
 
                             <button type="button" onClick={submitLogin}>
-                                {loading 
+                                {loading
                                     ?
-                                        <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                                    : 
-                                        <span>Acessar</span>
-                                }   
+                                    <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                    :
+                                    <span>Acessar</span>
+                                }
                             </button>
                         </div>
                     }
@@ -211,7 +214,7 @@ export function Auth() {
                                 onChange={({ target }) => changeState(target.value, setFullName)}
                                 value={fullName || ""}
                             />
-          
+
                             <input
                                 type="email"
                                 name="email"
@@ -237,6 +240,16 @@ export function Auth() {
                                 value={confirmPassword || ""}
                             />
 
+                            <select
+                                value={profile}
+                                className="form-select"
+                                onChange={({ target }) => setProfile(Number(target.value))}
+                            >
+                                <option value={3}>Aluno</option>
+                                <option value={2}>Orientador</option>
+                                <option value={1}>Coordenador</option>
+                            </select>
+
                             <button type="button" onClick={submitRegister}>Cadastrar</button>
                         </div>
                     }
@@ -257,12 +270,12 @@ export function Auth() {
                             />
 
                             <button type="button" onClick={submitForgotPassword}>
-                                {loading 
+                                {loading
                                     ?
-                                        <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                                    : 
-                                        <span>Cadastrar</span>
-                                }                                
+                                    <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                    :
+                                    <span>Cadastrar</span>
+                                }
                             </button>
                         </div>
                     }
