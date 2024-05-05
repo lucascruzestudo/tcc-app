@@ -15,14 +15,25 @@
 .panel-auth-reset-password {
     border-radius: 5px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    flex-direction: row;
-    width: 80%;
+    flex-direction: column;
+    width: 40%;
     height: 70%;
+    padding: 10px;
     flex-wrap: nowrap;
     background-color: #ffffff;
-    max-width: 1000px;
+    gap: 30px;
+
+    .logo {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+
+        img {
+            max-height: 200px;
+            border-radius: 100%;
+        }
+    }
     
     .panel-control {
         display: flex;

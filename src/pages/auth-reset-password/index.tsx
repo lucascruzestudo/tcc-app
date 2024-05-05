@@ -1,11 +1,10 @@
-import {
-    validMarchet,
-    validPassword,
-} from "@utils/validators";
+import logo_with_background from "@assets/logo-with-background.png";
+import { validMarchet, validPassword } from "@utils/validators";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import AuthService from "src/services/auth";
+
 import "./index.css";
 
 class Validators {
@@ -58,7 +57,7 @@ export function AuthResetPassword() {
 
         setloading(true);
 
-        const response = await authService.resetPassword<{msg: string}>(_password, otp);
+        const response = await authService.resetPassword<{ msg: string }>(_password, otp);
 
         setloading(false);
 
@@ -68,22 +67,29 @@ export function AuthResetPassword() {
         }
 
         toast("Senha redefinida comn sucesso.", { type: "success" });
-        
-        navigate("/");
+
+        goLoginScheen();
     }
 
     useEffect(() => {
         if (!otp) window.location.href = "/";
     }, [])
 
+    const goLoginScheen = () => navigate("/");
+
     return (
         <div className="background-auth-reset-password">
             <div className="panel-auth-reset-password">
-                <div className="panel-control">
+                
+                <div className="logo mt-3">
+                    <img src={logo_with_background} alt="logo" />
+                </div>
+
+                <div className="panel-control mt-5">
                     <input
                         type="password"
                         name="password"
-                        placeholder="Senha"
+                        placeholder="Nova Senha"
                         id="password"
                         onChange={({ target }) => changeState(target.value, setPassword)}
                         value={password || ""}
@@ -92,12 +98,12 @@ export function AuthResetPassword() {
                         type="password"
                         name="confirmPassword"
                         id="confirmPassword"
-                        placeholder="Confirmação da senha"
+                        placeholder="Confirmação da nova senha"
                         onChange={({ target }) => changeState(target.value, setConfirmPassword)}
                         value={confirmPassword || ""}
                     />
 
-                    <button type="button" onClick={submitForgetPassword}>
+                    <button className="mt-3" type="button" onClick={submitForgetPassword}>
                         {loading
                             ?
                             <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
@@ -106,6 +112,8 @@ export function AuthResetPassword() {
                         }
                     </button>
                 </div>
+
+                <button onClick={goLoginScheen} type="button" className="btn btn-link">Volta para tela de login</button>
             </div>
             <ToastContainer position="top-right" theme="light" />
         </div>
