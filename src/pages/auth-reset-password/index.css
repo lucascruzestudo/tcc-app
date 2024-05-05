@@ -1,0 +1,55 @@
+
+.background-auth-reset-password {
+    background-color: #e2e2e2;
+    margin: 0px;
+    padding: 0px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.panel-auth-reset-password {
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    width: 80%;
+    height: 70%;
+    flex-wrap: nowrap;
+    background-color: #ffffff;
+    max-width: 1000px;
+    
+    .panel-control {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+
+        input {
+            margin-bottom: 15px;
+            padding: 15px 10px;
+            border-radius: 10px;
+            border: none;
+            background-color: rgba(223, 223, 223, 0.548);
+            width: 70%;
+            max-width: 500px;
+        }
+
+        button {
+            padding: 15px 35px;
+            border: 1px solid #ffffff;
+            background: var(--color-default);
+            border-radius: 25px;
+            color: #ffffff;
+            cursor: pointer;
+        }
+    }
+
+
+}

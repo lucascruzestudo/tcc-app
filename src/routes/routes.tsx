@@ -1,4 +1,5 @@
 import {
+    AuthResetPassword,
     ListProjects,
     ListProjectsFinalApproval,
     MyAccount,
@@ -9,6 +10,7 @@ import {
 } from "@pages/index";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import PrivateRoutes from "./privateRoutes";
+
 
 export const router = createBrowserRouter([
     {
@@ -49,6 +51,10 @@ export const router = createBrowserRouter([
                 element: <MyAccount />
             },
         ]
+    },
+    {
+        path: "/reset-password",
+        element: <AuthResetPassword />,
     },
     {
         path: "/not-found",

@@ -99,13 +99,17 @@ export function Auth() {
         window.location.href = '/projects'
     }
 
-    const submitForgotPassword = () => {
+    const submitForgotPassword = async () => {
         const _email = Validators.validateEmail(email);
 
         if (!_email) return;
 
-        // TODO: ForgotPassword to API
-        console.log({ _email });
+        await authService.sendResetPassword(_email);
+
+        toast("Em alguns minutos, as instruções para a redefinição de" +
+            "senha devem chegar ao e-mail informado.", 
+            { type: "success" }
+        )
     }
 
     const submitRegister = async () => {
@@ -118,7 +122,7 @@ export function Auth() {
             !_password ||
             !_confirmPassword ||
             fullName.length < 4 ||
-            !([1,2,3].includes(profile))
+            !([1, 2, 3].includes(profile))
         ) {
             toast("Dados inválidos.", { type: "error" });
             setloading(false);

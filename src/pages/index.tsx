@@ -1,4 +1,5 @@
 export { Auth } from "./auth";
+export { AuthResetPassword } from "./auth-reset-password";
 export { ListProjects } from './list-projects';
 export { ListProjectsFinalApproval } from './list-projects-final-approval';
 export { MyAccount } from "./my-account";

@@ -18,36 +18,36 @@ type Response<T = any> = {
 }
 
 export default class AuthService {
-  async login<T>(data: Login): Promise<Response<T>> {
+
+  private async request<T>(method: () => Promise<any>): Promise<Response<T>> {
     try {
-      const response = await api.post("/login", data);
+      const response = await method();
       return { status: response.status, data: response.data };
     } catch (error: any) {
-      console.error("Error when logging in - ", error);
+      console.error("Error - ", error);
       const { data, status } = error.response;
       return { data, status };
     }
   }
 
-  async register<T>(data: Register): Promise<Response<T>> {
-    try {
-      const response = await api.post("/register", data);
-      return { status: response.status, data: response.data };
-    } catch (error: any) {
-      console.error("Error registering new user - ", error);
-      const { data, status } = error.response;
-      return { data, status };
-    }
+  login<T>(data: Login): Promise<Response<T>> {
+    return this.request<T>(() => api.post("/login", data));
   }
 
-  async logout(): Promise<Response> {
-    try {
-      const response = await api.post("/logout");
-      return { status: response.status, data: response.data };
-    } catch (error: any) {
-      console.error("Error logged out - ", error);
-      const { data, status } = error.response;
-      return { data, status };
-    }
+  register<T>(data: Register): Promise<Response<T>> {
+    return this.request<T>(() => api.post("/register", data));
   }
+
+  logout<T>(): Promise<Response<T>> {
+    return this.request<T>(() => api.post("/logout"));
+  }
+
+  sendResetPassword<T>(email: string): Promise<Response<T>> {
+    return this.request<T>(() => api.post("/request-password-reset", { email }));
+  }
+
+  resetPassword<T>(new_password: string, otp: string): Promise<Response<T>> {
+    return this.request<T>(() => api.post(`/reset-password/${otp}`, { new_password }));
+  }
+
 }
