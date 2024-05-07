@@ -266,15 +266,31 @@ export function ProjectProgress() {
           <>
             <nav className="menu-step">
               {steps.map(({ stageId, stageName }) => (
-                <div key={`step-${stageId}`}>
-                  <button
-                    className={stageId === currentStage?.stageId ? "active-step" : ""}
-                    onClick={() => nextStep(stageId)}
-                  >
-                    {stageName}
-                  </button>
-                </div>
+                <button
+                  key={`step-${stageId}`}
+                  className={stageId === currentStage?.stageId ? "active-step" : ""}
+                  onClick={() => nextStep(stageId)}
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="left"
+                  title={project?.currentStage === stageId ? 'Fase Atual' : 'Fase não disponivel'}
+                >
+                  {stageName}
+                </button>
               ))}
+
+              <div
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                title="Fase final entre Orientador e Coordenador."
+              >
+                <button
+                  disabled={true}
+                  className="btn btn-secondary"
+                >
+                  Entrega Final Corrigida
+                </button>
+              </div>
+
             </nav>
 
             <section className="header">
@@ -427,7 +443,7 @@ export function ProjectProgress() {
         }
 
       </div>
-      
+
     </div>
   );
 }

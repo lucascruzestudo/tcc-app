@@ -366,7 +366,7 @@ export function RetrieveProject() {
           </div>
 
           {!canEdit && 
-            <div className="text-center mt-5">
+            <div className="text-center mt-5 text-danger">
               <p>Você não pode atualizar esse projeto após aprovação!</p>
             </div>
           }
