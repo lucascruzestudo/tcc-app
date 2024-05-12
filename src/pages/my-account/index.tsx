@@ -35,7 +35,7 @@ export function MyAccount() {
         setloading(true);
 
         const _userLocalStorage: LocalStorangeUser = JSON.parse(localStorage.getItem('user')!);
-
+        
         const user = {
             currentPassword: "",
             newPassword: "",
@@ -49,6 +49,11 @@ export function MyAccount() {
         setUser(user);
 
         setloading(false);
+
+        setTimeout(() => {
+            const _userLocalStorage: LocalStorangeUser = JSON.parse(localStorage.getItem('user')!);
+            setProfileImg(_userLocalStorage.profile_picture || defaultProfile);
+        }, 850);
 
         return () => {}
     }, []);
