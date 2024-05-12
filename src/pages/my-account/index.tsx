@@ -128,9 +128,7 @@ export function MyAccount() {
         const formData = new FormData();
         formData.append('file', file);
         
-        const id: string = userLocalStorage.id
-
-        const response = await userService.editprofile(id, formData);
+        const response = await userService.editprofile(formData);
 
         if (response.status !== 200) {
             toast("Não foi possivel alterar a foto de perfil!",  {type: "error"});
@@ -149,7 +147,7 @@ export function MyAccount() {
         setTimeout(() => {
             window.location.reload();
         }, 500);
-    };
+    }
 
     return(
         <div className="container-user row mt-3">

@@ -29,12 +29,12 @@ export default class UserService {
       return this.request<T>(() => api.patch(`/user-edit/${id}`, data));
     }
 
-    editprofile<T>(id: string, data: any): Promise<Response<T>> {
-      return this.request<T>(() => api.patch(`/photo-profile/${id}`, data));
+    editprofile<T>(data: any): Promise<Response<T>> {
+      return this.request<T>(() => api.patch('/photo-profile', data));
     }
     
-    getProfile<T>(id: string): Promise<Response<T>> {
-      return this.request<T>(() => api.get(`/photo-profile/${id}`, {
+    getProfile<T>(): Promise<Response<T>> {
+      return this.request<T>(() => api.get('/photo-profile', {
         responseType: 'blob'
       }));
     }

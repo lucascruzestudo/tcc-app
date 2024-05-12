@@ -94,6 +94,7 @@ export function RetrieveProject() {
       setStudents(updatedStudents);
       setStudentsIds(updatedStudentsIds);
     } else {
+      setCanEdit(true);
       const updatedStudents = new Map();
       
       const id = generateRandomId();
@@ -120,7 +121,7 @@ export function RetrieveProject() {
   };
 
   const addStudent = () => {
-    if (studentsIds.length > 6) {
+    if (studentsIds.length > 4) {
       toast("Limite de membros", { type: "error" });
       return;
     }
@@ -346,7 +347,7 @@ export function RetrieveProject() {
             </div>
           ))}
 
-          {studentsIds.length < 6 && (
+          {studentsIds.length < 4 && (
             <div className="row">
               <div className="mt-4 offset-11 col-1 d-flex flex-column justify-content-end align-items-center">
                 <button className="btn btn-primary" onClick={addStudent}>

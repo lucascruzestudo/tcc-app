@@ -9,7 +9,7 @@ import "./index.css";
 import { AllMenus, Menus } from "./menus";
 
 export function SideBar() {
-    const [userLocalStorage, setUserLocalStorage] = useState<LocalStorangeUser|null>(null)
+    const [userLocalStorage, setUserLocalStorage] = useState<LocalStorangeUser | null>(null)
     const userService = new UserService()
     const authService = new AuthService();
     const [menus, setMenus] = useState<Menus>([])
@@ -20,7 +20,7 @@ export function SideBar() {
         if (user.role === 3) {
             _menus = _menus.filter(menu => menu.linkTo !== '/projects/final-approval');
         }
-        
+
         // if (user.projectIds.length === 1) {
         //     _menus.unshift({
         //         title: "Projeto",
@@ -42,26 +42,51 @@ export function SideBar() {
     }, []);
 
     const getProfileImg = (_userLocalStorage: LocalStorangeUser) => {
-        if (!_userLocalStorage.profile_picture) {
-            userService.getProfile<BlobPart>(_userLocalStorage.id).then(({status, data}) => {
+        if (_userLocalStorage.profile_picture.trim() === '') {
+            userService.getProfile<BlobPart>().then(({ status, data }) => {
                 if (status !== 200) {
-                    setUserLocalStorage(_userLocalStorage);
+                    setUserLocalStorage(
+                        { ..._userLocalStorage, profile_picture: '' }
+                    );
                     return
                 }
-        
+
                 const blob = new Blob([data]);
                 const url = URL.createObjectURL(blob);
-                
-                const user = {..._userLocalStorage, profile_picture: url};
+
+                const user = { ..._userLocalStorage, profile_picture: url };
                 setUserLocalStorage(user);
                 localStorage.setItem('user', JSON.stringify(user));
 
-                window.location.reload();
+                // window.location.reload();
             });
         } else {
-            setUserLocalStorage(_userLocalStorage);
+            validateProfileUrl(_userLocalStorage.profile_picture).then((valid) => {  
+                console.log(valid)             
+                if (valid) setUserLocalStorage(_userLocalStorage);
+                else getProfileImg({..._userLocalStorage, profile_picture: ''});
+            })
         }
     }
+
+    const validateProfileUrl = (url: string): Promise<boolean> => {
+        console.log(url);
+        
+        return new Promise((resolve) => {
+            fetch(url, { method: 'HEAD' }).then(response => {
+                const content_type = response.headers.get('content-type')
+                if (content_type && content_type.includes('image')) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            }).catch(error => {
+                console.error('Erro ao validar a imagem:', error);
+                resolve(false);
+            });
+        })
+    }
+
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     const toggleSidebar = () => {
@@ -72,11 +97,11 @@ export function SideBar() {
         await authService.logout();
 
         let _userLocalStorage: LocalStorangeUser = JSON.parse(localStorage.getItem('user')!);
-        
+
         if (_userLocalStorage.profile_picture) {
             URL.revokeObjectURL(_userLocalStorage.profile_picture);
         }
-        
+
         localStorage.removeItem('user');
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
@@ -92,7 +117,7 @@ export function SideBar() {
 
     return (
         <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
-            
+
             <div className="logo_details">
                 <i className="bx bxl-audible icon"></i>
                 <div className="logo_name">Laboratório</div>
