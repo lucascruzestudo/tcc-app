@@ -42,7 +42,7 @@ export function SideBar() {
     }, []);
 
     const getProfileImg = (_userLocalStorage: LocalStorangeUser) => {
-        if (_userLocalStorage.profile_picture.trim() === '') {
+        if (!_userLocalStorage.profile_picture) {
             userService.getProfile<BlobPart>().then(({ status, data }) => {
                 if (status !== 200) {
                     setUserLocalStorage(
@@ -62,7 +62,6 @@ export function SideBar() {
             });
         } else {
             validateProfileUrl(_userLocalStorage.profile_picture).then((valid) => {  
-                console.log(valid)             
                 if (valid) setUserLocalStorage(_userLocalStorage);
                 else getProfileImg({..._userLocalStorage, profile_picture: ''});
             })
