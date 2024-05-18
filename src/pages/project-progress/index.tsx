@@ -28,6 +28,7 @@ export function ProjectProgress() {
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoadingComments, setIsLoadingComments] = useState(false);
+  const [newCommentLoading, setNewCommentLoading] = useState(false);
   const [loading, setloading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -53,6 +54,8 @@ export function ProjectProgress() {
 
     const response = await projectsService.getProject<TProject>(projectId);
 
+    setloading(false);
+
     if (response.status !== 200) return
 
     let project = response.data;
@@ -68,8 +71,16 @@ export function ProjectProgress() {
     const step = project.stages.find((step) => step.stageId === project.currentStage) ?? null;
 
     if (step) changeStep(step);
+  }
 
-    setloading(false);
+  const canUserUpload = (): boolean => {
+    if (!currentStage || !project) return true
+
+    if (userLocalStorage.role === 3 && currentStage.stageId > 2) return true
+
+    if (currentStage.stageId !== project.currentStage) return true
+
+    return false
   }
 
   const getComment = async (stageId: number) => {
@@ -88,7 +99,8 @@ export function ProjectProgress() {
     if (!project) return;
 
     const _step = steps.find((step) => step.stageId === step_id) ?? null;
-    if (!_step || _step.stageId > project.currentStage) return;
+    // || _step.stageId > project.currentStage
+    if (!_step) return;
 
     setComments([]);
     changeStep(_step);
@@ -108,14 +120,18 @@ export function ProjectProgress() {
     } else {
       setEndDate("Não definido!");
     }
+
+    setComment('');
   };
 
   const handleUploadFile = async (event: any, _file: UploadFile) => {
     if (!project || !currentStage || event.cancelable) return;
 
+    if (userLocalStorage.role === 3 && currentStage.stageId > 2) return;
+
     const file = event.target.files[0];
 
-    const max_size_file = 100000 * 5
+    const max_size_file = 850 * 1024 * 1024
 
     if (file.size > max_size_file) {
       toast(`Very large file. ${file.size}/${100000}`, { type: "error" });
@@ -155,11 +171,13 @@ export function ProjectProgress() {
   };
 
   const handleSubmitCommets = async () => {
-    if (!project || !currentStage) return;
+    if (!project || !currentStage || newCommentLoading) return;
 
     const message = comment.trim();
 
     if (message.length <= 0) return;
+
+    setNewCommentLoading(true);
 
     try {
       const response = await projectsService.sendNewCommentProject<Comment>(project._id, {
@@ -177,6 +195,8 @@ export function ProjectProgress() {
     } catch (error) {
       console.error(error);
       toast("Erro ao enviar seu comentário.", { type: "error" });
+    } finally {
+      setNewCommentLoading(false);
     }
   };
 
@@ -209,7 +229,12 @@ export function ProjectProgress() {
       return;
     }
 
-    const filename = file_type ? file.return_filename : file.filename
+    let filename = null
+
+    if (file_type === 1) filename = file.filename
+    if (file_type === 2) filename = file.return_filename
+
+    if (filename === null) return
 
     try {
       const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -226,10 +251,19 @@ export function ProjectProgress() {
 
   }
 
-  const handleApproveStage = async () => {
-    if (!projectId || !currentStage) return;
+  const canApproveStage = () => {
+    if (!currentStage || !project || currentStage.stageId > project.currentStage) return false
+    if (userLocalStorage.role === 1) return true
+    if (userLocalStorage.role === 3) return false
 
-    if (project?.currentStage !== currentStage.stageId) {
+    if (currentStage.stageId > 2) return false
+    else return true
+  }
+
+  const handleApproveStage = async () => {
+    if (!projectId || !project || !currentStage) return;
+
+    if (project.currentStage !== currentStage.stageId) {
       toast(`Ainda não é possivel aprovar essa etapa do projeto.`, { type: "error" });
       return
     }
@@ -262,7 +296,7 @@ export function ProjectProgress() {
       <Spinner loading={loading} />
 
       <div className="steps">
-        {currentStage && (
+        {currentStage && project && (
           <>
             <nav className="menu-step">
               {steps.map(({ stageId, stageName }) => (
@@ -272,7 +306,7 @@ export function ProjectProgress() {
                   onClick={() => nextStep(stageId)}
                   data-bs-toggle="tooltip"
                   data-bs-placement="left"
-                  title={project?.currentStage === stageId ? 'Fase Atual' : 'Fase não disponivel'}
+                  title={project.currentStage === stageId ? 'Fase Atual' : 'Fase não disponivel'}
                 >
                   {stageName}
                 </button>
@@ -327,7 +361,7 @@ export function ProjectProgress() {
                       </label>
 
                       <input
-                        disabled={currentStage?.completed || false}
+                        disabled={canUserUpload()}
                         className="form-control"
                         type="file"
                         name={`file-${file.id}`}
@@ -376,6 +410,7 @@ export function ProjectProgress() {
               <h3>Comentários:</h3>
 
               <textarea
+                // disabled={currentStage ? currentStage.stageId !== project.currentStage : true}
                 id="comment"
                 name="comment"
                 rows={4}
@@ -385,12 +420,18 @@ export function ProjectProgress() {
                 onChange={(e) => setComment(e.target.value)}
               ></textarea>
               <button
-                disabled={currentStage?.completed || false}
+                // disabled={currentStage ? currentStage.stageId !== project.currentStage : true}
                 className="mt-3 btn btn-primary"
                 type="button"
                 onClick={handleSubmitCommets}
               >
-                Enviar
+                {newCommentLoading
+                  ? (<>
+                    <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                    <span> Enviando...</span>
+                  </>)
+                  : <span>Enviar</span>
+                }
               </button>
             </section>
 
@@ -419,7 +460,7 @@ export function ProjectProgress() {
           </>
         )}
 
-        {userLocalStorage.role !== 3 && currentStage &&
+        {currentStage && canApproveStage() &&
           <div className="approve-stage">
             {(currentStage.completed || false) && currentStage.stageId
               ?

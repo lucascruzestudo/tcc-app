@@ -53,13 +53,15 @@ export function ListProjects() {
         ))}
       </div>
 
-      <button
-        onClick={() => handleNavigate('/new-project')}
-        title="Iniciar novo projeto"
-        className="btn-new-project btn btn-primary"
-      >
-        <FaPlus /> Novo projeto
-      </button>
+      {userLocalStorage.role === 3 &&
+        <button
+          onClick={() => handleNavigate('/new-project')}
+          title="Iniciar novo projeto"
+          className="btn-new-project btn btn-primary"
+        >
+          <FaPlus /> Novo projeto
+        </button>
+      }
     </div>
   );
 }

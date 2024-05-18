@@ -65,7 +65,7 @@ export function RetrieveProject() {
 
       setProject(response.data);
 
-      setCanEdit(response.data.creationApproved ? userLocalStorage.role === 1 : false);
+      setCanEdit(!response.data.creationApproved || userLocalStorage.role === 1);
       
       setName(response.data.projectName);
       setDescription(response.data.description);
