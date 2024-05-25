@@ -73,7 +73,7 @@ export function ProjectProgress() {
     if (step) changeStep(step);
   }
 
-  const canUserUpload = (): boolean => {
+  const canUserUploadOrAddComments = (): boolean => {
     if (!currentStage || !project) return true
 
     if (userLocalStorage.role === 3 && currentStage.stageId > 2) return true
@@ -361,7 +361,7 @@ export function ProjectProgress() {
                       </label>
 
                       <input
-                        disabled={canUserUpload()}
+                        disabled={canUserUploadOrAddComments()}
                         className="form-control"
                         type="file"
                         name={`file-${file.id}`}
@@ -373,7 +373,7 @@ export function ProjectProgress() {
 
                     <div className="attachment">
                       {file.file_path && (<>
-                        <div className="pt-1 pb-2"><strong>Upload do Aluno: </strong></div>
+                        <div className="pt-1 pb-2">Por {file.origin_name || 'Anônimo'}: </div>
                         <div>
                           <button
                             onClick={() => handleDownloadFile(file, 1)}
@@ -388,7 +388,7 @@ export function ProjectProgress() {
 
                     <div className="attachment">
                       {file.return_file_path && (<>
-                        <div className="pt-1 pb-2"><strong>Retorno do Orientador: </strong></div>
+                        <div className="pt-1 pb-2">Por {file.return_origin_name || 'Anônimo'}: </div>
                         <div>
                           <button
                             onClick={() => handleDownloadFile(file, 2)}
@@ -420,7 +420,7 @@ export function ProjectProgress() {
                 onChange={(e) => setComment(e.target.value)}
               ></textarea>
               <button
-                // disabled={currentStage ? currentStage.stageId !== project.currentStage : true}
+                disabled={canUserUploadOrAddComments()}
                 className="mt-3 btn btn-primary"
                 type="button"
                 onClick={handleSubmitCommets}

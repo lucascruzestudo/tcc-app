@@ -12,6 +12,8 @@ export type TFile = {
     return_filename: string;
     description: string;
     return_file_path: string;
+    origin_name: string;
+    return_origin_name: string;
 }
 
 export type TStages = {

@@ -6,6 +6,7 @@ import {
 } from "@utils/validators";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import logo from "src/assets/logo-without-background-2.png";
 import AuthService from "src/services/auth";
 import "./index.css";
 
@@ -150,6 +151,8 @@ export function Auth() {
             <div className="container-sign-in">
 
                 <div className="panel-menu">
+
+                    <img className="logo" src={logo} alt="logo" />
 
                     <div className="info-app">
                         <h3>Bem-vindo ao</h3>

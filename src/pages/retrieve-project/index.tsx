@@ -185,7 +185,8 @@ export function RetrieveProject() {
       const response = await projectsService.updateProject(projectId, bory);
       
       if (response.status !== 200) {
-        toast("Opss. Não foi possivel concluir a operação!", { type: "error" });  
+        // @ts-ignore
+        toast(response.data.msg_pt_br, { type: "error" });  
         return;
       }
 
@@ -195,11 +196,13 @@ export function RetrieveProject() {
       const response = await projectsService.createProject(bory);
       
       if (response.status !== 201) {
-        toast("Opss. Não foi possivel concluir a operação!", { type: "error" });  
+        // @ts-ignore
+        toast(response.data.msg_pt_br, { type: "error" });  
         return;
       }
       
       toast("Projeto criado com sucesso!", { type: "success" });
+      window.location.href = '/projects'
     }
 
   };

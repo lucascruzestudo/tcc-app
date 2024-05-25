@@ -17,7 +17,6 @@ api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     // Aqui é Pura bagunça...
-    debugger
 
     const refreshToken = localStorage.getItem("refreshToken");
 

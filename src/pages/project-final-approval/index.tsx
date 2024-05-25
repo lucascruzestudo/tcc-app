@@ -85,8 +85,8 @@ export function ProjectProgressFinalApproval() {
       project._id, stageId
     );
 
-    if (response.status === 200) {
-      setComments([response.data[0]])
+    if (response.status === 200 && response.data.length > 0) {
+      setComments(response.data)
     }
   }
 
@@ -293,7 +293,7 @@ export function ProjectProgressFinalApproval() {
 
                     <div className="attachment">
                       {file.file_path && (<>
-                        <div className="pt-1 pb-2"><strong>Upload do Orientador: </strong></div>
+                        <div className="pt-1 pb-2">Por {file.origin_name || 'Anônimo'}: </div>
                         <div>
                           <button
                             onClick={() => handleDownloadFile(file, 1)}
@@ -308,7 +308,7 @@ export function ProjectProgressFinalApproval() {
 
                     <div className="attachment">
                       {file.return_file_path && (<>
-                        <div className="pt-1 pb-2"><strong>Retorno do Coordenador: </strong></div>
+                        <div className="pt-1 pb-2">Por {file.return_origin_name || 'Anônimo'}: </div>
                         <div>
                           <button
                             onClick={() => handleDownloadFile(file, 2)}
