@@ -16,9 +16,20 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
+    // Aqui é Pura bagunça...
+    debugger
+
     const refreshToken = localStorage.getItem("refreshToken");
 
     const {status, data} = error.response as any
+
+    if ('The E-mail or password is incorrect'.includes(data?.msg) && error.config?.url !== '/login') {
+      localStorage.removeItem('user');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+
+      window.location.href = '/';
+    }
 
     if (!(status == 401 && data && data.msg && data.msg.includes('Token has expired'))) {
       return Promise.reject(error);
