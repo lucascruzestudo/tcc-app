@@ -132,12 +132,16 @@ export function Auth() {
 
         setloading(true);
 
-        const response = await authService.register({
+        const body = {
             password: _password,
             email: _email,
             full_name: fullName,
             role: profile,
-        });
+            AdmKey: profile === 1 ? "EXUZPCOVSBSNOMSLEKRGAWDAM" : undefined
+        };
+        
+
+        const response = await authService.register(body);
 
         setloading(false);
 
@@ -145,7 +149,6 @@ export function Auth() {
 
         submitLogin();
     }
-
     return (
         <div className="background-sign-in">
             <div className="container-sign-in">
