@@ -1,20 +1,21 @@
 import api from "@config/api";
 import { AxiosRequestConfig } from "axios";
 
-type Response<T = any> = {
+export type Response<T = any> = {
   status: number;
   data: T,
+  msg: string
 }
 
 export default class ProjectsService {
   private async request<T>(method: () => Promise<any>): Promise<Response<T>> {
     try {
       const response = await method();
-      return { status: response.status, data: response.data };
+      return { status: response.status, data: response.data, msg: response.data.msg };
     } catch (error: any) {
       console.error("Error - ", error);
       const { data, status } = error.response;
-      return { data, status };
+      return { data, status, msg: data?.msg };
     }
   }
 
@@ -26,7 +27,7 @@ export default class ProjectsService {
   }
 
   getProjects<T>(
-    params?: { pending_final_approval?: boolean, include_final_stage?: boolean }
+    params?: { pending_final_approval?: boolean, include_final_stage?: boolean, completed?: boolean }
   ): Promise<Response<T>> {
     return this.request<T>(() => api.get("/projects", { params }));
   }

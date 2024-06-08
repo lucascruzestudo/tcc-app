@@ -3,6 +3,7 @@ import api from "@config/api";
 type Response<T = any> = {
   status: number;
   data: T,
+  msg: string
 }
 
 type UpdateUser = {
@@ -17,11 +18,11 @@ export default class UserService {
     private async request<T>(method: () => Promise<any>): Promise<Response<T>> {
         try {
           const response = await method();
-          return { status: response.status, data: response.data };
+          return { status: response.status, data: response.data, msg: response.data.msg };
         } catch (error: any) {
           console.error("Error - ", error);
           const { data, status } = error.response;
-          return { data, status };
+          return { data, status, msg: data?.msg };
         }
     }
     

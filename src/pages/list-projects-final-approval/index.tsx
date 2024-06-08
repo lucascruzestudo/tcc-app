@@ -27,7 +27,7 @@ export function ListProjectsFinalApproval() {
     setloading(true);
 
     const response = await projectsService.getProjects<Array<TProject>>({
-      include_final_stage: true, pending_final_approval: true
+      include_final_stage: true, pending_final_approval: true, completed: false,
     });
     
     if (response.status !== 200) return;

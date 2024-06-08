@@ -36,15 +36,21 @@ export function Project({ project, userRole }: { project: TProject, userRole: nu
         const response = await projectsService.approvalProject(project._id, { approve });
 
         if (response.status !== 200) {
-            toast("Opss. Não foi possivel concluir a operação!", { type: "error" });  
+            toast(response.msg || "Opss. Não foi possivel concluir a operação!", { type: "error" });  
             return;
         }
         
         _setProject({..._project, creationApproved: approve})
     }
+
+    function getColorCardByProjectStatus(_project: TProject) {
+        if (_project.completed) return 'card-approved'
+        else if (_project.creationApproved) return 'card-blue'
+        else return 'card-yellow'
+    }
     
     return (
-        <div className={`card container-project ${_project.creationApproved ? 'card-blue' : 'card-yellow'}`}>
+        <div className={`card container-project ${getColorCardByProjectStatus(_project)}`}>
             
             <div className="header">
                 <p>
@@ -57,7 +63,7 @@ export function Project({ project, userRole }: { project: TProject, userRole: nu
                 </p>
                 {userRole === 1 && 
                     <div className="form-check form-switch">
-                        <input onChange={(e) => handleApproveProject(e.target.checked)} 
+                        <input disabled={project.completed} onChange={(e) => handleApproveProject(e.target.checked)} 
                             className="form-check-input" 
                             type="checkbox" 
                             id="flexSwitchCheckApproveTCC"
@@ -106,7 +112,7 @@ export function Project({ project, userRole }: { project: TProject, userRole: nu
                         <button className="btn btn-primary" disabled={!project.creationApproved} onClick={() => handleAccessProject(project._id)}>
                             Acessar
                         </button>
-                        <button className="btn btn-warning" onClick={() => handleEditProject(project._id)}>
+                        <button disabled={_project.completed} className="btn btn-warning" onClick={() => handleEditProject(project._id)}>
                             Editar
                         </button>
                     </div>
