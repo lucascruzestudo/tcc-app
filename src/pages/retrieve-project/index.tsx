@@ -19,6 +19,7 @@ export function RetrieveProject() {
   const projectsService = new ProjectsService()
   const { projectId } = useParams();
   const userLocalStorage = useAuth().user!
+  // @ts-ignore
   const [project, setProject] = useState<TProject>();
   const [canEdit, setCanEdit] = useState<boolean>();
   
