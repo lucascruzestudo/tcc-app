@@ -280,7 +280,7 @@ export function ProjectProgress() {
     const response = await projectsService.proceedStage(projectId);
 
     if (response.status != 200) {
-      toast(`Error ao aprovar etapa atual.`, { type: "error" });
+      toast(response.msg || `Error ao aprovar etapa atual.`, { type: "error" });
       return
     }
 
@@ -293,7 +293,7 @@ export function ProjectProgress() {
     const response = await projectsService.revertStage(projectId, stageId);
 
     if (response.status != 200) {
-      toast(`Error ao revogar etapa atual.`, { type: "error" });
+      toast(response.msg || `Error ao revogar etapa atual.`, { type: "error" });
       return
     }
 
