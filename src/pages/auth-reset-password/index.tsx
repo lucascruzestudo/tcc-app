@@ -57,12 +57,12 @@ export function AuthResetPassword() {
 
         setloading(true);
 
-        const response = await authService.resetPassword<{ msg: string }>(_password, otp);
+        const response = await authService.resetPassword(_password, otp);
 
         setloading(false);
 
         if (response.status !== 200) {
-            toast(response.data.msg, { type: "error" });
+            toast(response.msg || "Erro na troca de senha", { type: "error" });
             return;
         }
 

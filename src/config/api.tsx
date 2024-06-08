@@ -55,8 +55,6 @@ api.interceptors.response.use(
       
       const data = await response.json();
       
-      debugger
-
       localStorage.setItem("accessToken", data.access_token);
       localStorage.setItem("refreshToken", data.refresh_token);
 

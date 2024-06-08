@@ -73,10 +73,19 @@ export function ProjectProgress() {
     if (step) changeStep(step);
   }
 
-  const canUserUploadOrAddComments = (): boolean => {
+  const canUserUpload = (): boolean => {
     if (!currentStage || !project) return true
 
     if (userLocalStorage.role === 3 && currentStage.stageId > 2) return true
+
+    if (currentStage.stageId !== project.currentStage) return true
+
+    return false
+  }
+
+
+  const canUserAddComments = (): boolean => {
+    if (!currentStage || !project) return true
 
     if (currentStage.stageId !== project.currentStage) return true
 
@@ -149,7 +158,7 @@ export function ProjectProgress() {
     );
 
     if (response.status !== 200) {
-      toast(`Error no upload.`, { type: "error" });
+      toast(response.msg || `Error no upload.`, { type: "error" });
       return;
     }
 
@@ -186,7 +195,7 @@ export function ProjectProgress() {
       });
 
       if (response.status !== 201) {
-        toast("Oppss... Ocorreu um erro ao enviar o comentário.", { type: "error" });
+        toast(response.msg || "Oppss... Ocorreu um erro ao enviar o comentário.", { type: "error" });
         return;
       }
 
@@ -225,7 +234,7 @@ export function ProjectProgress() {
     );
 
     if (response.status !== 200) {
-      toast(`Error no upload.`, { type: "error" });
+      toast(response.msg || `Error no upload.`, { type: "error" });
       return;
     }
 
@@ -271,7 +280,7 @@ export function ProjectProgress() {
     const response = await projectsService.proceedStage(projectId);
 
     if (response.status != 200) {
-      toast(`Error ao aprovar etapa atual.`, { type: "error" });
+      toast(response.msg || `Error ao aprovar etapa atual.`, { type: "error" });
       return
     }
 
@@ -284,7 +293,7 @@ export function ProjectProgress() {
     const response = await projectsService.revertStage(projectId, stageId);
 
     if (response.status != 200) {
-      toast(`Error ao aprovar etapa atual.`, { type: "error" });
+      toast(response.msg || `Error ao revogar etapa atual.`, { type: "error" });
       return
     }
 
@@ -361,7 +370,7 @@ export function ProjectProgress() {
                       </label>
 
                       <input
-                        disabled={canUserUploadOrAddComments()}
+                        disabled={canUserUpload()}
                         className="form-control"
                         type="file"
                         name={`file-${file.id}`}
@@ -420,7 +429,7 @@ export function ProjectProgress() {
                 onChange={(e) => setComment(e.target.value)}
               ></textarea>
               <button
-                disabled={canUserUploadOrAddComments()}
+                disabled={canUserAddComments()}
                 className="mt-3 btn btn-primary"
                 type="button"
                 onClick={handleSubmitCommets}

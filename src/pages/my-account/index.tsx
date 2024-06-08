@@ -78,10 +78,10 @@ export function MyAccount() {
         if (Object.keys(userUpdate).length === 0) return;
         
         const id: string = userLocalStorage.id
-        const response = await userService.edit<{msg: string}>(id, userUpdate);
+        const response = await userService.edit(id, userUpdate);
 
-        if (response.status !== 200 && response.data) {
-            toast(response.data.msg,  {type: "error"});
+        if (response.status !== 200) {
+            toast(response.msg || "Erro ao editar usuário.",  {type: "error"});
             return false;
         }
 
@@ -107,17 +107,13 @@ export function MyAccount() {
 
         const id: string = userLocalStorage.id
 
-        const response = await userService.edit<{msg: string}>(id, {
+        const response = await userService.edit(id, {
             currentPassword: currentPassword,
             newPassword: newPassword
         });
 
         if (response.status !== 200 && response.data) {
-            if (response.data.msg.includes('Invalid Password')) {
-                toast("Senha antiga incorreta!",  {type: "error"});
-            } else {
-                toast(response.data.msg,  {type: "error"});
-            }
+            toast(response.msg || "Senha atual incorreta!",  {type: "error"});
             return false;
         }
 
@@ -207,7 +203,7 @@ export function MyAccount() {
             </div>
 
             <div className="form-update-password mb-5 col-md-6 col-sm-12">
-                <label htmlFor="formControlcurrentPassword" className="form-label">Senha Antiga</label>
+                <label htmlFor="formControlcurrentPassword" className="form-label">Senha atual</label>
                 <input 
                     type="password" 
                     className="form-control mb-3" 

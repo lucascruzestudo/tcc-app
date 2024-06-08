@@ -185,8 +185,7 @@ export function RetrieveProject() {
       const response = await projectsService.updateProject(projectId, bory);
       
       if (response.status !== 200) {
-        // @ts-ignore
-        toast(response.data.msg_pt_br, { type: "error" });  
+        toast(response.msg || "Erro ao atualizar projeto.", { type: "error" });  
         return;
       }
 
@@ -196,8 +195,7 @@ export function RetrieveProject() {
       const response = await projectsService.createProject(bory);
       
       if (response.status !== 201) {
-        // @ts-ignore
-        toast(response.data.msg_pt_br, { type: "error" });  
+        toast(response.msg || "Erro ao criar projeto.", { type: "error" });  
         return;
       }
       
@@ -213,7 +211,7 @@ export function RetrieveProject() {
     const response = await projectsService.approvalProject(projectId, { approve: _approve });
 
     if (response.status !== 200) {
-        toast("Opss. Não foi possivel concluir a operação!", { type: "error" });  
+        toast(response.msg || "Opss. Não foi possivel concluir a operação!", { type: "error" });  
         return;
     }
 

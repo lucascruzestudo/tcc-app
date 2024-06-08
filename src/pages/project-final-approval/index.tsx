@@ -129,7 +129,7 @@ export function ProjectProgressFinalApproval() {
     );
 
     if (response.status !== 200) {
-      toast(`Error no upload.`, { type: "error" });
+      toast(response.msg || `Error no upload.`, { type: "error" });
       return;
     }
 
@@ -164,9 +164,10 @@ export function ProjectProgressFinalApproval() {
       });
 
       if (response.status !== 201) {
-        toast("Oppss... Ocorreu um erro ao enviar o comentário.", { type: "error" });
+        toast(response.msg || "Oppss... Ocorreu um erro ao enviar o comentário.", { type: "error" });
         return;
       }
+      
 
       setComment("");
       setComments((prevComments) => [response.data, ...prevComments]);
@@ -201,7 +202,7 @@ export function ProjectProgressFinalApproval() {
     );
 
     if (response.status !== 200) {
-      toast(`Error no upload.`, { type: "error" });
+      toast(response.msg || `Error no upload.`, { type: "error" });
       return;
     }
 
@@ -227,8 +228,8 @@ export function ProjectProgressFinalApproval() {
 
     const response = await projectsService.completedProject(projectId);
 
-    if (response.status != 200) {
-      toast(`Error ao aprovar etapa atual.`, { type: "error" });
+    if (response.status != 200 && response.data) {
+      toast(response.msg || `Error ao aprovar etapa atual.`, { type: "error" });
       return
     }
 

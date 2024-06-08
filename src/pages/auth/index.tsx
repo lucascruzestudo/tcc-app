@@ -74,14 +74,18 @@ export function Auth() {
         });
 
         if (response.status === 401) {
-            toast("O E-mail ou senha está incorreto.", { type: "error" });
+            toast(response.msg || "O E-mail ou senha está incorreto.", { type: "error" });
             setloading(false);
             return
         }
 
         setloading(false);
 
-        if (response.status !== 200) return
+        if (response.status !== 200) {
+            toast(response.msg || "Erro de Login", { type: "error" });
+            setloading(false);
+            return
+        }
 
         const {
             access_token,
@@ -145,7 +149,11 @@ export function Auth() {
 
         setloading(false);
 
-        if (response.status !== 201) return;
+        if (response.status !== 201) {
+            toast(response.msg || "Erro de registro", { type: "error" });
+            setloading(false);
+            return
+        };
 
         submitLogin();
     }
