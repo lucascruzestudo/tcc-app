@@ -43,14 +43,14 @@ export function Project({ project, userRole }: { project: TProject, userRole: nu
         _setProject({..._project, creationApproved: approve})
     }
 
-    function getColorCardByProjectStatus(_project: TProject) {
+    function getColorCardByProjectStatus() {
         if (_project.completed) return 'card-approved'
         else if (_project.creationApproved) return 'card-blue'
         else return 'card-yellow'
     }
     
     return (
-        <div className={`card container-project ${getColorCardByProjectStatus(_project)}`}>
+        <div className={`card container-project ${getColorCardByProjectStatus()}`}>
             
             <div className="header">
                 <p>
@@ -70,7 +70,7 @@ export function Project({ project, userRole }: { project: TProject, userRole: nu
                             checked={_project.creationApproved}
                         />
                         <label className="form-check-label" htmlFor="flexSwitchCheckApproveTCC">
-                            {project.creationApproved ? 'Reprovar' : 'Aprovar'} Ideia
+                            {_project.creationApproved ? 'Reprovar' : 'Aprovar'} Ideia
                         </label>
                     </div>
                 }
@@ -109,7 +109,7 @@ export function Project({ project, userRole }: { project: TProject, userRole: nu
                         {getHour()}
                     </p>
                     <div className="mt-3 btns">
-                        <button className="btn btn-primary" disabled={!project.creationApproved} onClick={() => handleAccessProject(project._id)}>
+                        <button className="btn btn-primary" disabled={!_project.creationApproved} onClick={() => handleAccessProject(project._id)}>
                             Acessar
                         </button>
                         <button disabled={_project.completed} className="btn btn-warning" onClick={() => handleEditProject(project._id)}>
