@@ -10,6 +10,7 @@ type Register = {
   email: string;
   full_name: string;
   role: number;
+  secret_manager?: string;
 }
 
 type Response<T = any> = {

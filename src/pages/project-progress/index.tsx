@@ -62,6 +62,7 @@ export function ProjectProgress() {
 
     project = {
       ...project,
+      originalCurrentStage: project.currentStage, 
       currentStage: project.currentStage > project.stages.length ? project.stages.length : project.currentStage
     }
 
@@ -262,11 +263,10 @@ export function ProjectProgress() {
 
   const canApproveStage = () => {
     if (!currentStage || !project || currentStage.stageId > project.currentStage) return false
+    
     if (userLocalStorage.role === 1) return true
-    if (userLocalStorage.role === 3) return false
-
-    if (currentStage.stageId > 2) return false
-    else return true
+    
+    return false
   }
 
   const handleApproveStage = async () => {
@@ -370,7 +370,7 @@ export function ProjectProgress() {
                       </label>
 
                       <input
-                        disabled={canUserUpload()}
+                        disabled={canUserUpload() || project.originalCurrentStage===6}
                         className="form-control"
                         type="file"
                         name={`file-${file.id}`}

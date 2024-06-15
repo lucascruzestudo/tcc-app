@@ -57,6 +57,7 @@ export function Auth() {
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [loading, setloading] = useState<boolean>(false);
+    const [secretManager, setSecretManager] = useState<string>('');
 
     const changeState = (value: string, setState: any) => setState(value);
 
@@ -130,7 +131,11 @@ export function Auth() {
             !([1, 2, 3].includes(profile))
         ) {
             toast("Dados inválidos.", { type: "error" });
-            setloading(false);
+            return
+        }
+
+        if (profile === 1 && secretManager.trim().length == 0) {
+            toast("Chave secreta não fornecida.", { type: "error" });
             return
         }
 
@@ -141,6 +146,7 @@ export function Auth() {
             email: _email,
             full_name: fullName,
             role: profile,
+            secret_manager: secretManager
         });
 
         setloading(false);
@@ -264,6 +270,17 @@ export function Auth() {
                                 <option value={2}>Orientador</option>
                                 <option value={1}>Coordenador</option>
                             </select>
+
+                            {profile === 1 &&
+                                <input
+                                    type="password"
+                                    name="secret-manager"
+                                    placeholder="Chave secreta"
+                                    id="secret-manager"
+                                    onChange={({ target }) => changeState(target.value, setSecretManager)}
+                                    value={secretManager || ""}
+                                />
+                            }
 
                             <button type="button" onClick={submitRegister}>Cadastrar</button>
                         </div>

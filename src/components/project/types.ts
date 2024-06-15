@@ -46,4 +46,7 @@ export type TProject = {
     stages: Array<TStages>
 
     students: TMember[];
+
+
+    originalCurrentStage?: number; // gambiii
 };
