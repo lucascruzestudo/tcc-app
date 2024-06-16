@@ -202,11 +202,16 @@ export function ProjectProgressFinalApproval() {
     );
 
     if (response.status !== 200) {
-      toast(response.msg || `Error no upload.`, { type: "error" });
+      toast(response.msg || `Error no download.`, { type: "error" });
       return;
     }
 
-    const filename = file_type ? file.return_filename : file.filename
+    let filename = null
+
+    if (file_type === 1) filename = file.filename
+    if (file_type === 2) filename = file.return_filename
+
+    if (filename === null) return
 
     try {
       const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -216,11 +221,9 @@ export function ProjectProgressFinalApproval() {
       document.body.appendChild(link);
       link.click();
       link.parentNode!.removeChild(link);
-      console.log('OPA');
     } catch (error) {
       console.error('Error Download file:', error);
     }
-
   }
 
   const handleApproveProject = async () => {

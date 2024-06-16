@@ -235,7 +235,7 @@ export function ProjectProgress() {
     );
 
     if (response.status !== 200) {
-      toast(response.msg || `Error no upload.`, { type: "error" });
+      toast(response.msg || `Error no download.`, { type: "error" });
       return;
     }
 
@@ -254,11 +254,9 @@ export function ProjectProgress() {
       document.body.appendChild(link);
       link.click();
       link.parentNode!.removeChild(link);
-      console.log('OPA');
     } catch (error) {
       console.error('Error Download file:', error);
     }
-
   }
 
   const canApproveStage = () => {
